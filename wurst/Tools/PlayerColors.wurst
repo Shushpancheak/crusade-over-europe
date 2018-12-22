@@ -1,0 +1,36 @@
+package PlayerColors
+
+string array player_color
+string end_color = "|r"
+
+public function P2Scolored(string s, player p) returns string
+	player pl = p
+	string st = player_color[GetPlayerId(pl)] + s + end_color
+	return st
+
+init
+	player_color[0] = "|cffff0202"
+	player_color[1] = "|cff0040ff"
+	player_color[2] = "|cff1be5b9"
+	player_color[3] = "|cff530080"
+	player_color[4] = "|cfffffb00"
+	player_color[5] = "|cfffe890d"
+	player_color[6] = "|cff20bf00"
+	player_color[7] = "|cffe45aaf"
+	player_color[8] = "|cff949596"
+	player_color[9] = "|cff7dbff1"
+	player_color[10] = "|cff0f6146"
+	player_color[11] = "|cff4d2903"
+	player_color[12] = "|cff800000"
+	player_color[13] = "|cff000080"
+	player_color[14] = "|cff40e0d0"
+	player_color[15] = "|cfffa00fa"
+	player_color[16] = "|cfff5ddb3"
+	player_color[17] = "|cffffdab9"
+	player_color[18] = "|cff99ff99"
+	player_color[19] = "|cffe6e6fa"
+	player_color[20] = "|cff0f0300"
+	player_color[21] = "|cfffffafa"
+	player_color[22] = "|cff086100"
+	player_color[23] = "|cff916300"
+

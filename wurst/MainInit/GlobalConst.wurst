@@ -1,0 +1,13 @@
+package GlobalConst
+
+
+// Starting resources
+
+public let kStartGold = 260
+public let kStartLumber = 250
+
+
+
+// Units
+
+public let uSettler = 'h00J'

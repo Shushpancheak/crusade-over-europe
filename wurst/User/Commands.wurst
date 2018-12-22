@@ -1,0 +1,52 @@
+package Commands
+import Main_init
+import PlayerColors
+
+// Constants
+// Commands
+public let kFarDistance = 3000.0
+public let kMedDistance = 2300.0
+	
+// String constants.
+public let ksFar = "far"
+public let ksMed = "med"
+public let ksName = "name"
+public let ksNameTown = "nametown"
+
+
+function action()
+	string input = GetEventPlayerChatString()
+	string array args
+	string arg = "" // all args together after args[0]
+	player pl = GetTriggerPlayer()
+	if dbg_msg
+		dbg("A command has been typed = " + input + "; By: " + P2Scolored(GetPlayerName(pl), pl))
+	
+	var j = 0
+	for i = 1 to input.length()
+		let char = input.substring(i, i + 1)
+		if j > 0 and i > args[0].length() + 1
+			arg += char 
+		if char != " "
+			args[j] += char
+		else
+			j++
+	
+	if args[0] == ksFar
+		SetCameraFieldForPlayer(GetTriggerPlayer(), CAMERA_FIELD_TARGET_DISTANCE, kFarDistance, 0)
+	else if args[0] == ksMed
+		SetCameraFieldForPlayer(GetTriggerPlayer(), CAMERA_FIELD_TARGET_DISTANCE, kMedDistance, 0)
+	else if (args[0] == ksName)
+		SetPlayerName(GetTriggerPlayer(), arg)
+
+function cond() returns bool
+	return GetEventPlayerChatString().startsWith("-")
+
+init
+	let t = CreateTrigger()
+		..addCondition(Condition(function cond))
+		..addAction(function action)
+	
+	for i = 0 to PLAYER_SLOTS
+		t.registerPlayerChatEvent(Player(i), "-", false)
+	
