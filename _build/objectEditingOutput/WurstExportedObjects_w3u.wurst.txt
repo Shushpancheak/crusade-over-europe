@@ -4342,7 +4342,7 @@ import ObjEditingNatives
 	..setInt("upru", 1)
 	..setString("utub", "")
 	..setString("uhab", "")
-	..setString("uabi", "A02N,A02H,A02I,A02J")
+	..setString("uabi", "A03T,A02N,A02H,A02I,A02J")
 	..setInt("uaen", 0)
 	..setString("udaa", "A02H")
 	..setInt("umvs", 0)

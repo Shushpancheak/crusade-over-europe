@@ -385,6 +385,11 @@ trigger gg_trg_Settlement_Aura=null
 trigger gg_trg_Capitol_City_Hall_Up_Copy=null
 trigger gg_trg_Capitol_Castle_T3=null
 real Basics_ANIMATION_PERIOD=0.
+integer Colors_COLOR_BLACK_red=0
+integer Colors_COLOR_BLACK_green=0
+integer Colors_COLOR_BLACK_blue=0
+integer Colors_COLOR_BLACK_alpha=0
+integer Colors_MAX_PLAYER_COLORS=0
 integer array Colors_PLAYER_COLORS_red
 integer array Colors_PLAYER_COLORS_green
 integer array Colors_PLAYER_COLORS_blue
@@ -401,41 +406,40 @@ hashtable ErrorHandling_HT=null
 boolean ErrorHandling_suppressErrorMessages=false
 timer GameTimer_gameTimer=null
 real GameTimer_currentTime=0.
+boolean GlobalConst_dbg_msg=false
+boolean GlobalConst_dbg_mode=false
+integer GlobalConst_dbg_player=0
+integer GlobalConst_PLAYER_SLOTS=0
+integer GlobalConst_kStartGold=0
+integer GlobalConst_kStartLumber=0
 integer GlobalConst_uSettler=0
 integer Group_unitCounter=0
 integer Group_randomCounter=0
 group Group_iterGroup=null
 integer Integer_INT_MAX=0
 boolean MagicFunctions_compiletime=false
-boolean Main_init_dbg_msg=false
-boolean Main_init_dbg_mode=false
-integer Main_init_dbg_player=0
-real Main_init_SPAWN_POINT_x=0.
-real Main_init_SPAWN_POINT_y=0.
-integer Main_init_SPWN_players_first_ring=0
-integer Main_init_SPWN_players_add=0
-real Main_init_SPWN_players_radius=0.
-real Main_init_SPWN_players_radius_change=0.
-force Main_init_fWE=null
-force Main_init_fEE=null
-force Main_init_fME=null
-force Main_init_fBZ=null
-integer Main_init_PLAYER_SLOTS=0
-integer Main_init_kStartGold=0
-integer Main_init_kStartLumber=0
-real Main_init_kCTfade=0.
-real Main_init_kCTchange=0.
-integer Main_init_ksCTsize=0
-string array Main_init_ksCT
+real MainInit_SPAWN_POINT_x=0.
+real MainInit_SPAWN_POINT_y=0.
+integer MainInit_SPWN_players_first_ring=0
+integer MainInit_SPWN_players_add=0
+real MainInit_SPWN_players_radius=0.
+real MainInit_SPWN_players_radius_change=0.
+force MainInit_fWE=null
+force MainInit_fEE=null
+force MainInit_fME=null
+force MainInit_fBZ=null
+real MainInit_kCTfade=0.
+real MainInit_kCTchange=0.
+integer MainInit_ksCTsize=0
+string array MainInit_ksCT
 real Maths_PI2=0.
-string array PlayerColors_player_color
-string PlayerColors_end_color=null
 player array Player_players
 player Player_localPlayer=null
 playercolor Playercolor_PLAYER_COLOR_BLACK_AGGRESSIVE=null
 playercolor Playercolor_PLAYER_COLOR_UNKNOWN1=null
 playercolor Playercolor_PLAYER_COLOR_UNKNOWN2=null
 playercolor Playercolor_PLAYER_COLOR_BLACK_PASSIVE=null
+playercolor array Playercolor_LOOKUP
 integer Printing_DEBUG_LEVEL=0
 real Printing_DEBUG_MSG_DURATION=0.
 string String_charset=null
@@ -448,6 +452,12 @@ integer Table_maxIndex=0
 integer array Table_typeId
 integer wurst_stack_depth=0
 string array wurst_stack
+integer playercolor_toColor_return_red=0
+integer playercolor_toColor_return_green=0
+integer playercolor_toColor_return_blue=0
+integer colorA_withoutAlpha_return_red=0
+integer colorA_withoutAlpha_return_green=0
+integer colorA_withoutAlpha_return_blue=0
 real vec2_op_plus_return_x=0.
 real vec2_op_plus_return_y=0.
 code ref_function_Trig_Melee_Initialization_Actions=null
@@ -785,9 +795,10 @@ code ref_function_init_Lightning=null
 code ref_function_init_WeatherEffects=null
 code ref_function_bridge_init_TypeCasting=null
 code ref_function_init_GlobalConst=null
-code ref_function_init_Main_init=null
-code ref_function_init_PlayerColors=null
 code ref_function_init_Commands=null
+code ref_function_init_Diplomacy=null
+code ref_function_init_MainInit=null
+code ref_function_init_PlayerColors=null
 code ref_function_cond=null
 code ref_function_action=null
 code ref_function_GameTimer_closure_impl=null
@@ -2970,16 +2981,16 @@ endfunction
 function CinematicTutorial takes nothing returns nothing
 	local integer i
 	local integer temp
-	if Main_init_dbg_mode then
+	if GlobalConst_dbg_mode then
 		return
 	endif
 	call ShowInterfaceForceOff(GetPlayersAll(), 0.50)
 	set i = 0
-	set temp = Main_init_ksCTsize - 1
+	set temp = MainInit_ksCTsize - 1
 	loop
 		exitwhen i > temp
-		call DisplayTimedTextToForce(GetPlayersAll(), Main_init_kCTfade, Main_init_ksCT[i])
-		call TriggerSleepAction(Main_init_kCTchange)
+		call DisplayTimedTextToForce(GetPlayersAll(), MainInit_kCTfade, MainInit_ksCT[i])
+		call TriggerSleepAction(MainInit_kCTchange)
 		set i = i + 1
 	endloop
 	call CinematicModeBJ(false, GetPlayersAll())
@@ -5907,11 +5918,15 @@ function Trig_Settlement_Range_Check_Func003Func001Func001C takes nothing return
 	return true
 endfunction
 
+function Trig_Settlement_Range_Check_Func003Func001Func002C takes nothing returns boolean
+	return false
+endfunction
+
 function Trig_Settlement_Range_Check_Func003Func001C takes nothing returns boolean
 	if  not Trig_Settlement_Range_Check_Func003Func001Func001C() then
 		return false
 	endif
-	if  not false then
+	if  not Trig_Settlement_Range_Check_Func003Func001Func002C() then
 		return false
 	endif
 	if  not (GetUnitTypeId(GetEnumUnit()) == 1747988557) then
@@ -7208,15 +7223,81 @@ function Trig_upkeep_Conditions takes nothing returns boolean
 	return true
 endfunction
 
-function P2Scolored takes string s, player p returns string
-	local player pl = p
-	local string st = PlayerColors_player_color[GetPlayerId(pl)] + s + PlayerColors_end_color
-	set pl = null
-	return st
+function dbg takes string msg returns nothing
+	call DisplayTimedTextToPlayer(Player(GlobalConst_dbg_player), 0., 0., 60., msg)
 endfunction
 
-function dbg takes string msg returns nothing
-	call DisplayTimedTextToPlayer(Player(Main_init_dbg_player), 0., 0., 60., msg)
+function toHex takes integer number returns string
+	local integer firstpart = number / 16
+	local integer secondpart = number - firstpart * 16
+	return Colors_hexs[firstpart] + Colors_hexs[secondpart]
+endfunction
+
+function color_toColorString takes integer this_red, integer this_green, integer this_blue returns string
+	return "|cff" + toHex(this_red) + toHex(this_green) + toHex(this_blue)
+endfunction
+
+function player_getColor takes player this returns playercolor
+	return GetPlayerColor(this)
+endfunction
+
+function colorA_withoutAlpha takes integer this_red, integer this_green, integer this_blue, integer this_alpha returns integer
+	set colorA_withoutAlpha_return_red = this_red
+	set colorA_withoutAlpha_return_green = this_green
+	set colorA_withoutAlpha_return_blue = this_blue
+	return colorA_withoutAlpha_return_red
+endfunction
+
+function playercolor_toInt takes playercolor this returns integer
+	local integer value = 0
+	local integer i = 0
+	local integer temp = bj_MAX_PLAYER_SLOTS - 1
+	loop
+		exitwhen i > temp
+		if Playercolor_LOOKUP[i] == this then
+			set value = i
+			exitwhen true
+		endif
+		set i = i + 1
+	endloop
+	return value
+endfunction
+
+function playercolor_toColor takes playercolor this returns integer
+	local integer cond_result_red
+	local integer cond_result_green
+	local integer cond_result_blue
+	local integer tempIndex
+	local integer tuple_temp
+	local integer tuple_temp_2
+	local integer tuple_temp_3
+	local integer tuple_temp_4
+	local integer tuple_temp_5
+	local integer tuple_temp_6
+	if playercolor_toInt(this) <= Colors_MAX_PLAYER_COLORS then
+		set tempIndex = playercolor_toInt(this)
+		set tuple_temp = Colors_PLAYER_COLORS_red[tempIndex]
+		set tuple_temp_2 = Colors_PLAYER_COLORS_green[tempIndex]
+		set tuple_temp_3 = Colors_PLAYER_COLORS_blue[tempIndex]
+		set cond_result_red = tuple_temp
+		set cond_result_green = tuple_temp_2
+		set cond_result_blue = tuple_temp_3
+	else
+		set tuple_temp_4 = colorA_withoutAlpha(Colors_COLOR_BLACK_red, Colors_COLOR_BLACK_green, Colors_COLOR_BLACK_blue, Colors_COLOR_BLACK_alpha)
+		set tuple_temp_5 = colorA_withoutAlpha_return_green
+		set tuple_temp_6 = colorA_withoutAlpha_return_blue
+		set cond_result_red = tuple_temp_4
+		set cond_result_green = tuple_temp_5
+		set cond_result_blue = tuple_temp_6
+	endif
+	set playercolor_toColor_return_red = cond_result_red
+	set playercolor_toColor_return_green = cond_result_green
+	set playercolor_toColor_return_blue = cond_result_blue
+	return playercolor_toColor_return_red
+endfunction
+
+function player_getNameColored takes player this returns string
+	return color_toColorString(playercolor_toColor(player_getColor(this)), playercolor_toColor_return_green, playercolor_toColor_return_blue) + GetPlayerName(this) + "|r"
 endfunction
 
 function string_length takes string this returns integer
@@ -7236,8 +7317,8 @@ function action takes nothing returns nothing
 	local integer i
 	local integer temp
 	local string char
-	if Main_init_dbg_msg then
-		call dbg("A command has been typed = " + input + "; By: " + P2Scolored(GetPlayerName(pl), pl))
+	if GlobalConst_dbg_msg then
+		call dbg("A command has been typed = " + input + "; By: " + player_getNameColored(pl))
 	endif
 	set j = 0
 	set i = 1
@@ -7624,10 +7705,15 @@ function init_Colors takes string stackPos returns boolean
 	set tuple_temp_6 = 0
 	set tuple_temp_7 = 0
 	set tuple_temp_8 = 0
+	set Colors_COLOR_BLACK_red = tuple_temp_5
+	set Colors_COLOR_BLACK_green = tuple_temp_6
+	set Colors_COLOR_BLACK_blue = tuple_temp_7
+	set Colors_COLOR_BLACK_alpha = tuple_temp_8
 	set tuple_temp_9 = 255
 	set tuple_temp_10 = 204
 	set tuple_temp_11 = 0
 	set tuple_temp_12 = 255
+	set Colors_MAX_PLAYER_COLORS = 23
 	set tuple_temp_13 = 255
 	set tuple_temp_14 = 2
 	set tuple_temp_15 = 2
@@ -7964,7 +8050,7 @@ function init_Commands takes nothing returns boolean
 	call trigger_addAction(receiver_2, ref_function_action)
 	set t = receiver_2
 	set i = 0
-	set temp = Main_init_PLAYER_SLOTS
+	set temp = GlobalConst_PLAYER_SLOTS
 	loop
 		exitwhen i > temp
 		call trigger_registerPlayerChatEvent(t, Player(i), "-", false)
@@ -7973,6 +8059,10 @@ function init_Commands takes nothing returns boolean
 	set t = null
 	set receiver = null
 	set receiver_2 = null
+	return true
+endfunction
+
+function init_Diplomacy takes nothing returns boolean
 	return true
 endfunction
 
@@ -8000,6 +8090,12 @@ function init_GameTimer takes nothing returns boolean
 endfunction
 
 function init_GlobalConst takes nothing returns boolean
+	set GlobalConst_dbg_msg = false
+	set GlobalConst_dbg_mode = false
+	set GlobalConst_dbg_player = 0
+	set GlobalConst_PLAYER_SLOTS = 22
+	set GlobalConst_kStartGold = 260
+	set GlobalConst_kStartLumber = 250
 	set GlobalConst_uSettler = 1747988554
 	return true
 endfunction
@@ -8070,11 +8166,11 @@ function vec2_op_plus takes real this_x, real this_y, real v_x, real v_y returns
 endfunction
 
 function SetPlayersAtStart takes nothing returns nothing
-	local integer pl_left = Main_init_PLAYER_SLOTS
-	local integer pl_in_ring = Main_init_SPWN_players_first_ring
-	local real rad = Main_init_SPWN_players_radius
-	local real tuple_temp = Main_init_SPAWN_POINT_x
-	local real tuple_temp_2 = Main_init_SPAWN_POINT_y
+	local integer pl_left = GlobalConst_PLAYER_SLOTS
+	local integer pl_in_ring = MainInit_SPWN_players_first_ring
+	local real rad = MainInit_SPWN_players_radius
+	local real tuple_temp = MainInit_SPAWN_POINT_x
+	local real tuple_temp_2 = MainInit_SPAWN_POINT_y
 	local real pos_x = tuple_temp
 	local real pos_y = tuple_temp_2
 	local real tuple_temp_3 = 0.0
@@ -8093,19 +8189,19 @@ function SetPlayersAtStart takes nothing returns nothing
 			exitwhen i > temp
 			set tuple_temp_4 = i * Maths_PI2 / pl_in_ring
 			set ang_radians = tuple_temp_4
-			set tuple_temp_5 = vec2_op_plus(Main_init_SPAWN_POINT_x, Main_init_SPAWN_POINT_y, rad * angle_cos(ang_radians), rad * angle_sin(ang_radians))
+			set tuple_temp_5 = vec2_op_plus(MainInit_SPAWN_POINT_x, MainInit_SPAWN_POINT_y, rad * angle_cos(ang_radians), rad * angle_sin(ang_radians))
 			set tuple_temp_6 = vec2_op_plus_return_y
 			set pos_x = tuple_temp_5
 			set pos_y = tuple_temp_6
-			set curpl = Player(Main_init_PLAYER_SLOTS - pl_left + i - 1)
+			set curpl = Player(GlobalConst_PLAYER_SLOTS - pl_left + i - 1)
 			if player_isIngame(curpl) then
-				call CreateNUnitsAtLocFacingLocBJ(1, GlobalConst_uSettler, curpl, Location(pos_x, pos_y), Location(Main_init_SPAWN_POINT_x, Main_init_SPAWN_POINT_y))
+				call CreateNUnitsAtLocFacingLocBJ(1, GlobalConst_uSettler, curpl, Location(pos_x, pos_y), Location(MainInit_SPAWN_POINT_x, MainInit_SPAWN_POINT_y))
 			endif
 			set i = i + 1
 		endloop
-		set rad = rad + Main_init_SPWN_players_radius_change
+		set rad = rad + MainInit_SPWN_players_radius_change
 		set pl_left = pl_left - pl_in_ring
-		set pl_in_ring = pl_in_ring + Main_init_SPWN_players_add
+		set pl_in_ring = pl_in_ring + MainInit_SPWN_players_add
 		set pl_in_ring = min_2(pl_left, pl_in_ring)
 	endloop
 	set curpl = null
@@ -8119,79 +8215,71 @@ function trigger_registerTimerEvent takes trigger this, real timeout, boolean pe
 	return TriggerRegisterTimerEvent(this, timeout, periodic)
 endfunction
 
-function init_Main_init takes nothing returns boolean
+function init_MainInit takes nothing returns boolean
+	local real tuple_temp = 311.2
+	local real tuple_temp_2 = 5166.7
 	local integer i
 	local integer temp
 	local trigger receiver
 	local trigger receiver_2
-	local real tuple_temp
-	local real tuple_temp_2
-	set Main_init_dbg_msg = false
-	set Main_init_dbg_mode = false
-	set Main_init_dbg_player = 0
-	set tuple_temp = 311.2
-	set tuple_temp_2 = 5166.7
-	set Main_init_SPAWN_POINT_x = tuple_temp
-	set Main_init_SPAWN_POINT_y = tuple_temp_2
-	set Main_init_SPWN_players_first_ring = 6
-	set Main_init_SPWN_players_add = 2
-	set Main_init_SPWN_players_radius = 100.0
-	set Main_init_SPWN_players_radius_change = 50.0
-	set Main_init_fWE = CreateForce()
+	set MainInit_SPAWN_POINT_x = tuple_temp
+	set MainInit_SPAWN_POINT_y = tuple_temp_2
+	set MainInit_SPWN_players_first_ring = 6
+	set MainInit_SPWN_players_add = 2
+	set MainInit_SPWN_players_radius = 100.0
+	set MainInit_SPWN_players_radius_change = 50.0
+	set MainInit_fWE = CreateForce()
 	call Player(0)
 	call Player(1)
 	call Player(2)
 	call Player(3)
 	call Player(4)
 	call Player(5)
-	set Main_init_fEE = CreateForce()
+	set MainInit_fEE = CreateForce()
 	call Player(6)
 	call Player(7)
 	call Player(8)
 	call Player(9)
 	call Player(10)
 	call Player(11)
-	set Main_init_fME = CreateForce()
+	set MainInit_fME = CreateForce()
 	call Player(12)
 	call Player(13)
 	call Player(14)
 	call Player(15)
 	call Player(16)
 	call Player(17)
-	set Main_init_fBZ = CreateForce()
+	set MainInit_fBZ = CreateForce()
 	call Player(18)
 	call Player(19)
 	call Player(20)
 	call Player(21)
-	set Main_init_PLAYER_SLOTS = 22
-	set Main_init_kStartGold = 260
-	set Main_init_kStartLumber = 250
-	set Main_init_kCTfade = 10.0
-	set Main_init_kCTchange = 12.5
-	set Main_init_ksCTsize = 5
-	set Main_init_ksCT[0] = "You're playing |cffffff80Crusade over Europe|r.\nA grand strategy medieval game inspired by many games and genres.\nCreate alliances and dissolve them just as easily, declare war on your neighbours and |cfff5da16Conquer Europe|r."
-	set Main_init_ksCT[1] = "Use your |cffff8040Settler|r to choose the location of your Kingdom, use the ability |cffffff80Create Capitol|r on any Town Hall to build your Capitol.\nChoose your postion carefully and be mindful of the other players positions."
-	set Main_init_ksCT[2] = "|cfff5da16Mechanics|r\n\n|cff80ff00Supply & Nutrition:|r All units and building will continuously lose Hit Points if not supplied by Cities or Supply Horses.\n|cffff0000Unrest:|r Is dynamic and can be checked in the Economy Tab (F2). High Unrest will cause revolts to appear in your Kingdom."
-	set Main_init_ksCT[3] = "|cfff5da16Combat & Diplomacy|r\n\nBuild your army but keep in mind that every army will have it's weaknesses, you must have a flexible strategy that will allow you to change your army composition quickly.\nUse |cffffff80Diplomacy|r (F1) menu to create Alliances and Declare War."
-	set Main_init_ksCT[4] = "|cfff5da16Economy|r\n\n|cffffff80Florins|r (Gold) are given each Turn (1 minute), you can increase the amount generated by capturing |cffffff80Cities|r or precious |cffffff80Ores|r and upgrading them in to |cffffff80Mines|r.\nLumber is harvested from Trees.\nYou can check your current income and unrest in Economy (F2) - Statistics (A)"
-	if Main_init_dbg_msg then
+	set MainInit_kCTfade = 10.0
+	set MainInit_kCTchange = 12.5
+	set MainInit_ksCTsize = 5
+	set MainInit_ksCT[0] = "You're playing |cffffff65Crusade over Europe|r.\nA grand strategy medieval game inspired by many games and genres.\nCreate alliances and dissolve them just as easily, declare war on your neighbours and |cfff5da16Conquer Europe|r."
+	set MainInit_ksCT[1] = "Use your |cffff8040Settler|r to choose the location of your Kingdom, use the ability |cffffff80Create Capitol|r on any Town Hall to build your Capitol.\nChoose your postion carefully and be mindful of the other players positions."
+	set MainInit_ksCT[2] = "|cfff5da16Mechanics|r\n\n|cff80ff00Supply & Nutrition:|r All units and building will continuously lose Hit Points if not supplied by Cities or Supply Horses.\n|cffff0000Unrest:|r Is dynamic and can be checked in the Economy Tab (F2). High Unrest will cause revolts to appear in your Kingdom."
+	set MainInit_ksCT[3] = "|cfff5da16Combat & Diplomacy|r\n\nBuild your army but keep in mind that every army will have it's weaknesses, you must have a flexible strategy that will allow you to change your army composition quickly.\nUse |cffffff80Diplomacy|r (F1) menu to create Alliances and Declare War."
+	set MainInit_ksCT[4] = "|cfff5da16Economy|r\n\n|cffffff80Florins|r (Gold) are given each Turn (1 minute), you can increase the amount generated by capturing |cffffff80Cities|r or precious |cffffff80Ores|r and upgrading them in to |cffffff80Mines|r.\nLumber is harvested from Trees.\nYou can check your current income and unrest in Economy (F2) - Statistics (A)"
+	if GlobalConst_dbg_msg then
 		call dbg("Debug info is enabled. Only for Red.")
 	endif
-	if Main_init_dbg_mode then
+	if GlobalConst_dbg_mode then
 		call print("Debug mode is on.")
 	endif
 	call SetForceAllianceStateBJ(GetPlayersAll(), bj_FORCE_PLAYER[PLAYER_NEUTRAL_PASSIVE], bj_ALLIANCE_NEUTRAL)
 	call SetForceAllianceStateBJ(GetPlayersAll(), GetPlayersAll(), bj_ALLIANCE_UNALLIED)
-	call SetForceAllianceStateBJ(Main_init_fWE, Main_init_fWE, bj_ALLIANCE_NEUTRAL)
-	call SetForceAllianceStateBJ(Main_init_fEE, Main_init_fEE, bj_ALLIANCE_NEUTRAL)
-	call SetForceAllianceStateBJ(Main_init_fME, Main_init_fME, bj_ALLIANCE_NEUTRAL)
-	call SetForceAllianceStateBJ(Main_init_fBZ, Main_init_fBZ, bj_ALLIANCE_NEUTRAL)
+	call SetForceAllianceStateBJ(MainInit_fWE, MainInit_fWE, bj_ALLIANCE_NEUTRAL)
+	call SetForceAllianceStateBJ(MainInit_fEE, MainInit_fEE, bj_ALLIANCE_NEUTRAL)
+	call SetForceAllianceStateBJ(MainInit_fME, MainInit_fME, bj_ALLIANCE_NEUTRAL)
+	call SetForceAllianceStateBJ(MainInit_fBZ, MainInit_fBZ, bj_ALLIANCE_NEUTRAL)
 	set i = 0
-	set temp = Main_init_PLAYER_SLOTS
+	set temp = GlobalConst_PLAYER_SLOTS
 	loop
 		exitwhen i > temp
-		call SetPlayerState(Player(i), PLAYER_STATE_RESOURCE_GOLD, Main_init_kStartGold)
-		call SetPlayerState(Player(i), PLAYER_STATE_RESOURCE_LUMBER, Main_init_kStartLumber)
+		call SetPlayerState(Player(i), PLAYER_STATE_RESOURCE_GOLD, GlobalConst_kStartGold)
+		call SetPlayerState(Player(i), PLAYER_STATE_RESOURCE_LUMBER, GlobalConst_kStartLumber)
 		set i = i + 1
 	endloop
 	call SetPlayersAtStart()
@@ -8256,31 +8344,6 @@ function init_Player takes nothing returns boolean
 endfunction
 
 function init_PlayerColors takes nothing returns boolean
-	set PlayerColors_end_color = "|r"
-	set PlayerColors_player_color[0] = "|cffff0202"
-	set PlayerColors_player_color[1] = "|cff0040ff"
-	set PlayerColors_player_color[2] = "|cff1be5b9"
-	set PlayerColors_player_color[3] = "|cff530080"
-	set PlayerColors_player_color[4] = "|cfffffb00"
-	set PlayerColors_player_color[5] = "|cfffe890d"
-	set PlayerColors_player_color[6] = "|cff20bf00"
-	set PlayerColors_player_color[7] = "|cffe45aaf"
-	set PlayerColors_player_color[8] = "|cff949596"
-	set PlayerColors_player_color[9] = "|cff7dbff1"
-	set PlayerColors_player_color[10] = "|cff0f6146"
-	set PlayerColors_player_color[11] = "|cff4d2903"
-	set PlayerColors_player_color[12] = "|cff800000"
-	set PlayerColors_player_color[13] = "|cff000080"
-	set PlayerColors_player_color[14] = "|cff40e0d0"
-	set PlayerColors_player_color[15] = "|cfffa00fa"
-	set PlayerColors_player_color[16] = "|cfff5ddb3"
-	set PlayerColors_player_color[17] = "|cffffdab9"
-	set PlayerColors_player_color[18] = "|cff99ff99"
-	set PlayerColors_player_color[19] = "|cffe6e6fa"
-	set PlayerColors_player_color[20] = "|cff0f0300"
-	set PlayerColors_player_color[21] = "|cfffffafa"
-	set PlayerColors_player_color[22] = "|cff086100"
-	set PlayerColors_player_color[23] = "|cff916300"
 	return true
 endfunction
 
@@ -8289,6 +8352,34 @@ function init_Playercolor takes nothing returns boolean
 	set Playercolor_PLAYER_COLOR_UNKNOWN1 = ConvertPlayerColor(25)
 	set Playercolor_PLAYER_COLOR_UNKNOWN2 = ConvertPlayerColor(26)
 	set Playercolor_PLAYER_COLOR_BLACK_PASSIVE = ConvertPlayerColor(27)
+	set Playercolor_LOOKUP[0] = PLAYER_COLOR_RED
+	set Playercolor_LOOKUP[1] = PLAYER_COLOR_BLUE
+	set Playercolor_LOOKUP[2] = PLAYER_COLOR_CYAN
+	set Playercolor_LOOKUP[3] = PLAYER_COLOR_PURPLE
+	set Playercolor_LOOKUP[4] = PLAYER_COLOR_YELLOW
+	set Playercolor_LOOKUP[5] = PLAYER_COLOR_ORANGE
+	set Playercolor_LOOKUP[6] = PLAYER_COLOR_GREEN
+	set Playercolor_LOOKUP[7] = PLAYER_COLOR_PINK
+	set Playercolor_LOOKUP[8] = PLAYER_COLOR_LIGHT_GRAY
+	set Playercolor_LOOKUP[9] = PLAYER_COLOR_LIGHT_BLUE
+	set Playercolor_LOOKUP[10] = PLAYER_COLOR_AQUA
+	set Playercolor_LOOKUP[11] = PLAYER_COLOR_BROWN
+	set Playercolor_LOOKUP[12] = PLAYER_COLOR_MAROON
+	set Playercolor_LOOKUP[13] = PLAYER_COLOR_NAVY
+	set Playercolor_LOOKUP[14] = PLAYER_COLOR_TURQUOISE
+	set Playercolor_LOOKUP[15] = PLAYER_COLOR_VIOLET
+	set Playercolor_LOOKUP[16] = PLAYER_COLOR_WHEAT
+	set Playercolor_LOOKUP[17] = PLAYER_COLOR_PEACH
+	set Playercolor_LOOKUP[18] = PLAYER_COLOR_MINT
+	set Playercolor_LOOKUP[19] = PLAYER_COLOR_LAVENDER
+	set Playercolor_LOOKUP[20] = PLAYER_COLOR_COAL
+	set Playercolor_LOOKUP[21] = PLAYER_COLOR_SNOW
+	set Playercolor_LOOKUP[22] = PLAYER_COLOR_EMERALD
+	set Playercolor_LOOKUP[23] = PLAYER_COLOR_PEANUT
+	set Playercolor_LOOKUP[24] = Playercolor_PLAYER_COLOR_BLACK_AGGRESSIVE
+	set Playercolor_LOOKUP[25] = Playercolor_PLAYER_COLOR_UNKNOWN1
+	set Playercolor_LOOKUP[26] = Playercolor_PLAYER_COLOR_UNKNOWN2
+	set Playercolor_LOOKUP[27] = Playercolor_PLAYER_COLOR_BLACK_PASSIVE
 	return true
 endfunction
 
@@ -8867,9 +8958,10 @@ function initGlobals takes nothing returns nothing
 	set ref_function_init_WeatherEffects = function init_WeatherEffects
 	set ref_function_bridge_init_TypeCasting = function bridge_init_TypeCasting
 	set ref_function_init_GlobalConst = function init_GlobalConst
-	set ref_function_init_Main_init = function init_Main_init
-	set ref_function_init_PlayerColors = function init_PlayerColors
 	set ref_function_init_Commands = function init_Commands
+	set ref_function_init_Diplomacy = function init_Diplomacy
+	set ref_function_init_MainInit = function init_MainInit
+	set ref_function_init_PlayerColors = function init_PlayerColors
 	set ref_function_cond = function cond
 	set ref_function_action = function action
 	set ref_function_GameTimer_closure_impl = function GameTimer_closure_impl
@@ -9003,9 +9095,19 @@ function main takes nothing returns nothing
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package GlobalConst.")
 	endif
 	call TriggerClearConditions(initTrig)
-	call TriggerAddCondition(initTrig, Condition(ref_function_init_Main_init))
+	call TriggerAddCondition(initTrig, Condition(ref_function_init_Commands))
 	if  not TriggerEvaluate(initTrig) then
-		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package Main_init.")
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package Commands.")
+	endif
+	call TriggerClearConditions(initTrig)
+	call TriggerAddCondition(initTrig, Condition(ref_function_init_Diplomacy))
+	if  not TriggerEvaluate(initTrig) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package Diplomacy.")
+	endif
+	call TriggerClearConditions(initTrig)
+	call TriggerAddCondition(initTrig, Condition(ref_function_init_MainInit))
+	if  not TriggerEvaluate(initTrig) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package MainInit.")
 	endif
 	call TriggerClearConditions(initTrig)
 	call TriggerAddCondition(initTrig, Condition(ref_function_init_PlayerColors))
@@ -9013,17 +9115,12 @@ function main takes nothing returns nothing
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package PlayerColors.")
 	endif
 	call TriggerClearConditions(initTrig)
-	call TriggerAddCondition(initTrig, Condition(ref_function_init_Commands))
-	if  not TriggerEvaluate(initTrig) then
-		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package Commands.")
-	endif
-	call TriggerClearConditions(initTrig)
 	call DestroyTrigger(initTrig)
 	set initTrig = null
 endfunction
 
 function InitAllyPriorities takes nothing returns nothing
-	call SetStartLocPrioCount(0, 17)
+	call SetStartLocPrioCount(0, 21)
 	call SetStartLocPrio(0, 0, 1, MAP_LOC_PRIO_HIGH)
 	call SetStartLocPrio(0, 1, 2, MAP_LOC_PRIO_HIGH)
 	call SetStartLocPrio(0, 2, 3, MAP_LOC_PRIO_HIGH)
@@ -9041,6 +9138,10 @@ function InitAllyPriorities takes nothing returns nothing
 	call SetStartLocPrio(0, 14, 15, MAP_LOC_PRIO_HIGH)
 	call SetStartLocPrio(0, 15, 16, MAP_LOC_PRIO_HIGH)
 	call SetStartLocPrio(0, 16, 17, MAP_LOC_PRIO_HIGH)
+	call SetStartLocPrio(0, 17, 18, MAP_LOC_PRIO_HIGH)
+	call SetStartLocPrio(0, 18, 19, MAP_LOC_PRIO_HIGH)
+	call SetStartLocPrio(0, 19, 20, MAP_LOC_PRIO_HIGH)
+	call SetStartLocPrio(0, 20, 21, MAP_LOC_PRIO_HIGH)
 	call SetStartLocPrioCount(1, 9)
 	call SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
 	call SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -9372,16 +9473,16 @@ function InitCustomTeams takes nothing returns nothing
 	call SetPlayerTeam(Player(9), 0)
 	call SetPlayerTeam(Player(10), 0)
 	call SetPlayerTeam(Player(11), 0)
-	call SetPlayerTeam(Player(12), 0)
-	call SetPlayerTeam(Player(13), 0)
-	call SetPlayerTeam(Player(14), 0)
-	call SetPlayerTeam(Player(15), 0)
-	call SetPlayerTeam(Player(16), 0)
-	call SetPlayerTeam(Player(17), 0)
-	call SetPlayerTeam(Player(18), 0)
-	call SetPlayerTeam(Player(19), 0)
-	call SetPlayerTeam(Player(20), 0)
-	call SetPlayerTeam(Player(21), 0)
+	call SetPlayerTeam(Player(12), 1)
+	call SetPlayerTeam(Player(13), 1)
+	call SetPlayerTeam(Player(14), 1)
+	call SetPlayerTeam(Player(15), 1)
+	call SetPlayerTeam(Player(16), 1)
+	call SetPlayerTeam(Player(17), 1)
+	call SetPlayerTeam(Player(18), 1)
+	call SetPlayerTeam(Player(19), 1)
+	call SetPlayerTeam(Player(20), 1)
+	call SetPlayerTeam(Player(21), 1)
 endfunction
 
 function config takes nothing returns nothing

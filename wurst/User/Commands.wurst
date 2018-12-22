@@ -1,6 +1,5 @@
 package Commands
-import Main_init
-import PlayerColors
+import GlobalConst
 
 // Constants
 // Commands
@@ -20,7 +19,7 @@ function action()
 	string arg = "" // all args together after args[0]
 	player pl = GetTriggerPlayer()
 	if dbg_msg
-		dbg("A command has been typed = " + input + "; By: " + P2Scolored(GetPlayerName(pl), pl))
+		dbg("A command has been typed = " + input + "; By: " + pl.getNameColored())
 	
 	var j = 0
 	for i = 1 to input.length()

@@ -2290,6 +2290,20 @@ import ObjEditingNatives
 	..setLvlDataInt("achd", 0, 0, 0)
 
 
+@compiletime function create_w3a_A03T()
+	let def = createObjectDefinition("w3a", 'A03T', 'Agyv')
+	..setLvlDataInt("Det1", 1, 1, 0)
+	..setLvlDataUnreal("aran", 1, 0, 0.0)
+	..setLvlDataString("aart", 0, 0, "ReplaceableTextures\\CommandButtons\\BTNScrollUber.blp")
+	..setLvlDataString("atp1", 1, 0, "Unrest Information")
+	..setLvlDataString("anam", 0, 0, "Unrest Information")
+	..setLvlDataString("aub1", 1, 0, "|cff51ff00-Stage 1|r:|cffffae00 400|r|n|cffd0ff00-Stage 2|r:|cffffae00 600|r|n|cffffee00-Stage 3|r:|cffffae00 800|r|n|cffffae00-Stage 4|r:|cffffae00 1000|r|n|cffff1e00-Stage 5|r:|cffffae00 1200|r|n|cffff1e00-Stage 6|r:|cffffae00 1400|r|n")
+	..setLvlDataString("ansf", 0, 0, "")
+	..setLvlDataString("arac", 0, 0, "other")
+	..setLvlDataInt("achd", 0, 0, 0)
+	..setLvlDataInt("abpx", 0, 0, 3)
+
+
 // Original Table (contains all modified default objects)
 // Wurst does not support modifying default objects
 // but you can copy these functions and replace 'xxxx' with a new, custom id.

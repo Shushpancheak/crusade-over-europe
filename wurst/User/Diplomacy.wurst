@@ -1,0 +1,30 @@
+package Diplomacy
+import GlobalConst
+
+// When someone declares war
+let ksWar = "has declared war on "
+
+function action()
+	var source = GetSpellAbilityUnit().getOwner()
+	var target = GetSpellTargetUnit().getOwner()
+	switch GetSpellAbilityId()
+		case aWar
+			SetPlayerAllianceStateBJ(source, target, bj_ALLIANCE_UNALLIED)
+			SetPlayerAllianceStateBJ(target, source, bj_ALLIANCE_UNALLIED)
+			
+			print(source.getNameColored() + ksWar + source.getNameColored())
+
+function cond() returns bool
+	//Player cannot do diplomacy with himself
+	if GetSpellAbilityUnit().getOwner() == GetSpellTargetUnit().getOwner()
+		return false
+	
+	var id = GetSpellAbilityId()
+	
+	return id == aWar or id == aAlly or id == aNeutral or id == aUnally or id == aShareUnits
+
+init
+	//let t = CreateTrigger()
+	//	..registerAnyUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT)
+	//	..addCondition(Condition(function cond))
+	//	..addAction(function action)
