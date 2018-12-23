@@ -49,6 +49,7 @@ globals
 // integer bj_UNIT_STATE_METHOD_MAXIMUM=0
 // real bj_CORPSE_MAX_DEATH_TIME=0.
 // force bj_FORCE_ALL_PLAYERS=null
+// rect bj_mapInitialPlayableArea=null
 // integer bj_forLoopAIndex=0
 // integer bj_forLoopAIndexEnd=0
 // timer bj_gameStartedTimer=null
@@ -233,7 +234,9 @@ location udg_RiotPointOffset2=null
 location udg_THDEATH=null
 rect gg_rct_Tax_Region=null
 rect gg_rct_Iron_Region=null
+rect gg_rct_CITY_BYZ_Adrianopolis=null
 rect gg_rct_Faction=null
+rect gg_rct_CITY_BYZ_Arta=null
 sound gg_snd_Warning=null
 trigger gg_trg_Melee_Initialization=null
 trigger gg_trg_F9=null
@@ -387,11 +390,12 @@ integer Colors_decs=0
 hashtable ErrorHandling_HT=null
 timer GameTimer_gameTimer=null
 real GameTimer_currentTime=0.
-integer array GlobalConstFunc_player_stats
 force GlobalConstFunc_fWE=null
 force GlobalConstFunc_fEE=null
 force GlobalConstFunc_fME=null
 force GlobalConstFunc_fBZ=null
+integer GlobalConstFunc_cityCount=0
+integer array GlobalConstFunc_player_stats
 string array GlobalConstFunc_ksWarningWE
 string array GlobalConstFunc_ksWarningEE
 string array GlobalConstFunc_ksWarningME
@@ -408,6 +412,7 @@ string array GlobalConstFunc_ksAttentionWE
 string array GlobalConstFunc_ksAttentionEE
 string array GlobalConstFunc_ksAttentionME
 string array GlobalConstFunc_ksAttentionBZ
+unit array City_city_unit
 integer array PlayerStats_unhappiness
 player array PlayerStats_pl
 boolean array PlayerStats_is_in_game
@@ -424,6 +429,10 @@ playercolor Playercolor_PLAYER_COLOR_BLACK_PASSIVE=null
 playercolor array Playercolor_LOOKUP
 hashtable Table_ht=null
 integer TypeCasting_typecastdata=0
+integer array City_nextFree
+integer City_firstFree=0
+integer City_maxIndex=0
+integer array City_typeId
 integer array PlayerStats_nextFree
 integer PlayerStats_firstFree=0
 integer PlayerStats_maxIndex=0
@@ -459,6 +468,8 @@ integer array PlayerStats_alliance_states_18
 integer array PlayerStats_alliance_states_19
 integer array PlayerStats_alliance_states_20
 integer array PlayerStats_alliance_states_21
+integer array PlayerStats_alliance_states_22
+integer array PlayerStats_alliance_states_23
 code ref_function_Trig_F9_Actions=null
 code ref_function_Trig_Riot_OPTIMIZED_Func002A=null
 code ref_function_Trig_Riot_OPTIMIZED_Actions=null
@@ -792,9 +803,9 @@ code ref_function_action=null
 code ref_function_cond_2=null
 code ref_function_bridge_action=null
 code ref_function_GameTimer_closure_impl=null
+code ref_function_Group_closure_impl=null
 code ref_function_CinematicTutorial=null
 code ref_function_bridge_action_2=null
-code ref_function_Group_closure_impl=null
 endglobals
 function CreateNeutralHostileBuildings takes nothing returns nothing
 	local player p = Player(PLAYER_NEUTRAL_AGGRESSIVE)
@@ -819,7 +830,7 @@ function CreateNeutralHostileBuildings takes nothing returns nothing
 	call CreateUnit(p, 1747989297,  - 7104.0,  - 768.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 28544.0, 0.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 27840.0,  - 2752.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 26752.0, 2624.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 27008.0, 2688.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 17024.0, 512.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 21696.0,  - 4224.0, 270.000)
 	call CreateUnit(p, 1747989042, 17536.0,  - 9024.0, 270.000)
@@ -844,20 +855,20 @@ function CreateNeutralHostileBuildings takes nothing returns nothing
 	call CreateUnit(p, 1747989297, 11008.0,  - 18496.0, 270.000)
 	call CreateUnit(p, 1747989297, 13248.0,  - 17856.0, 270.000)
 	call CreateUnit(p, 1747989297, 12288.0,  - 20864.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 11392.0, 10496.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 11456.0, 11008.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 8640.0, 7104.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 7360.0, 17088.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 5120.0, 14528.0, 270.000)
 	call CreateUnit(p, 1747989297, 15488.0,  - 26816.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 9600.0, 13120.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 11328.0, 14528.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 11456.0, 14528.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 12544.0, 16320.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 7680.0, 22272.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 6272.0, 21376.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 4992.0, 21888.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 1280.0, 23936.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 2432.0, 26048.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 2112.0, 28096.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 3328.0, 23232.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 2560.0, 26368.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 6528.0, 28288.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 9856.0, 28416.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 13376.0, 15104.0, 270.000)
@@ -876,12 +887,12 @@ function CreateNeutralHostileBuildings takes nothing returns nothing
 	call CreateUnit(p, 1747989297,  - 20352.0, 12224.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 13568.0, 5184.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 5120.0, 24576.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 3008.0, 30016.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 1856.0, 27776.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 16704.0, 24192.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 15936.0, 17088.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 17792.0, 16064.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 20224.0, 21632.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 22848.0, 20928.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 22400.0, 19968.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 15872.0, 20544.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 19776.0, 16512.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 17216.0, 12928.0, 270.000)
@@ -889,7 +900,7 @@ function CreateNeutralHostileBuildings takes nothing returns nothing
 	call CreateUnit(p, 1747989297,  - 15680.0, 26112.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 17088.0, 26816.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 16704.0, 3584.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 11712.0, 7232.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 11456.0, 7232.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 18176.0, 10816.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 16000.0, 6016.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 8896.0, 26688.0, 270.000)
@@ -940,7 +951,7 @@ function CreateNeutralHostileBuildings takes nothing returns nothing
 	call CreateUnit(p, 1747989297,  - 17216.0, 22208.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 18880.0, 17920.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 17280.0, 18304.0, 270.000)
-	call CreateUnit(p, 1747989297,  - 21824.0, 23168.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 22272.0, 22400.0, 270.000)
 	call CreateUnit(p, 1747989297,  - 10496.0,  - 9152.0, 270.000)
 	call CreateUnit(p, 1747989297, 13248.0, 5120.0, 270.000)
 	call CreateUnit(p, 1747989297, 7936.0,  - 2368.0, 270.000)
@@ -976,7 +987,7 @@ function CreateNeutralHostileBuildings takes nothing returns nothing
 	call CreateUnit(p, 1747989043, 3456.0, 11584.0, 270.000)
 	call CreateUnit(p, 1747989044,  - 24640.0, 4352.0, 270.000)
 	call CreateUnit(p, 1747989044,  - 23232.0,  - 5120.0, 270.000)
-	call CreateUnit(p, 1747989042,  - 24192.0, 832.0, 270.000)
+	call CreateUnit(p, 1747989042,  - 23424.0, 768.0, 270.000)
 	call CreateUnit(p, 1747989045,  - 15936.0,  - 2688.0, 270.000)
 	call CreateUnit(p, 1747989045,  - 10752.0,  - 3456.0, 270.000)
 	call CreateUnit(p, 1747989044,  - 7552.0, 4416.0, 270.000)
@@ -1005,10 +1016,12 @@ function CreateNeutralHostileBuildings takes nothing returns nothing
 	call CreateUnit(p, 1747989042,  - 3392.0, 8640.0, 270.000)
 	call CreateUnit(p, 1747989044,  - 1856.0, 16576.0, 270.000)
 	call CreateUnit(p, 1747989043,  - 13888.0, 14784.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 29568.0,  - 9792.0, 270.000)
 	call CreateUnit(p, 1747989043,  - 9088.0, 26240.0, 270.000)
 	call CreateUnit(p, 1747989045,  - 5440.0, 23808.0, 270.000)
 	call CreateUnit(p, 1747989045, 2176.0, 30080.0, 270.000)
 	call CreateUnit(p, 1747989043, 1984.0, 6464.0, 270.000)
+	call CreateUnit(p, 1747989297,  - 26304.0,  - 1408.0, 270.000)
 	call CreateUnit(p, 1747989043, 448.0, 13056.0, 270.000)
 	call CreateUnit(p, 1747989045, 3072.0, 26752.0, 270.000)
 	call CreateUnit(p, 1747989043, 6656.0, 18880.0, 270.000)
@@ -1016,6 +1029,7 @@ function CreateNeutralHostileBuildings takes nothing returns nothing
 	call CreateUnit(p, 1747989297, 15872.0, 5760.0, 270.000)
 	call CreateUnit(p, 1747989043, 6528.0, 22080.0, 270.000)
 	call CreateUnit(p, 1747989044, 8896.0, 27008.0, 270.000)
+	call CreateUnit(p, 1747989297, 18496.0,  - 17280.0, 270.000)
 	call CreateUnit(p, 1747989297, 11392.0, 7872.0, 270.000)
 	call CreateUnit(p, 1747989297, 12672.0, 11328.0, 270.000)
 	call CreateUnit(p, 1747989297, 6016.0, 12416.0, 270.000)
@@ -16482,6 +16496,87 @@ function action takes nothing returns nothing
 	set whichField_2 = null
 endfunction
 
+function GetAttentionStringForPlayer takes player pl returns string
+	local player whichPlayer = pl
+	local force f_2 = CreateForce()
+	local force f
+	local integer r
+	local string s
+	call ForceAddPlayer(f_2, whichPlayer)
+	set f = f_2
+	set r = GetRandomInt(0, 3)
+	set s = ""
+	if f == GlobalConstFunc_fWE then
+		set s = GlobalConstFunc_ksAttentionWE[r]
+	elseif f == GlobalConstFunc_fEE then
+		set s = GlobalConstFunc_ksAttentionEE[r]
+	elseif f == GlobalConstFunc_fME then
+		set s = GlobalConstFunc_ksAttentionME[r]
+	elseif f == GlobalConstFunc_fBZ then
+		set s = GlobalConstFunc_ksAttentionBZ[r]
+	else
+		set s = "Attention!"
+	endif
+	set f = null
+	set whichPlayer = null
+	set f_2 = null
+	return "|cffffa600" + s + "|r"
+endfunction
+
+function GetGoodNewsStringForPlayer takes player pl returns string
+	local player whichPlayer = pl
+	local force f_2 = CreateForce()
+	local force f
+	local integer r
+	local string s
+	call ForceAddPlayer(f_2, whichPlayer)
+	set f = f_2
+	set r = GetRandomInt(0, 3)
+	set s = ""
+	if f == GlobalConstFunc_fWE then
+		set s = GlobalConstFunc_ksGoodNewsWE[r]
+	elseif f == GlobalConstFunc_fEE then
+		set s = GlobalConstFunc_ksGoodNewsEE[r]
+	elseif f == GlobalConstFunc_fME then
+		set s = GlobalConstFunc_ksGoodNewsME[r]
+	elseif f == GlobalConstFunc_fBZ then
+		set s = GlobalConstFunc_ksGoodNewsBZ[r]
+	else
+		set s = "Good news!"
+	endif
+	set f = null
+	set whichPlayer = null
+	set f_2 = null
+	return "|cff00ff00" + s + "|r"
+endfunction
+
+function GetNoteStringForPlayer takes player pl returns string
+	local player whichPlayer = pl
+	local force f_2 = CreateForce()
+	local force f
+	local integer r
+	local string s
+	call ForceAddPlayer(f_2, whichPlayer)
+	set f = f_2
+	set r = GetRandomInt(0, 3)
+	set s = ""
+	if f == GlobalConstFunc_fWE then
+		set s = GlobalConstFunc_ksNoteWE[r]
+	elseif f == GlobalConstFunc_fEE then
+		set s = GlobalConstFunc_ksNoteEE[r]
+	elseif f == GlobalConstFunc_fME then
+		set s = GlobalConstFunc_ksNoteME[r]
+	elseif f == GlobalConstFunc_fBZ then
+		set s = GlobalConstFunc_ksNoteBZ[r]
+	else
+		set s = "Note:"
+	endif
+	set f = null
+	set whichPlayer = null
+	set f_2 = null
+	return "|cff00ccff" + s + "|r"
+endfunction
+
 function GetWarningStringForPlayer takes player pl returns string
 	local player whichPlayer = pl
 	local force f_2 = CreateForce()
@@ -16509,27 +16604,51 @@ function GetWarningStringForPlayer takes player pl returns string
 	return "|cffff0000" + s + "|r"
 endfunction
 
-function WarningToForce takes string msg, force f returns nothing
-	local integer i = 0
-	local integer temp = 22 - 1
+function PlayerStats_ChangeUnhapiness takes integer this, integer change returns nothing
+	local player this_2
+	local player this_3
+	local string msg
 	local player pl
-	local player whichPlayer
-	local force f_2
-	loop
-		exitwhen i > temp
-		set whichPlayer = Player_players[i]
-		set f_2 = CreateForce()
-		call ForceAddPlayer(f_2, whichPlayer)
-		if f_2 == f then
-			set pl = Player_players[i]
-			call DisplayTimedTextToPlayer(pl, 0., 0., 30.0, GetWarningStringForPlayer(pl))
-			call DisplayTimedTextToPlayer(pl, 0., 0., 30.0, msg)
-		endif
-		set i = i + 1
-	endloop
+	local integer this_4
+	local integer this_5
+	local string msg_2
+	local player pl_2
+	local integer this_6
+	local integer this_7
+	local string temp
+	local string temp_2
+	if  not PlayerStats_is_in_game[this] then
+		set this_2 = null
+		set this_3 = null
+		set pl = null
+		set pl_2 = null
+		return
+	endif
+	set this_2 = PlayerStats_pl[this]
+	set this_3 = PlayerStats_pl[this]
+	set udg_Unhappiness[GetPlayerId(this_2)] = udg_Unhappiness[GetPlayerId(this_3)] + change
+	set PlayerStats_unhappiness[this] = PlayerStats_unhappiness[this] + change
+	if change > 0 then
+		set this_4 = change
+		set temp = "Unhappiness of your people has risen by " + I2S(this_4) + " points!\nNow you have "
+		set this_5 = PlayerStats_unhappiness[this]
+		set msg = temp + I2S(this_5)
+		set pl = PlayerStats_pl[this]
+		call DisplayTimedTextToPlayer(pl, 0., 0., 15.0, GetAttentionStringForPlayer(pl))
+		call DisplayTimedTextToPlayer(pl, 0., 0., 15.0, msg)
+	elseif change < 0 then
+		set this_6 =  - change
+		set temp_2 = "Unhappiness of your people has dropped down by " + I2S(this_6) + " points!\nNow you have "
+		set this_7 = PlayerStats_unhappiness[this]
+		set msg_2 = temp_2 + I2S(this_7)
+		set pl_2 = PlayerStats_pl[this]
+		call DisplayTimedTextToPlayer(pl_2, 0., 0., 15.0, GetGoodNewsStringForPlayer(pl_2))
+		call DisplayTimedTextToPlayer(pl_2, 0., 0., 15.0, msg_2)
+	endif
+	set this_2 = null
+	set this_3 = null
 	set pl = null
-	set whichPlayer = null
-	set f_2 = null
+	set pl_2 = null
 endfunction
 
 function Loglevel_getTag takes integer this returns string
@@ -16747,7 +16866,1118 @@ function error takes string msg, string stackPos returns nothing
 	set showTo_4 = null
 endfunction
 
+function PlayerStats_alliance_states_get takes integer index1, integer index2, string stackPos returns integer
+	local integer returnVal
+	if index2 < 0 or index2 >= 24 then
+		call error("Index out of Bounds", stackPos)
+	elseif index2 <= 11 then
+		if index2 <= 5 then
+			if index2 <= 2 then
+				if index2 <= 1 then
+					if index2 <= 0 then
+						set returnVal = PlayerStats_alliance_states_0[index1]
+					else
+						set returnVal = PlayerStats_alliance_states_1[index1]
+					endif
+				else
+					set returnVal = PlayerStats_alliance_states_2[index1]
+				endif
+			elseif index2 <= 4 then
+				if index2 <= 3 then
+					set returnVal = PlayerStats_alliance_states_3[index1]
+				else
+					set returnVal = PlayerStats_alliance_states_4[index1]
+				endif
+			else
+				set returnVal = PlayerStats_alliance_states_5[index1]
+			endif
+		elseif index2 <= 8 then
+			if index2 <= 7 then
+				if index2 <= 6 then
+					set returnVal = PlayerStats_alliance_states_6[index1]
+				else
+					set returnVal = PlayerStats_alliance_states_7[index1]
+				endif
+			else
+				set returnVal = PlayerStats_alliance_states_8[index1]
+			endif
+		elseif index2 <= 10 then
+			if index2 <= 9 then
+				set returnVal = PlayerStats_alliance_states_9[index1]
+			else
+				set returnVal = PlayerStats_alliance_states_10[index1]
+			endif
+		else
+			set returnVal = PlayerStats_alliance_states_11[index1]
+		endif
+	elseif index2 <= 17 then
+		if index2 <= 14 then
+			if index2 <= 13 then
+				if index2 <= 12 then
+					set returnVal = PlayerStats_alliance_states_12[index1]
+				else
+					set returnVal = PlayerStats_alliance_states_13[index1]
+				endif
+			else
+				set returnVal = PlayerStats_alliance_states_14[index1]
+			endif
+		elseif index2 <= 16 then
+			if index2 <= 15 then
+				set returnVal = PlayerStats_alliance_states_15[index1]
+			else
+				set returnVal = PlayerStats_alliance_states_16[index1]
+			endif
+		else
+			set returnVal = PlayerStats_alliance_states_17[index1]
+		endif
+	elseif index2 <= 20 then
+		if index2 <= 19 then
+			if index2 <= 18 then
+				set returnVal = PlayerStats_alliance_states_18[index1]
+			else
+				set returnVal = PlayerStats_alliance_states_19[index1]
+			endif
+		else
+			set returnVal = PlayerStats_alliance_states_20[index1]
+		endif
+	elseif index2 <= 22 then
+		if index2 <= 21 then
+			set returnVal = PlayerStats_alliance_states_21[index1]
+		else
+			set returnVal = PlayerStats_alliance_states_22[index1]
+		endif
+	else
+		set returnVal = PlayerStats_alliance_states_23[index1]
+	endif
+	return returnVal
+endfunction
+
+function PlayerStats_alliance_states_set takes integer instanceId, integer arrayIndex, integer value, string stackPos returns nothing
+	if arrayIndex < 0 or arrayIndex >= 24 then
+		call error("Index out of Bounds", stackPos)
+	elseif arrayIndex <= 11 then
+		if arrayIndex <= 5 then
+			if arrayIndex <= 2 then
+				if arrayIndex <= 1 then
+					if arrayIndex <= 0 then
+						set PlayerStats_alliance_states_0[instanceId] = value
+					else
+						set PlayerStats_alliance_states_1[instanceId] = value
+					endif
+				else
+					set PlayerStats_alliance_states_2[instanceId] = value
+				endif
+			elseif arrayIndex <= 4 then
+				if arrayIndex <= 3 then
+					set PlayerStats_alliance_states_3[instanceId] = value
+				else
+					set PlayerStats_alliance_states_4[instanceId] = value
+				endif
+			else
+				set PlayerStats_alliance_states_5[instanceId] = value
+			endif
+		elseif arrayIndex <= 8 then
+			if arrayIndex <= 7 then
+				if arrayIndex <= 6 then
+					set PlayerStats_alliance_states_6[instanceId] = value
+				else
+					set PlayerStats_alliance_states_7[instanceId] = value
+				endif
+			else
+				set PlayerStats_alliance_states_8[instanceId] = value
+			endif
+		elseif arrayIndex <= 10 then
+			if arrayIndex <= 9 then
+				set PlayerStats_alliance_states_9[instanceId] = value
+			else
+				set PlayerStats_alliance_states_10[instanceId] = value
+			endif
+		else
+			set PlayerStats_alliance_states_11[instanceId] = value
+		endif
+	elseif arrayIndex <= 17 then
+		if arrayIndex <= 14 then
+			if arrayIndex <= 13 then
+				if arrayIndex <= 12 then
+					set PlayerStats_alliance_states_12[instanceId] = value
+				else
+					set PlayerStats_alliance_states_13[instanceId] = value
+				endif
+			else
+				set PlayerStats_alliance_states_14[instanceId] = value
+			endif
+		elseif arrayIndex <= 16 then
+			if arrayIndex <= 15 then
+				set PlayerStats_alliance_states_15[instanceId] = value
+			else
+				set PlayerStats_alliance_states_16[instanceId] = value
+			endif
+		else
+			set PlayerStats_alliance_states_17[instanceId] = value
+		endif
+	elseif arrayIndex <= 20 then
+		if arrayIndex <= 19 then
+			if arrayIndex <= 18 then
+				set PlayerStats_alliance_states_18[instanceId] = value
+			else
+				set PlayerStats_alliance_states_19[instanceId] = value
+			endif
+		else
+			set PlayerStats_alliance_states_20[instanceId] = value
+		endif
+	elseif arrayIndex <= 22 then
+		if arrayIndex <= 21 then
+			set PlayerStats_alliance_states_21[instanceId] = value
+		else
+			set PlayerStats_alliance_states_22[instanceId] = value
+		endif
+	else
+		set PlayerStats_alliance_states_23[instanceId] = value
+	endif
+endfunction
+
+function PlayerStats_SetAlliance takes integer this, player which_player, integer alliance_state, string stackPos returns nothing
+	local integer id
+	local player this_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this_2 = which_player
+	set id = GetPlayerId(this_2)
+	if  not PlayerStats_is_in_game[this] then
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set this_2 = null
+		return
+	endif
+	if id >= 24 then
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set this_2 = null
+		return
+	endif
+	if PlayerStats_alliance_states_get(this, id, "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 160") == alliance_state or which_player == PlayerStats_pl[this] then
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set this_2 = null
+		return
+	endif
+	call PlayerStats_alliance_states_set(this, id, alliance_state, "when writing array PlayerStats_alliance_states in GlobalConstFunc, line 162")
+	call SetPlayerAllianceStateBJ(PlayerStats_pl[this], which_player, alliance_state)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set this_2 = null
+endfunction
+
 function action_2 takes string stackPos returns nothing
+	local player source
+	local player target
+	local string source_s
+	local string target_s
+	local integer source_id
+	local force f1
+	local force f2
+	local integer temp
+	local integer i
+	local integer temp_2
+	local force current_f
+	local integer i_2
+	local integer temp_3
+	local force current_f_2
+	local integer i_3
+	local integer temp_4
+	local force current_f_3
+	local integer i_4
+	local integer temp_5
+	local force current_f_4
+	local integer i_5
+	local integer temp_6
+	local force current_f_5
+	local unit this
+	local unit this_2
+	local player whichPlayer
+	local force f
+	local player whichPlayer_2
+	local force f_2
+	local integer this_3
+	local player which_player
+	local string stackPos_2
+	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result
+	local integer this_4
+	local player which_player_2
+	local string stackPos_3
+	local integer stackTrace_tempReturn
+	local player this_5
+	local integer this_6
+	local player which_player_3
+	local integer alliance_state
+	local string stackPos_4
+	local player whichPlayer_3
+	local force f_3
+	local string msg
+	local player pl
+	local string msg_2
+	local player pl_2
+	local string msg_3
+	local player pl_3
+	local integer this_7
+	local integer change
+	local string stackPos_5
+	local integer this_8
+	local player which_player_4
+	local string stackPos_6
+	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result_2
+	local integer this_9
+	local player which_player_5
+	local string stackPos_7
+	local integer stackTrace_tempReturn_2
+	local player this_10
+	local integer this_11
+	local player which_player_6
+	local integer alliance_state_2
+	local string stackPos_8
+	local player whichPlayer_4
+	local force f_4
+	local string msg_4
+	local player pl_4
+	local string msg_5
+	local player pl_5
+	local string msg_6
+	local player pl_6
+	local integer this_12
+	local player which_player_7
+	local string stackPos_9
+	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result_3
+	local integer this_13
+	local player which_player_8
+	local string stackPos_10
+	local integer stackTrace_tempReturn_3
+	local player this_14
+	local integer this_15
+	local player which_player_9
+	local integer alliance_state_3
+	local string stackPos_11
+	local player whichPlayer_5
+	local force f_5
+	local string msg_7
+	local player pl_7
+	local string msg_8
+	local player pl_8
+	local string msg_9
+	local player pl_9
+	local integer this_16
+	local player which_player_10
+	local string stackPos_12
+	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result_4
+	local integer this_17
+	local player which_player_11
+	local string stackPos_13
+	local integer stackTrace_tempReturn_4
+	local player this_18
+	local integer this_19
+	local player which_player_12
+	local integer alliance_state_4
+	local string stackPos_14
+	local player whichPlayer_6
+	local force f_6
+	local string msg_10
+	local player pl_10
+	local string msg_11
+	local player pl_11
+	local string msg_12
+	local player pl_12
+	local integer this_20
+	local player which_player_13
+	local string stackPos_15
+	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result_5
+	local integer this_21
+	local player which_player_14
+	local string stackPos_16
+	local integer stackTrace_tempReturn_5
+	local player this_22
+	local integer this_23
+	local player which_player_15
+	local integer alliance_state_5
+	local string stackPos_17
+	local player whichPlayer_7
+	local force f_7
+	local string msg_13
+	local player pl_13
+	local string msg_14
+	local player pl_14
+	local string msg_15
+	local player pl_15
+	local integer temp_7
+	local integer temp_8
+	local integer temp_9
+	local integer temp_10
+	local integer temp_11
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this = GetSpellAbilityUnit()
+	set source = GetOwningPlayer(this)
+	set this_2 = GetSpellTargetUnit()
+	set target = GetOwningPlayer(this_2)
+	set source_s = player_getNameColored(source)
+	set target_s = player_getNameColored(target)
+	set source_id = GetPlayerId(source)
+	call GetPlayerId(target)
+	set whichPlayer = source
+	set f = CreateForce()
+	call ForceAddPlayer(f, whichPlayer)
+	set f1 = f
+	set whichPlayer_2 = source
+	set f_2 = CreateForce()
+	call ForceAddPlayer(f_2, whichPlayer_2)
+	set f2 = f_2
+	set temp = GetSpellAbilityId()
+	if temp == 1093677396 then
+		set this_3 = GlobalConstFunc_player_stats[source_id]
+		set which_player = target
+		set stackPos_2 = "when calling GetAllianceState in Diplomacy, line 17"
+		set wurst_stack[wurst_stack_depth] = stackPos_2
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_3] == 0 then
+			if this_3 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 165")
+			else
+				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 165")
+			endif
+		endif
+		set this_4 = this_3
+		set which_player_2 = which_player
+		set stackPos_3 = "when calling GetAllianceState in GlobalConstFunc, line 165"
+		set wurst_stack[wurst_stack_depth] = stackPos_3
+		set wurst_stack_depth = wurst_stack_depth + 1
+		set temp_7 = this_4
+		set this_5 = which_player_2
+		set stackTrace_tempReturn = PlayerStats_alliance_states_get(temp_7, GetPlayerId(this_5), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 166")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set GlobalConstFunc_PlayerStats_GetAllianceState_result = stackTrace_tempReturn
+		set wurst_stack_depth = wurst_stack_depth - 1
+		if GlobalConstFunc_PlayerStats_GetAllianceState_result == bj_ALLIANCE_UNALLIED then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			set current_f_5 = null
+			set this = null
+			set this_2 = null
+			set whichPlayer = null
+			set f = null
+			set whichPlayer_2 = null
+			set f_2 = null
+			set which_player = null
+			set which_player_2 = null
+			set this_5 = null
+			set which_player_3 = null
+			set whichPlayer_3 = null
+			set f_3 = null
+			set pl = null
+			set pl_2 = null
+			set pl_3 = null
+			set which_player_4 = null
+			set which_player_5 = null
+			set this_10 = null
+			set which_player_6 = null
+			set whichPlayer_4 = null
+			set f_4 = null
+			set pl_4 = null
+			set pl_5 = null
+			set pl_6 = null
+			set which_player_7 = null
+			set which_player_8 = null
+			set this_14 = null
+			set which_player_9 = null
+			set whichPlayer_5 = null
+			set f_5 = null
+			set pl_7 = null
+			set pl_8 = null
+			set pl_9 = null
+			set which_player_10 = null
+			set which_player_11 = null
+			set this_18 = null
+			set which_player_12 = null
+			set whichPlayer_6 = null
+			set f_6 = null
+			set pl_10 = null
+			set pl_11 = null
+			set pl_12 = null
+			set which_player_13 = null
+			set which_player_14 = null
+			set this_22 = null
+			set which_player_15 = null
+			set whichPlayer_7 = null
+			set f_7 = null
+			set pl_13 = null
+			set pl_14 = null
+			set pl_15 = null
+			return
+		endif
+		set this_6 = GlobalConstFunc_player_stats[source_id]
+		set which_player_3 = target
+		set alliance_state = bj_ALLIANCE_UNALLIED
+		set stackPos_4 = "when calling SetAlliance in Diplomacy, line 19"
+		set wurst_stack[wurst_stack_depth] = stackPos_4
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_6] == 0 then
+			if this_6 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 154")
+			else
+				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 154")
+			endif
+		endif
+		call PlayerStats_SetAlliance(this_6, which_player_3, alliance_state, "when calling SetAlliance in GlobalConstFunc, line 154")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set i = 0
+		set temp_2 = 24 - 1
+		loop
+			exitwhen i > temp_2
+			set whichPlayer_3 = Player_players[i]
+			set f_3 = CreateForce()
+			call ForceAddPlayer(f_3, whichPlayer_3)
+			set current_f = f_3
+			if Player_players[i] == target then
+				set msg = source_s + " has declared war on you!"
+				set pl = Player_players[i]
+				call DisplayTimedTextToPlayer(pl, 0., 0., 30.0, GetWarningStringForPlayer(pl))
+				call DisplayTimedTextToPlayer(pl, 0., 0., 30.0, msg)
+			elseif current_f == f1 or current_f == f2 then
+				set msg_2 = source_s + " has declared war on your brother-in-arms, " + target_s + "!"
+				set pl_2 = Player_players[i]
+				call DisplayTimedTextToPlayer(pl_2, 0., 0., 15.0, GetAttentionStringForPlayer(pl_2))
+				call DisplayTimedTextToPlayer(pl_2, 0., 0., 15.0, msg_2)
+			else
+				set msg_3 = source_s + " has declared war on " + target_s
+				set pl_3 = Player_players[i]
+				call DisplayTimedTextToPlayer(pl_3, 0., 0., 15.0, GetNoteStringForPlayer(pl_3))
+				call DisplayTimedTextToPlayer(pl_3, 0., 0., 15.0, msg_3)
+			endif
+			set i = i + 1
+		endloop
+		set this_7 = GlobalConstFunc_player_stats[source_id]
+		set change = 600
+		set stackPos_5 = "when calling ChangeUnhapiness in Diplomacy, line 30"
+		set wurst_stack[wurst_stack_depth] = stackPos_5
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_7] == 0 then
+			if this_7 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.ChangeUnhapiness", "when calling error in GlobalConstFunc, line 132")
+			else
+				call error("Called PlayerStats.ChangeUnhapiness on invalid object.", "when calling error in GlobalConstFunc, line 132")
+			endif
+		endif
+		call PlayerStats_ChangeUnhapiness(this_7, change)
+		set wurst_stack_depth = wurst_stack_depth - 1
+	elseif temp == 1093677397 then
+		set this_8 = GlobalConstFunc_player_stats[source_id]
+		set which_player_4 = target
+		set stackPos_6 = "when calling GetAllianceState in Diplomacy, line 33"
+		set wurst_stack[wurst_stack_depth] = stackPos_6
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_8] == 0 then
+			if this_8 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 165")
+			else
+				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 165")
+			endif
+		endif
+		set this_9 = this_8
+		set which_player_5 = which_player_4
+		set stackPos_7 = "when calling GetAllianceState in GlobalConstFunc, line 165"
+		set wurst_stack[wurst_stack_depth] = stackPos_7
+		set wurst_stack_depth = wurst_stack_depth + 1
+		set temp_8 = this_9
+		set this_10 = which_player_5
+		set stackTrace_tempReturn_2 = PlayerStats_alliance_states_get(temp_8, GetPlayerId(this_10), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 166")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set GlobalConstFunc_PlayerStats_GetAllianceState_result_2 = stackTrace_tempReturn_2
+		set wurst_stack_depth = wurst_stack_depth - 1
+		if GlobalConstFunc_PlayerStats_GetAllianceState_result_2 == bj_ALLIANCE_ALLIED_VISION then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			set current_f_5 = null
+			set this = null
+			set this_2 = null
+			set whichPlayer = null
+			set f = null
+			set whichPlayer_2 = null
+			set f_2 = null
+			set which_player = null
+			set which_player_2 = null
+			set this_5 = null
+			set which_player_3 = null
+			set whichPlayer_3 = null
+			set f_3 = null
+			set pl = null
+			set pl_2 = null
+			set pl_3 = null
+			set which_player_4 = null
+			set which_player_5 = null
+			set this_10 = null
+			set which_player_6 = null
+			set whichPlayer_4 = null
+			set f_4 = null
+			set pl_4 = null
+			set pl_5 = null
+			set pl_6 = null
+			set which_player_7 = null
+			set which_player_8 = null
+			set this_14 = null
+			set which_player_9 = null
+			set whichPlayer_5 = null
+			set f_5 = null
+			set pl_7 = null
+			set pl_8 = null
+			set pl_9 = null
+			set which_player_10 = null
+			set which_player_11 = null
+			set this_18 = null
+			set which_player_12 = null
+			set whichPlayer_6 = null
+			set f_6 = null
+			set pl_10 = null
+			set pl_11 = null
+			set pl_12 = null
+			set which_player_13 = null
+			set which_player_14 = null
+			set this_22 = null
+			set which_player_15 = null
+			set whichPlayer_7 = null
+			set f_7 = null
+			set pl_13 = null
+			set pl_14 = null
+			set pl_15 = null
+			return
+		endif
+		set this_11 = GlobalConstFunc_player_stats[source_id]
+		set which_player_6 = target
+		set alliance_state_2 = bj_ALLIANCE_ALLIED_VISION
+		set stackPos_8 = "when calling SetAlliance in Diplomacy, line 35"
+		set wurst_stack[wurst_stack_depth] = stackPos_8
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_11] == 0 then
+			if this_11 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 154")
+			else
+				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 154")
+			endif
+		endif
+		call PlayerStats_SetAlliance(this_11, which_player_6, alliance_state_2, "when calling SetAlliance in GlobalConstFunc, line 154")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set i_2 = 0
+		set temp_3 = 24 - 1
+		loop
+			exitwhen i_2 > temp_3
+			set whichPlayer_4 = Player_players[i_2]
+			set f_4 = CreateForce()
+			call ForceAddPlayer(f_4, whichPlayer_4)
+			set current_f_2 = f_4
+			if Player_players[i_2] == target then
+				set msg_4 = source_s + " wants to ally you"
+				set pl_4 = Player_players[i_2]
+				call DisplayTimedTextToPlayer(pl_4, 0., 0., 15.0, GetGoodNewsStringForPlayer(pl_4))
+				call DisplayTimedTextToPlayer(pl_4, 0., 0., 15.0, msg_4)
+			elseif current_f_2 == f1 or current_f_2 == f2 then
+				set msg_5 = source_s + " allied " + target_s
+				set pl_5 = Player_players[i_2]
+				call DisplayTimedTextToPlayer(pl_5, 0., 0., 15.0, GetNoteStringForPlayer(pl_5))
+				call DisplayTimedTextToPlayer(pl_5, 0., 0., 15.0, msg_5)
+			else
+				set msg_6 = source_s + " allied " + target_s
+				set pl_6 = Player_players[i_2]
+				call DisplayTimedTextToPlayer(pl_6, 0., 0., 15.0, GetNoteStringForPlayer(pl_6))
+				call DisplayTimedTextToPlayer(pl_6, 0., 0., 15.0, msg_6)
+			endif
+			set i_2 = i_2 + 1
+		endloop
+	elseif temp == 1093677398 then
+		set this_12 = GlobalConstFunc_player_stats[source_id]
+		set which_player_7 = target
+		set stackPos_9 = "when calling GetAllianceState in Diplomacy, line 47"
+		set wurst_stack[wurst_stack_depth] = stackPos_9
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_12] == 0 then
+			if this_12 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 165")
+			else
+				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 165")
+			endif
+		endif
+		set this_13 = this_12
+		set which_player_8 = which_player_7
+		set stackPos_10 = "when calling GetAllianceState in GlobalConstFunc, line 165"
+		set wurst_stack[wurst_stack_depth] = stackPos_10
+		set wurst_stack_depth = wurst_stack_depth + 1
+		set temp_9 = this_13
+		set this_14 = which_player_8
+		set stackTrace_tempReturn_3 = PlayerStats_alliance_states_get(temp_9, GetPlayerId(this_14), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 166")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set GlobalConstFunc_PlayerStats_GetAllianceState_result_3 = stackTrace_tempReturn_3
+		set wurst_stack_depth = wurst_stack_depth - 1
+		if GlobalConstFunc_PlayerStats_GetAllianceState_result_3 == bj_ALLIANCE_NEUTRAL then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			set current_f_5 = null
+			set this = null
+			set this_2 = null
+			set whichPlayer = null
+			set f = null
+			set whichPlayer_2 = null
+			set f_2 = null
+			set which_player = null
+			set which_player_2 = null
+			set this_5 = null
+			set which_player_3 = null
+			set whichPlayer_3 = null
+			set f_3 = null
+			set pl = null
+			set pl_2 = null
+			set pl_3 = null
+			set which_player_4 = null
+			set which_player_5 = null
+			set this_10 = null
+			set which_player_6 = null
+			set whichPlayer_4 = null
+			set f_4 = null
+			set pl_4 = null
+			set pl_5 = null
+			set pl_6 = null
+			set which_player_7 = null
+			set which_player_8 = null
+			set this_14 = null
+			set which_player_9 = null
+			set whichPlayer_5 = null
+			set f_5 = null
+			set pl_7 = null
+			set pl_8 = null
+			set pl_9 = null
+			set which_player_10 = null
+			set which_player_11 = null
+			set this_18 = null
+			set which_player_12 = null
+			set whichPlayer_6 = null
+			set f_6 = null
+			set pl_10 = null
+			set pl_11 = null
+			set pl_12 = null
+			set which_player_13 = null
+			set which_player_14 = null
+			set this_22 = null
+			set which_player_15 = null
+			set whichPlayer_7 = null
+			set f_7 = null
+			set pl_13 = null
+			set pl_14 = null
+			set pl_15 = null
+			return
+		endif
+		set this_15 = GlobalConstFunc_player_stats[source_id]
+		set which_player_9 = target
+		set alliance_state_3 = bj_ALLIANCE_NEUTRAL
+		set stackPos_11 = "when calling SetAlliance in Diplomacy, line 49"
+		set wurst_stack[wurst_stack_depth] = stackPos_11
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_15] == 0 then
+			if this_15 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 154")
+			else
+				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 154")
+			endif
+		endif
+		call PlayerStats_SetAlliance(this_15, which_player_9, alliance_state_3, "when calling SetAlliance in GlobalConstFunc, line 154")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set i_3 = 0
+		set temp_4 = 24 - 1
+		loop
+			exitwhen i_3 > temp_4
+			set whichPlayer_5 = Player_players[i_3]
+			set f_5 = CreateForce()
+			call ForceAddPlayer(f_5, whichPlayer_5)
+			set current_f_3 = f_5
+			if Player_players[i_3] == target then
+				set msg_7 = source_s + " is now neutral towards you"
+				set pl_7 = Player_players[i_3]
+				call DisplayTimedTextToPlayer(pl_7, 0., 0., 15.0, GetNoteStringForPlayer(pl_7))
+				call DisplayTimedTextToPlayer(pl_7, 0., 0., 15.0, msg_7)
+			elseif current_f_3 == f1 or current_f_3 == f2 then
+				set msg_8 = source_s + " now sees " + target_s + " as neutral"
+				set pl_8 = Player_players[i_3]
+				call DisplayTimedTextToPlayer(pl_8, 0., 0., 15.0, GetNoteStringForPlayer(pl_8))
+				call DisplayTimedTextToPlayer(pl_8, 0., 0., 15.0, msg_8)
+			else
+				set msg_9 = source_s + " now sees " + target_s + " as neutral"
+				set pl_9 = Player_players[i_3]
+				call DisplayTimedTextToPlayer(pl_9, 0., 0., 15.0, GetNoteStringForPlayer(pl_9))
+				call DisplayTimedTextToPlayer(pl_9, 0., 0., 15.0, msg_9)
+			endif
+			set i_3 = i_3 + 1
+		endloop
+	elseif temp == 1093677400 then
+		set this_16 = GlobalConstFunc_player_stats[source_id]
+		set which_player_10 = target
+		set stackPos_12 = "when calling GetAllianceState in Diplomacy, line 61"
+		set wurst_stack[wurst_stack_depth] = stackPos_12
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_16] == 0 then
+			if this_16 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 165")
+			else
+				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 165")
+			endif
+		endif
+		set this_17 = this_16
+		set which_player_11 = which_player_10
+		set stackPos_13 = "when calling GetAllianceState in GlobalConstFunc, line 165"
+		set wurst_stack[wurst_stack_depth] = stackPos_13
+		set wurst_stack_depth = wurst_stack_depth + 1
+		set temp_10 = this_17
+		set this_18 = which_player_11
+		set stackTrace_tempReturn_4 = PlayerStats_alliance_states_get(temp_10, GetPlayerId(this_18), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 166")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set GlobalConstFunc_PlayerStats_GetAllianceState_result_4 = stackTrace_tempReturn_4
+		set wurst_stack_depth = wurst_stack_depth - 1
+		if GlobalConstFunc_PlayerStats_GetAllianceState_result_4 == bj_ALLIANCE_NEUTRAL then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			set current_f_5 = null
+			set this = null
+			set this_2 = null
+			set whichPlayer = null
+			set f = null
+			set whichPlayer_2 = null
+			set f_2 = null
+			set which_player = null
+			set which_player_2 = null
+			set this_5 = null
+			set which_player_3 = null
+			set whichPlayer_3 = null
+			set f_3 = null
+			set pl = null
+			set pl_2 = null
+			set pl_3 = null
+			set which_player_4 = null
+			set which_player_5 = null
+			set this_10 = null
+			set which_player_6 = null
+			set whichPlayer_4 = null
+			set f_4 = null
+			set pl_4 = null
+			set pl_5 = null
+			set pl_6 = null
+			set which_player_7 = null
+			set which_player_8 = null
+			set this_14 = null
+			set which_player_9 = null
+			set whichPlayer_5 = null
+			set f_5 = null
+			set pl_7 = null
+			set pl_8 = null
+			set pl_9 = null
+			set which_player_10 = null
+			set which_player_11 = null
+			set this_18 = null
+			set which_player_12 = null
+			set whichPlayer_6 = null
+			set f_6 = null
+			set pl_10 = null
+			set pl_11 = null
+			set pl_12 = null
+			set which_player_13 = null
+			set which_player_14 = null
+			set this_22 = null
+			set which_player_15 = null
+			set whichPlayer_7 = null
+			set f_7 = null
+			set pl_13 = null
+			set pl_14 = null
+			set pl_15 = null
+			return
+		endif
+		set this_19 = GlobalConstFunc_player_stats[source_id]
+		set which_player_12 = target
+		set alliance_state_4 = bj_ALLIANCE_NEUTRAL
+		set stackPos_14 = "when calling SetAlliance in Diplomacy, line 63"
+		set wurst_stack[wurst_stack_depth] = stackPos_14
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_19] == 0 then
+			if this_19 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 154")
+			else
+				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 154")
+			endif
+		endif
+		call PlayerStats_SetAlliance(this_19, which_player_12, alliance_state_4, "when calling SetAlliance in GlobalConstFunc, line 154")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set i_4 = 0
+		set temp_5 = 24 - 1
+		loop
+			exitwhen i_4 > temp_5
+			set whichPlayer_6 = Player_players[i_4]
+			set f_6 = CreateForce()
+			call ForceAddPlayer(f_6, whichPlayer_6)
+			set current_f_4 = f_6
+			if Player_players[i_4] == target then
+				set msg_10 = source_s + " unallies you!"
+				set pl_10 = Player_players[i_4]
+				call DisplayTimedTextToPlayer(pl_10, 0., 0., 15.0, GetNoteStringForPlayer(pl_10))
+				call DisplayTimedTextToPlayer(pl_10, 0., 0., 15.0, msg_10)
+			elseif current_f_4 == f1 or current_f_4 == f2 then
+				set msg_11 = source_s + " unallied " + target_s
+				set pl_11 = Player_players[i_4]
+				call DisplayTimedTextToPlayer(pl_11, 0., 0., 15.0, GetNoteStringForPlayer(pl_11))
+				call DisplayTimedTextToPlayer(pl_11, 0., 0., 15.0, msg_11)
+			else
+				set msg_12 = source_s + " unallied " + target_s
+				set pl_12 = Player_players[i_4]
+				call DisplayTimedTextToPlayer(pl_12, 0., 0., 15.0, GetNoteStringForPlayer(pl_12))
+				call DisplayTimedTextToPlayer(pl_12, 0., 0., 15.0, msg_12)
+			endif
+			set i_4 = i_4 + 1
+		endloop
+	elseif temp == 1093677399 then
+		set this_20 = GlobalConstFunc_player_stats[source_id]
+		set which_player_13 = target
+		set stackPos_15 = "when calling GetAllianceState in Diplomacy, line 75"
+		set wurst_stack[wurst_stack_depth] = stackPos_15
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_20] == 0 then
+			if this_20 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 165")
+			else
+				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 165")
+			endif
+		endif
+		set this_21 = this_20
+		set which_player_14 = which_player_13
+		set stackPos_16 = "when calling GetAllianceState in GlobalConstFunc, line 165"
+		set wurst_stack[wurst_stack_depth] = stackPos_16
+		set wurst_stack_depth = wurst_stack_depth + 1
+		set temp_11 = this_21
+		set this_22 = which_player_14
+		set stackTrace_tempReturn_5 = PlayerStats_alliance_states_get(temp_11, GetPlayerId(this_22), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 166")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set GlobalConstFunc_PlayerStats_GetAllianceState_result_5 = stackTrace_tempReturn_5
+		set wurst_stack_depth = wurst_stack_depth - 1
+		if GlobalConstFunc_PlayerStats_GetAllianceState_result_5 == bj_ALLIANCE_ALLIED_ADVUNITS then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			set current_f_5 = null
+			set this = null
+			set this_2 = null
+			set whichPlayer = null
+			set f = null
+			set whichPlayer_2 = null
+			set f_2 = null
+			set which_player = null
+			set which_player_2 = null
+			set this_5 = null
+			set which_player_3 = null
+			set whichPlayer_3 = null
+			set f_3 = null
+			set pl = null
+			set pl_2 = null
+			set pl_3 = null
+			set which_player_4 = null
+			set which_player_5 = null
+			set this_10 = null
+			set which_player_6 = null
+			set whichPlayer_4 = null
+			set f_4 = null
+			set pl_4 = null
+			set pl_5 = null
+			set pl_6 = null
+			set which_player_7 = null
+			set which_player_8 = null
+			set this_14 = null
+			set which_player_9 = null
+			set whichPlayer_5 = null
+			set f_5 = null
+			set pl_7 = null
+			set pl_8 = null
+			set pl_9 = null
+			set which_player_10 = null
+			set which_player_11 = null
+			set this_18 = null
+			set which_player_12 = null
+			set whichPlayer_6 = null
+			set f_6 = null
+			set pl_10 = null
+			set pl_11 = null
+			set pl_12 = null
+			set which_player_13 = null
+			set which_player_14 = null
+			set this_22 = null
+			set which_player_15 = null
+			set whichPlayer_7 = null
+			set f_7 = null
+			set pl_13 = null
+			set pl_14 = null
+			set pl_15 = null
+			return
+		endif
+		set this_23 = GlobalConstFunc_player_stats[source_id]
+		set which_player_15 = target
+		set alliance_state_5 = bj_ALLIANCE_ALLIED_ADVUNITS
+		set stackPos_17 = "when calling SetAlliance in Diplomacy, line 77"
+		set wurst_stack[wurst_stack_depth] = stackPos_17
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_23] == 0 then
+			if this_23 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 154")
+			else
+				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 154")
+			endif
+		endif
+		call PlayerStats_SetAlliance(this_23, which_player_15, alliance_state_5, "when calling SetAlliance in GlobalConstFunc, line 154")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set i_5 = 0
+		set temp_6 = 24 - 1
+		loop
+			exitwhen i_5 > temp_6
+			set whichPlayer_7 = Player_players[i_5]
+			set f_7 = CreateForce()
+			call ForceAddPlayer(f_7, whichPlayer_7)
+			set current_f_5 = f_7
+			if Player_players[i_5] == target then
+				set msg_13 = source_s + " wants to share his rule with you!"
+				set pl_13 = Player_players[i_5]
+				call DisplayTimedTextToPlayer(pl_13, 0., 0., 15.0, GetGoodNewsStringForPlayer(pl_13))
+				call DisplayTimedTextToPlayer(pl_13, 0., 0., 15.0, msg_13)
+			elseif current_f_5 == f1 or current_f_5 == f2 then
+				set msg_14 = source_s + " now shares rule with " + target_s
+				set pl_14 = Player_players[i_5]
+				call DisplayTimedTextToPlayer(pl_14, 0., 0., 15.0, GetNoteStringForPlayer(pl_14))
+				call DisplayTimedTextToPlayer(pl_14, 0., 0., 15.0, msg_14)
+			else
+				set msg_15 = source_s + " now shares rule with " + target_s
+				set pl_15 = Player_players[i_5]
+				call DisplayTimedTextToPlayer(pl_15, 0., 0., 15.0, GetNoteStringForPlayer(pl_15))
+				call DisplayTimedTextToPlayer(pl_15, 0., 0., 15.0, msg_15)
+			endif
+			set i_5 = i_5 + 1
+		endloop
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set source = null
+	set target = null
+	set f1 = null
+	set f2 = null
+	set current_f = null
+	set current_f_2 = null
+	set current_f_3 = null
+	set current_f_4 = null
+	set current_f_5 = null
+	set this = null
+	set this_2 = null
+	set whichPlayer = null
+	set f = null
+	set whichPlayer_2 = null
+	set f_2 = null
+	set which_player = null
+	set which_player_2 = null
+	set this_5 = null
+	set which_player_3 = null
+	set whichPlayer_3 = null
+	set f_3 = null
+	set pl = null
+	set pl_2 = null
+	set pl_3 = null
+	set which_player_4 = null
+	set which_player_5 = null
+	set this_10 = null
+	set which_player_6 = null
+	set whichPlayer_4 = null
+	set f_4 = null
+	set pl_4 = null
+	set pl_5 = null
+	set pl_6 = null
+	set which_player_7 = null
+	set which_player_8 = null
+	set this_14 = null
+	set which_player_9 = null
+	set whichPlayer_5 = null
+	set f_5 = null
+	set pl_7 = null
+	set pl_8 = null
+	set pl_9 = null
+	set which_player_10 = null
+	set which_player_11 = null
+	set this_18 = null
+	set which_player_12 = null
+	set whichPlayer_6 = null
+	set f_6 = null
+	set pl_10 = null
+	set pl_11 = null
+	set pl_12 = null
+	set which_player_13 = null
+	set which_player_14 = null
+	set this_22 = null
+	set which_player_15 = null
+	set whichPlayer_7 = null
+	set f_7 = null
+	set pl_13 = null
+	set pl_14 = null
+	set pl_15 = null
+endfunction
+
+function bridge_action takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call action_2("Diplomacy, line 100")
+endfunction
+
+function WarningToForce takes string msg, force f returns nothing
+	local integer i = 0
+	local integer temp = 24 - 1
+	local player pl
+	local player whichPlayer
+	local force f_2
+	loop
+		exitwhen i > temp
+		set whichPlayer = Player_players[i]
+		set f_2 = CreateForce()
+		call ForceAddPlayer(f_2, whichPlayer)
+		if f_2 == f then
+			set pl = Player_players[i]
+			call DisplayTimedTextToPlayer(pl, 0., 0., 30.0, GetWarningStringForPlayer(pl))
+			call DisplayTimedTextToPlayer(pl, 0., 0., 30.0, msg)
+		endif
+		set i = i + 1
+	endloop
+	set pl = null
+	set whichPlayer = null
+	set f_2 = null
+endfunction
+
+function action_3 takes string stackPos returns nothing
 	local group g
 	local group iterator
 	local unit u
@@ -16780,9 +18010,9 @@ function action_2 takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if PlayerStats_typeId[this] == 0 then
 		if this == 0 then
-			call error("Nullpointer exception when calling PlayerStats.SetInGame", "when calling error in GlobalConstFunc, line 38")
+			call error("Nullpointer exception when calling PlayerStats.SetInGame", "when calling error in GlobalConstFunc, line 150")
 		else
-			call error("Called PlayerStats.SetInGame on invalid object.", "when calling error in GlobalConstFunc, line 38")
+			call error("Called PlayerStats.SetInGame on invalid object.", "when calling error in GlobalConstFunc, line 150")
 		endif
 	endif
 	set this_2 = this
@@ -16836,1143 +18066,9 @@ function action_2 takes string stackPos returns nothing
 	set this_9 = null
 endfunction
 
-function bridge_action takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call action_2("OnPlayerLeave, line 14")
-endfunction
-
-function GetAttentionStringForPlayer takes player pl returns string
-	local player whichPlayer = pl
-	local force f_2 = CreateForce()
-	local force f
-	local integer r
-	local string s
-	call ForceAddPlayer(f_2, whichPlayer)
-	set f = f_2
-	set r = GetRandomInt(0, 3)
-	set s = ""
-	if f == GlobalConstFunc_fWE then
-		set s = GlobalConstFunc_ksAttentionWE[r]
-	elseif f == GlobalConstFunc_fEE then
-		set s = GlobalConstFunc_ksAttentionEE[r]
-	elseif f == GlobalConstFunc_fME then
-		set s = GlobalConstFunc_ksAttentionME[r]
-	elseif f == GlobalConstFunc_fBZ then
-		set s = GlobalConstFunc_ksAttentionBZ[r]
-	else
-		set s = "Attention!"
-	endif
-	set f = null
-	set whichPlayer = null
-	set f_2 = null
-	return "|cffffa600" + s + "|r"
-endfunction
-
-function GetGoodNewsStringForPlayer takes player pl returns string
-	local player whichPlayer = pl
-	local force f_2 = CreateForce()
-	local force f
-	local integer r
-	local string s
-	call ForceAddPlayer(f_2, whichPlayer)
-	set f = f_2
-	set r = GetRandomInt(0, 3)
-	set s = ""
-	if f == GlobalConstFunc_fWE then
-		set s = GlobalConstFunc_ksGoodNewsWE[r]
-	elseif f == GlobalConstFunc_fEE then
-		set s = GlobalConstFunc_ksGoodNewsEE[r]
-	elseif f == GlobalConstFunc_fME then
-		set s = GlobalConstFunc_ksGoodNewsME[r]
-	elseif f == GlobalConstFunc_fBZ then
-		set s = GlobalConstFunc_ksGoodNewsBZ[r]
-	else
-		set s = "Good news!"
-	endif
-	set f = null
-	set whichPlayer = null
-	set f_2 = null
-	return "|cff00ff00" + s + "|r"
-endfunction
-
-function GetNoteStringForPlayer takes player pl returns string
-	local player whichPlayer = pl
-	local force f_2 = CreateForce()
-	local force f
-	local integer r
-	local string s
-	call ForceAddPlayer(f_2, whichPlayer)
-	set f = f_2
-	set r = GetRandomInt(0, 3)
-	set s = ""
-	if f == GlobalConstFunc_fWE then
-		set s = GlobalConstFunc_ksNoteWE[r]
-	elseif f == GlobalConstFunc_fEE then
-		set s = GlobalConstFunc_ksNoteEE[r]
-	elseif f == GlobalConstFunc_fME then
-		set s = GlobalConstFunc_ksNoteME[r]
-	elseif f == GlobalConstFunc_fBZ then
-		set s = GlobalConstFunc_ksNoteBZ[r]
-	else
-		set s = "Note:"
-	endif
-	set f = null
-	set whichPlayer = null
-	set f_2 = null
-	return "|cff00ccff" + s + "|r"
-endfunction
-
-function PlayerStats_ChangeUnhapiness takes integer this, integer change returns nothing
-	local string msg
-	local player pl
-	local integer this_2
-	local integer this_3
-	local string msg_2
-	local player pl_2
-	local integer this_4
-	local integer this_5
-	local string temp
-	local string temp_2
-	if  not PlayerStats_is_in_game[this] then
-		set pl = null
-		set pl_2 = null
-		return
-	endif
-	set udg_Unhappiness[GetPlayerId(PlayerStats_pl[this])] = udg_Unhappiness[GetPlayerId(PlayerStats_pl[this])] + change
-	set PlayerStats_unhappiness[this] = PlayerStats_unhappiness[this] + change
-	if change > 0 then
-		set this_2 = change
-		set temp = "Unhappiness of your people has risen by " + I2S(this_2) + " points!\nNow you have "
-		set this_3 = PlayerStats_unhappiness[this]
-		set msg = temp + I2S(this_3)
-		set pl = PlayerStats_pl[this]
-		call DisplayTimedTextToPlayer(pl, 0., 0., 15.0, GetAttentionStringForPlayer(pl))
-		call DisplayTimedTextToPlayer(pl, 0., 0., 15.0, msg)
-	elseif change < 0 then
-		set this_4 =  - change
-		set temp_2 = "Unhappiness of your people has dropped down by " + I2S(this_4) + " points!\nNow you have "
-		set this_5 = PlayerStats_unhappiness[this]
-		set msg_2 = temp_2 + I2S(this_5)
-		set pl_2 = PlayerStats_pl[this]
-		call DisplayTimedTextToPlayer(pl_2, 0., 0., 15.0, GetGoodNewsStringForPlayer(pl_2))
-		call DisplayTimedTextToPlayer(pl_2, 0., 0., 15.0, msg_2)
-	endif
-	set pl = null
-	set pl_2 = null
-endfunction
-
-function PlayerStats_alliance_states_get takes integer index1, integer index2, string stackPos returns integer
-	local integer returnVal
-	if index2 < 0 or index2 >= 22 then
-		call error("Index out of Bounds", stackPos)
-	elseif index2 <= 10 then
-		if index2 <= 5 then
-			if index2 <= 2 then
-				if index2 <= 1 then
-					if index2 <= 0 then
-						set returnVal = PlayerStats_alliance_states_0[index1]
-					else
-						set returnVal = PlayerStats_alliance_states_1[index1]
-					endif
-				else
-					set returnVal = PlayerStats_alliance_states_2[index1]
-				endif
-			elseif index2 <= 4 then
-				if index2 <= 3 then
-					set returnVal = PlayerStats_alliance_states_3[index1]
-				else
-					set returnVal = PlayerStats_alliance_states_4[index1]
-				endif
-			else
-				set returnVal = PlayerStats_alliance_states_5[index1]
-			endif
-		elseif index2 <= 8 then
-			if index2 <= 7 then
-				if index2 <= 6 then
-					set returnVal = PlayerStats_alliance_states_6[index1]
-				else
-					set returnVal = PlayerStats_alliance_states_7[index1]
-				endif
-			else
-				set returnVal = PlayerStats_alliance_states_8[index1]
-			endif
-		elseif index2 <= 9 then
-			set returnVal = PlayerStats_alliance_states_9[index1]
-		else
-			set returnVal = PlayerStats_alliance_states_10[index1]
-		endif
-	elseif index2 <= 16 then
-		if index2 <= 13 then
-			if index2 <= 12 then
-				if index2 <= 11 then
-					set returnVal = PlayerStats_alliance_states_11[index1]
-				else
-					set returnVal = PlayerStats_alliance_states_12[index1]
-				endif
-			else
-				set returnVal = PlayerStats_alliance_states_13[index1]
-			endif
-		elseif index2 <= 15 then
-			if index2 <= 14 then
-				set returnVal = PlayerStats_alliance_states_14[index1]
-			else
-				set returnVal = PlayerStats_alliance_states_15[index1]
-			endif
-		else
-			set returnVal = PlayerStats_alliance_states_16[index1]
-		endif
-	elseif index2 <= 19 then
-		if index2 <= 18 then
-			if index2 <= 17 then
-				set returnVal = PlayerStats_alliance_states_17[index1]
-			else
-				set returnVal = PlayerStats_alliance_states_18[index1]
-			endif
-		else
-			set returnVal = PlayerStats_alliance_states_19[index1]
-		endif
-	elseif index2 <= 20 then
-		set returnVal = PlayerStats_alliance_states_20[index1]
-	else
-		set returnVal = PlayerStats_alliance_states_21[index1]
-	endif
-	return returnVal
-endfunction
-
-function PlayerStats_alliance_states_set takes integer instanceId, integer arrayIndex, integer value, string stackPos returns nothing
-	if arrayIndex < 0 or arrayIndex >= 22 then
-		call error("Index out of Bounds", stackPos)
-	elseif arrayIndex <= 10 then
-		if arrayIndex <= 5 then
-			if arrayIndex <= 2 then
-				if arrayIndex <= 1 then
-					if arrayIndex <= 0 then
-						set PlayerStats_alliance_states_0[instanceId] = value
-					else
-						set PlayerStats_alliance_states_1[instanceId] = value
-					endif
-				else
-					set PlayerStats_alliance_states_2[instanceId] = value
-				endif
-			elseif arrayIndex <= 4 then
-				if arrayIndex <= 3 then
-					set PlayerStats_alliance_states_3[instanceId] = value
-				else
-					set PlayerStats_alliance_states_4[instanceId] = value
-				endif
-			else
-				set PlayerStats_alliance_states_5[instanceId] = value
-			endif
-		elseif arrayIndex <= 8 then
-			if arrayIndex <= 7 then
-				if arrayIndex <= 6 then
-					set PlayerStats_alliance_states_6[instanceId] = value
-				else
-					set PlayerStats_alliance_states_7[instanceId] = value
-				endif
-			else
-				set PlayerStats_alliance_states_8[instanceId] = value
-			endif
-		elseif arrayIndex <= 9 then
-			set PlayerStats_alliance_states_9[instanceId] = value
-		else
-			set PlayerStats_alliance_states_10[instanceId] = value
-		endif
-	elseif arrayIndex <= 16 then
-		if arrayIndex <= 13 then
-			if arrayIndex <= 12 then
-				if arrayIndex <= 11 then
-					set PlayerStats_alliance_states_11[instanceId] = value
-				else
-					set PlayerStats_alliance_states_12[instanceId] = value
-				endif
-			else
-				set PlayerStats_alliance_states_13[instanceId] = value
-			endif
-		elseif arrayIndex <= 15 then
-			if arrayIndex <= 14 then
-				set PlayerStats_alliance_states_14[instanceId] = value
-			else
-				set PlayerStats_alliance_states_15[instanceId] = value
-			endif
-		else
-			set PlayerStats_alliance_states_16[instanceId] = value
-		endif
-	elseif arrayIndex <= 19 then
-		if arrayIndex <= 18 then
-			if arrayIndex <= 17 then
-				set PlayerStats_alliance_states_17[instanceId] = value
-			else
-				set PlayerStats_alliance_states_18[instanceId] = value
-			endif
-		else
-			set PlayerStats_alliance_states_19[instanceId] = value
-		endif
-	elseif arrayIndex <= 20 then
-		set PlayerStats_alliance_states_20[instanceId] = value
-	else
-		set PlayerStats_alliance_states_21[instanceId] = value
-	endif
-endfunction
-
-function PlayerStats_SetAlliance takes integer this, player which_player, integer alliance_state, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if  not PlayerStats_is_in_game[this] then
-		set wurst_stack_depth = wurst_stack_depth - 1
-		return
-	endif
-	if GetPlayerId(which_player) >= 22 then
-		set wurst_stack_depth = wurst_stack_depth - 1
-		return
-	endif
-	if PlayerStats_alliance_states_get(this, GetPlayerId(which_player), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 47") == alliance_state or which_player == PlayerStats_pl[this] then
-		set wurst_stack_depth = wurst_stack_depth - 1
-		return
-	endif
-	call PlayerStats_alliance_states_set(this, GetPlayerId(which_player), alliance_state, "when writing array PlayerStats_alliance_states in GlobalConstFunc, line 49")
-	call SetPlayerAllianceStateBJ(PlayerStats_pl[this], which_player, alliance_state)
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function action_3 takes string stackPos returns nothing
-	local player source
-	local player target
-	local string source_s
-	local string target_s
-	local integer source_id
-	local force f1
-	local force f2
-	local integer temp
-	local integer i
-	local integer temp_2
-	local force current_f
-	local integer i_2
-	local integer temp_3
-	local force current_f_2
-	local integer i_3
-	local integer temp_4
-	local force current_f_3
-	local integer i_4
-	local integer temp_5
-	local force current_f_4
-	local integer i_5
-	local integer temp_6
-	local force current_f_5
-	local unit this
-	local unit this_2
-	local player whichPlayer
-	local force f
-	local player whichPlayer_2
-	local force f_2
-	local integer this_3
-	local player which_player
-	local string stackPos_2
-	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result
-	local integer this_4
-	local player which_player_2
-	local string stackPos_3
-	local integer stackTrace_tempReturn
-	local integer this_5
-	local player which_player_3
-	local integer alliance_state
-	local string stackPos_4
-	local player whichPlayer_3
-	local force f_3
-	local string msg
-	local player pl
-	local string msg_2
-	local player pl_2
-	local string msg_3
-	local player pl_3
-	local integer this_6
-	local integer change
-	local string stackPos_5
-	local integer this_7
-	local player which_player_4
-	local string stackPos_6
-	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result_2
-	local integer this_8
-	local player which_player_5
-	local string stackPos_7
-	local integer stackTrace_tempReturn_2
-	local integer this_9
-	local player which_player_6
-	local integer alliance_state_2
-	local string stackPos_8
-	local player whichPlayer_4
-	local force f_4
-	local string msg_4
-	local player pl_4
-	local string msg_5
-	local player pl_5
-	local string msg_6
-	local player pl_6
-	local integer this_10
-	local player which_player_7
-	local string stackPos_9
-	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result_3
-	local integer this_11
-	local player which_player_8
-	local string stackPos_10
-	local integer stackTrace_tempReturn_3
-	local integer this_12
-	local player which_player_9
-	local integer alliance_state_3
-	local string stackPos_11
-	local player whichPlayer_5
-	local force f_5
-	local string msg_7
-	local player pl_7
-	local string msg_8
-	local player pl_8
-	local string msg_9
-	local player pl_9
-	local integer this_13
-	local player which_player_10
-	local string stackPos_12
-	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result_4
-	local integer this_14
-	local player which_player_11
-	local string stackPos_13
-	local integer stackTrace_tempReturn_4
-	local integer this_15
-	local player which_player_12
-	local integer alliance_state_4
-	local string stackPos_14
-	local player whichPlayer_6
-	local force f_6
-	local string msg_10
-	local player pl_10
-	local string msg_11
-	local player pl_11
-	local string msg_12
-	local player pl_12
-	local integer this_16
-	local player which_player_13
-	local string stackPos_15
-	local integer GlobalConstFunc_PlayerStats_GetAllianceState_result_5
-	local integer this_17
-	local player which_player_14
-	local string stackPos_16
-	local integer stackTrace_tempReturn_5
-	local integer this_18
-	local player which_player_15
-	local integer alliance_state_5
-	local string stackPos_17
-	local player whichPlayer_7
-	local force f_7
-	local string msg_13
-	local player pl_13
-	local string msg_14
-	local player pl_14
-	local string msg_15
-	local player pl_15
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set this = GetSpellAbilityUnit()
-	set source = GetOwningPlayer(this)
-	set this_2 = GetSpellTargetUnit()
-	set target = GetOwningPlayer(this_2)
-	set source_s = player_getNameColored(source)
-	set target_s = player_getNameColored(target)
-	set source_id = GetPlayerId(source)
-	call GetPlayerId(target)
-	set whichPlayer = source
-	set f = CreateForce()
-	call ForceAddPlayer(f, whichPlayer)
-	set f1 = f
-	set whichPlayer_2 = source
-	set f_2 = CreateForce()
-	call ForceAddPlayer(f_2, whichPlayer_2)
-	set f2 = f_2
-	set temp = GetSpellAbilityId()
-	if temp == 1093677396 then
-		set this_3 = GlobalConstFunc_player_stats[source_id]
-		set which_player = target
-		set stackPos_2 = "when calling GetAllianceState in Diplomacy, line 17"
-		set wurst_stack[wurst_stack_depth] = stackPos_2
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_3] == 0 then
-			if this_3 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 52")
-			else
-				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 52")
-			endif
-		endif
-		set this_4 = this_3
-		set which_player_2 = which_player
-		set stackPos_3 = "when calling GetAllianceState in GlobalConstFunc, line 52"
-		set wurst_stack[wurst_stack_depth] = stackPos_3
-		set wurst_stack_depth = wurst_stack_depth + 1
-		set stackTrace_tempReturn = PlayerStats_alliance_states_get(this_4, GetPlayerId(which_player_2), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 53")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set GlobalConstFunc_PlayerStats_GetAllianceState_result = stackTrace_tempReturn
-		set wurst_stack_depth = wurst_stack_depth - 1
-		if GlobalConstFunc_PlayerStats_GetAllianceState_result == bj_ALLIANCE_UNALLIED then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			set current_f_5 = null
-			set this = null
-			set this_2 = null
-			set whichPlayer = null
-			set f = null
-			set whichPlayer_2 = null
-			set f_2 = null
-			set which_player = null
-			set which_player_2 = null
-			set which_player_3 = null
-			set whichPlayer_3 = null
-			set f_3 = null
-			set pl = null
-			set pl_2 = null
-			set pl_3 = null
-			set which_player_4 = null
-			set which_player_5 = null
-			set which_player_6 = null
-			set whichPlayer_4 = null
-			set f_4 = null
-			set pl_4 = null
-			set pl_5 = null
-			set pl_6 = null
-			set which_player_7 = null
-			set which_player_8 = null
-			set which_player_9 = null
-			set whichPlayer_5 = null
-			set f_5 = null
-			set pl_7 = null
-			set pl_8 = null
-			set pl_9 = null
-			set which_player_10 = null
-			set which_player_11 = null
-			set which_player_12 = null
-			set whichPlayer_6 = null
-			set f_6 = null
-			set pl_10 = null
-			set pl_11 = null
-			set pl_12 = null
-			set which_player_13 = null
-			set which_player_14 = null
-			set which_player_15 = null
-			set whichPlayer_7 = null
-			set f_7 = null
-			set pl_13 = null
-			set pl_14 = null
-			set pl_15 = null
-			return
-		endif
-		set this_5 = GlobalConstFunc_player_stats[source_id]
-		set which_player_3 = target
-		set alliance_state = bj_ALLIANCE_UNALLIED
-		set stackPos_4 = "when calling SetAlliance in Diplomacy, line 19"
-		set wurst_stack[wurst_stack_depth] = stackPos_4
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_5] == 0 then
-			if this_5 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 42")
-			else
-				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 42")
-			endif
-		endif
-		call PlayerStats_SetAlliance(this_5, which_player_3, alliance_state, "when calling SetAlliance in GlobalConstFunc, line 42")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set i = 0
-		set temp_2 = 22 - 1
-		loop
-			exitwhen i > temp_2
-			set whichPlayer_3 = Player_players[i]
-			set f_3 = CreateForce()
-			call ForceAddPlayer(f_3, whichPlayer_3)
-			set current_f = f_3
-			if Player_players[i] == target then
-				set msg = source_s + " has declared war on you!"
-				set pl = Player_players[i]
-				call DisplayTimedTextToPlayer(pl, 0., 0., 30.0, GetWarningStringForPlayer(pl))
-				call DisplayTimedTextToPlayer(pl, 0., 0., 30.0, msg)
-			elseif current_f == f1 or current_f == f2 then
-				set msg_2 = source_s + " has declared war on your brother-in-arms, " + target_s + "!"
-				set pl_2 = Player_players[i]
-				call DisplayTimedTextToPlayer(pl_2, 0., 0., 15.0, GetAttentionStringForPlayer(pl_2))
-				call DisplayTimedTextToPlayer(pl_2, 0., 0., 15.0, msg_2)
-			else
-				set msg_3 = source_s + " has declared war on " + target_s
-				set pl_3 = Player_players[i]
-				call DisplayTimedTextToPlayer(pl_3, 0., 0., 15.0, GetNoteStringForPlayer(pl_3))
-				call DisplayTimedTextToPlayer(pl_3, 0., 0., 15.0, msg_3)
-			endif
-			set i = i + 1
-		endloop
-		set this_6 = GlobalConstFunc_player_stats[source_id]
-		set change = 600
-		set stackPos_5 = "when calling ChangeUnhapiness in Diplomacy, line 30"
-		set wurst_stack[wurst_stack_depth] = stackPos_5
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_6] == 0 then
-			if this_6 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.ChangeUnhapiness", "when calling error in GlobalConstFunc, line 21")
-			else
-				call error("Called PlayerStats.ChangeUnhapiness on invalid object.", "when calling error in GlobalConstFunc, line 21")
-			endif
-		endif
-		call PlayerStats_ChangeUnhapiness(this_6, change)
-		set wurst_stack_depth = wurst_stack_depth - 1
-	elseif temp == 1093677397 then
-		set this_7 = GlobalConstFunc_player_stats[source_id]
-		set which_player_4 = target
-		set stackPos_6 = "when calling GetAllianceState in Diplomacy, line 33"
-		set wurst_stack[wurst_stack_depth] = stackPos_6
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_7] == 0 then
-			if this_7 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 52")
-			else
-				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 52")
-			endif
-		endif
-		set this_8 = this_7
-		set which_player_5 = which_player_4
-		set stackPos_7 = "when calling GetAllianceState in GlobalConstFunc, line 52"
-		set wurst_stack[wurst_stack_depth] = stackPos_7
-		set wurst_stack_depth = wurst_stack_depth + 1
-		set stackTrace_tempReturn_2 = PlayerStats_alliance_states_get(this_8, GetPlayerId(which_player_5), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 53")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set GlobalConstFunc_PlayerStats_GetAllianceState_result_2 = stackTrace_tempReturn_2
-		set wurst_stack_depth = wurst_stack_depth - 1
-		if GlobalConstFunc_PlayerStats_GetAllianceState_result_2 == bj_ALLIANCE_ALLIED_VISION then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			set current_f_5 = null
-			set this = null
-			set this_2 = null
-			set whichPlayer = null
-			set f = null
-			set whichPlayer_2 = null
-			set f_2 = null
-			set which_player = null
-			set which_player_2 = null
-			set which_player_3 = null
-			set whichPlayer_3 = null
-			set f_3 = null
-			set pl = null
-			set pl_2 = null
-			set pl_3 = null
-			set which_player_4 = null
-			set which_player_5 = null
-			set which_player_6 = null
-			set whichPlayer_4 = null
-			set f_4 = null
-			set pl_4 = null
-			set pl_5 = null
-			set pl_6 = null
-			set which_player_7 = null
-			set which_player_8 = null
-			set which_player_9 = null
-			set whichPlayer_5 = null
-			set f_5 = null
-			set pl_7 = null
-			set pl_8 = null
-			set pl_9 = null
-			set which_player_10 = null
-			set which_player_11 = null
-			set which_player_12 = null
-			set whichPlayer_6 = null
-			set f_6 = null
-			set pl_10 = null
-			set pl_11 = null
-			set pl_12 = null
-			set which_player_13 = null
-			set which_player_14 = null
-			set which_player_15 = null
-			set whichPlayer_7 = null
-			set f_7 = null
-			set pl_13 = null
-			set pl_14 = null
-			set pl_15 = null
-			return
-		endif
-		set this_9 = GlobalConstFunc_player_stats[source_id]
-		set which_player_6 = target
-		set alliance_state_2 = bj_ALLIANCE_ALLIED_VISION
-		set stackPos_8 = "when calling SetAlliance in Diplomacy, line 35"
-		set wurst_stack[wurst_stack_depth] = stackPos_8
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_9] == 0 then
-			if this_9 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 42")
-			else
-				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 42")
-			endif
-		endif
-		call PlayerStats_SetAlliance(this_9, which_player_6, alliance_state_2, "when calling SetAlliance in GlobalConstFunc, line 42")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set i_2 = 0
-		set temp_3 = 22 - 1
-		loop
-			exitwhen i_2 > temp_3
-			set whichPlayer_4 = Player_players[i_2]
-			set f_4 = CreateForce()
-			call ForceAddPlayer(f_4, whichPlayer_4)
-			set current_f_2 = f_4
-			if Player_players[i_2] == target then
-				set msg_4 = source_s + " wants to ally you"
-				set pl_4 = Player_players[i_2]
-				call DisplayTimedTextToPlayer(pl_4, 0., 0., 15.0, GetGoodNewsStringForPlayer(pl_4))
-				call DisplayTimedTextToPlayer(pl_4, 0., 0., 15.0, msg_4)
-			elseif current_f_2 == f1 or current_f_2 == f2 then
-				set msg_5 = source_s + " allied " + target_s
-				set pl_5 = Player_players[i_2]
-				call DisplayTimedTextToPlayer(pl_5, 0., 0., 15.0, GetNoteStringForPlayer(pl_5))
-				call DisplayTimedTextToPlayer(pl_5, 0., 0., 15.0, msg_5)
-			else
-				set msg_6 = source_s + " allied " + target_s
-				set pl_6 = Player_players[i_2]
-				call DisplayTimedTextToPlayer(pl_6, 0., 0., 15.0, GetNoteStringForPlayer(pl_6))
-				call DisplayTimedTextToPlayer(pl_6, 0., 0., 15.0, msg_6)
-			endif
-			set i_2 = i_2 + 1
-		endloop
-	elseif temp == 1093677398 then
-		set this_10 = GlobalConstFunc_player_stats[source_id]
-		set which_player_7 = target
-		set stackPos_9 = "when calling GetAllianceState in Diplomacy, line 47"
-		set wurst_stack[wurst_stack_depth] = stackPos_9
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_10] == 0 then
-			if this_10 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 52")
-			else
-				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 52")
-			endif
-		endif
-		set this_11 = this_10
-		set which_player_8 = which_player_7
-		set stackPos_10 = "when calling GetAllianceState in GlobalConstFunc, line 52"
-		set wurst_stack[wurst_stack_depth] = stackPos_10
-		set wurst_stack_depth = wurst_stack_depth + 1
-		set stackTrace_tempReturn_3 = PlayerStats_alliance_states_get(this_11, GetPlayerId(which_player_8), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 53")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set GlobalConstFunc_PlayerStats_GetAllianceState_result_3 = stackTrace_tempReturn_3
-		set wurst_stack_depth = wurst_stack_depth - 1
-		if GlobalConstFunc_PlayerStats_GetAllianceState_result_3 == bj_ALLIANCE_NEUTRAL then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			set current_f_5 = null
-			set this = null
-			set this_2 = null
-			set whichPlayer = null
-			set f = null
-			set whichPlayer_2 = null
-			set f_2 = null
-			set which_player = null
-			set which_player_2 = null
-			set which_player_3 = null
-			set whichPlayer_3 = null
-			set f_3 = null
-			set pl = null
-			set pl_2 = null
-			set pl_3 = null
-			set which_player_4 = null
-			set which_player_5 = null
-			set which_player_6 = null
-			set whichPlayer_4 = null
-			set f_4 = null
-			set pl_4 = null
-			set pl_5 = null
-			set pl_6 = null
-			set which_player_7 = null
-			set which_player_8 = null
-			set which_player_9 = null
-			set whichPlayer_5 = null
-			set f_5 = null
-			set pl_7 = null
-			set pl_8 = null
-			set pl_9 = null
-			set which_player_10 = null
-			set which_player_11 = null
-			set which_player_12 = null
-			set whichPlayer_6 = null
-			set f_6 = null
-			set pl_10 = null
-			set pl_11 = null
-			set pl_12 = null
-			set which_player_13 = null
-			set which_player_14 = null
-			set which_player_15 = null
-			set whichPlayer_7 = null
-			set f_7 = null
-			set pl_13 = null
-			set pl_14 = null
-			set pl_15 = null
-			return
-		endif
-		set this_12 = GlobalConstFunc_player_stats[source_id]
-		set which_player_9 = target
-		set alliance_state_3 = bj_ALLIANCE_NEUTRAL
-		set stackPos_11 = "when calling SetAlliance in Diplomacy, line 49"
-		set wurst_stack[wurst_stack_depth] = stackPos_11
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_12] == 0 then
-			if this_12 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 42")
-			else
-				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 42")
-			endif
-		endif
-		call PlayerStats_SetAlliance(this_12, which_player_9, alliance_state_3, "when calling SetAlliance in GlobalConstFunc, line 42")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set i_3 = 0
-		set temp_4 = 22 - 1
-		loop
-			exitwhen i_3 > temp_4
-			set whichPlayer_5 = Player_players[i_3]
-			set f_5 = CreateForce()
-			call ForceAddPlayer(f_5, whichPlayer_5)
-			set current_f_3 = f_5
-			if Player_players[i_3] == target then
-				set msg_7 = source_s + " is now neutral towards you"
-				set pl_7 = Player_players[i_3]
-				call DisplayTimedTextToPlayer(pl_7, 0., 0., 15.0, GetNoteStringForPlayer(pl_7))
-				call DisplayTimedTextToPlayer(pl_7, 0., 0., 15.0, msg_7)
-			elseif current_f_3 == f1 or current_f_3 == f2 then
-				set msg_8 = source_s + " now sees " + target_s + " as neutral"
-				set pl_8 = Player_players[i_3]
-				call DisplayTimedTextToPlayer(pl_8, 0., 0., 15.0, GetNoteStringForPlayer(pl_8))
-				call DisplayTimedTextToPlayer(pl_8, 0., 0., 15.0, msg_8)
-			else
-				set msg_9 = source_s + " now sees " + target_s + " as neutral"
-				set pl_9 = Player_players[i_3]
-				call DisplayTimedTextToPlayer(pl_9, 0., 0., 15.0, GetNoteStringForPlayer(pl_9))
-				call DisplayTimedTextToPlayer(pl_9, 0., 0., 15.0, msg_9)
-			endif
-			set i_3 = i_3 + 1
-		endloop
-	elseif temp == 1093677400 then
-		set this_13 = GlobalConstFunc_player_stats[source_id]
-		set which_player_10 = target
-		set stackPos_12 = "when calling GetAllianceState in Diplomacy, line 61"
-		set wurst_stack[wurst_stack_depth] = stackPos_12
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_13] == 0 then
-			if this_13 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 52")
-			else
-				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 52")
-			endif
-		endif
-		set this_14 = this_13
-		set which_player_11 = which_player_10
-		set stackPos_13 = "when calling GetAllianceState in GlobalConstFunc, line 52"
-		set wurst_stack[wurst_stack_depth] = stackPos_13
-		set wurst_stack_depth = wurst_stack_depth + 1
-		set stackTrace_tempReturn_4 = PlayerStats_alliance_states_get(this_14, GetPlayerId(which_player_11), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 53")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set GlobalConstFunc_PlayerStats_GetAllianceState_result_4 = stackTrace_tempReturn_4
-		set wurst_stack_depth = wurst_stack_depth - 1
-		if GlobalConstFunc_PlayerStats_GetAllianceState_result_4 == bj_ALLIANCE_NEUTRAL then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			set current_f_5 = null
-			set this = null
-			set this_2 = null
-			set whichPlayer = null
-			set f = null
-			set whichPlayer_2 = null
-			set f_2 = null
-			set which_player = null
-			set which_player_2 = null
-			set which_player_3 = null
-			set whichPlayer_3 = null
-			set f_3 = null
-			set pl = null
-			set pl_2 = null
-			set pl_3 = null
-			set which_player_4 = null
-			set which_player_5 = null
-			set which_player_6 = null
-			set whichPlayer_4 = null
-			set f_4 = null
-			set pl_4 = null
-			set pl_5 = null
-			set pl_6 = null
-			set which_player_7 = null
-			set which_player_8 = null
-			set which_player_9 = null
-			set whichPlayer_5 = null
-			set f_5 = null
-			set pl_7 = null
-			set pl_8 = null
-			set pl_9 = null
-			set which_player_10 = null
-			set which_player_11 = null
-			set which_player_12 = null
-			set whichPlayer_6 = null
-			set f_6 = null
-			set pl_10 = null
-			set pl_11 = null
-			set pl_12 = null
-			set which_player_13 = null
-			set which_player_14 = null
-			set which_player_15 = null
-			set whichPlayer_7 = null
-			set f_7 = null
-			set pl_13 = null
-			set pl_14 = null
-			set pl_15 = null
-			return
-		endif
-		set this_15 = GlobalConstFunc_player_stats[source_id]
-		set which_player_12 = target
-		set alliance_state_4 = bj_ALLIANCE_NEUTRAL
-		set stackPos_14 = "when calling SetAlliance in Diplomacy, line 63"
-		set wurst_stack[wurst_stack_depth] = stackPos_14
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_15] == 0 then
-			if this_15 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 42")
-			else
-				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 42")
-			endif
-		endif
-		call PlayerStats_SetAlliance(this_15, which_player_12, alliance_state_4, "when calling SetAlliance in GlobalConstFunc, line 42")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set i_4 = 0
-		set temp_5 = 22 - 1
-		loop
-			exitwhen i_4 > temp_5
-			set whichPlayer_6 = Player_players[i_4]
-			set f_6 = CreateForce()
-			call ForceAddPlayer(f_6, whichPlayer_6)
-			set current_f_4 = f_6
-			if Player_players[i_4] == target then
-				set msg_10 = source_s + " unallies you!"
-				set pl_10 = Player_players[i_4]
-				call DisplayTimedTextToPlayer(pl_10, 0., 0., 15.0, GetNoteStringForPlayer(pl_10))
-				call DisplayTimedTextToPlayer(pl_10, 0., 0., 15.0, msg_10)
-			elseif current_f_4 == f1 or current_f_4 == f2 then
-				set msg_11 = source_s + " unallied " + target_s
-				set pl_11 = Player_players[i_4]
-				call DisplayTimedTextToPlayer(pl_11, 0., 0., 15.0, GetNoteStringForPlayer(pl_11))
-				call DisplayTimedTextToPlayer(pl_11, 0., 0., 15.0, msg_11)
-			else
-				set msg_12 = source_s + " unallied " + target_s
-				set pl_12 = Player_players[i_4]
-				call DisplayTimedTextToPlayer(pl_12, 0., 0., 15.0, GetNoteStringForPlayer(pl_12))
-				call DisplayTimedTextToPlayer(pl_12, 0., 0., 15.0, msg_12)
-			endif
-			set i_4 = i_4 + 1
-		endloop
-	elseif temp == 1093677399 then
-		set this_16 = GlobalConstFunc_player_stats[source_id]
-		set which_player_13 = target
-		set stackPos_15 = "when calling GetAllianceState in Diplomacy, line 75"
-		set wurst_stack[wurst_stack_depth] = stackPos_15
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_16] == 0 then
-			if this_16 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.GetAllianceState", "when calling error in GlobalConstFunc, line 52")
-			else
-				call error("Called PlayerStats.GetAllianceState on invalid object.", "when calling error in GlobalConstFunc, line 52")
-			endif
-		endif
-		set this_17 = this_16
-		set which_player_14 = which_player_13
-		set stackPos_16 = "when calling GetAllianceState in GlobalConstFunc, line 52"
-		set wurst_stack[wurst_stack_depth] = stackPos_16
-		set wurst_stack_depth = wurst_stack_depth + 1
-		set stackTrace_tempReturn_5 = PlayerStats_alliance_states_get(this_17, GetPlayerId(which_player_14), "when reading array PlayerStats_alliance_states in GlobalConstFunc, line 53")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set GlobalConstFunc_PlayerStats_GetAllianceState_result_5 = stackTrace_tempReturn_5
-		set wurst_stack_depth = wurst_stack_depth - 1
-		if GlobalConstFunc_PlayerStats_GetAllianceState_result_5 == bj_ALLIANCE_ALLIED_ADVUNITS then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			set current_f_5 = null
-			set this = null
-			set this_2 = null
-			set whichPlayer = null
-			set f = null
-			set whichPlayer_2 = null
-			set f_2 = null
-			set which_player = null
-			set which_player_2 = null
-			set which_player_3 = null
-			set whichPlayer_3 = null
-			set f_3 = null
-			set pl = null
-			set pl_2 = null
-			set pl_3 = null
-			set which_player_4 = null
-			set which_player_5 = null
-			set which_player_6 = null
-			set whichPlayer_4 = null
-			set f_4 = null
-			set pl_4 = null
-			set pl_5 = null
-			set pl_6 = null
-			set which_player_7 = null
-			set which_player_8 = null
-			set which_player_9 = null
-			set whichPlayer_5 = null
-			set f_5 = null
-			set pl_7 = null
-			set pl_8 = null
-			set pl_9 = null
-			set which_player_10 = null
-			set which_player_11 = null
-			set which_player_12 = null
-			set whichPlayer_6 = null
-			set f_6 = null
-			set pl_10 = null
-			set pl_11 = null
-			set pl_12 = null
-			set which_player_13 = null
-			set which_player_14 = null
-			set which_player_15 = null
-			set whichPlayer_7 = null
-			set f_7 = null
-			set pl_13 = null
-			set pl_14 = null
-			set pl_15 = null
-			return
-		endif
-		set this_18 = GlobalConstFunc_player_stats[source_id]
-		set which_player_15 = target
-		set alliance_state_5 = bj_ALLIANCE_ALLIED_ADVUNITS
-		set stackPos_17 = "when calling SetAlliance in Diplomacy, line 77"
-		set wurst_stack[wurst_stack_depth] = stackPos_17
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_18] == 0 then
-			if this_18 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.SetAlliance", "when calling error in GlobalConstFunc, line 42")
-			else
-				call error("Called PlayerStats.SetAlliance on invalid object.", "when calling error in GlobalConstFunc, line 42")
-			endif
-		endif
-		call PlayerStats_SetAlliance(this_18, which_player_15, alliance_state_5, "when calling SetAlliance in GlobalConstFunc, line 42")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set i_5 = 0
-		set temp_6 = 22 - 1
-		loop
-			exitwhen i_5 > temp_6
-			set whichPlayer_7 = Player_players[i_5]
-			set f_7 = CreateForce()
-			call ForceAddPlayer(f_7, whichPlayer_7)
-			set current_f_5 = f_7
-			if Player_players[i_5] == target then
-				set msg_13 = source_s + " wants to share his rule with you!"
-				set pl_13 = Player_players[i_5]
-				call DisplayTimedTextToPlayer(pl_13, 0., 0., 15.0, GetGoodNewsStringForPlayer(pl_13))
-				call DisplayTimedTextToPlayer(pl_13, 0., 0., 15.0, msg_13)
-			elseif current_f_5 == f1 or current_f_5 == f2 then
-				set msg_14 = source_s + " now shares rule with " + target_s
-				set pl_14 = Player_players[i_5]
-				call DisplayTimedTextToPlayer(pl_14, 0., 0., 15.0, GetNoteStringForPlayer(pl_14))
-				call DisplayTimedTextToPlayer(pl_14, 0., 0., 15.0, msg_14)
-			else
-				set msg_15 = source_s + " now shares rule with " + target_s
-				set pl_15 = Player_players[i_5]
-				call DisplayTimedTextToPlayer(pl_15, 0., 0., 15.0, GetNoteStringForPlayer(pl_15))
-				call DisplayTimedTextToPlayer(pl_15, 0., 0., 15.0, msg_15)
-			endif
-			set i_5 = i_5 + 1
-		endloop
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set source = null
-	set target = null
-	set f1 = null
-	set f2 = null
-	set current_f = null
-	set current_f_2 = null
-	set current_f_3 = null
-	set current_f_4 = null
-	set current_f_5 = null
-	set this = null
-	set this_2 = null
-	set whichPlayer = null
-	set f = null
-	set whichPlayer_2 = null
-	set f_2 = null
-	set which_player = null
-	set which_player_2 = null
-	set which_player_3 = null
-	set whichPlayer_3 = null
-	set f_3 = null
-	set pl = null
-	set pl_2 = null
-	set pl_3 = null
-	set which_player_4 = null
-	set which_player_5 = null
-	set which_player_6 = null
-	set whichPlayer_4 = null
-	set f_4 = null
-	set pl_4 = null
-	set pl_5 = null
-	set pl_6 = null
-	set which_player_7 = null
-	set which_player_8 = null
-	set which_player_9 = null
-	set whichPlayer_5 = null
-	set f_5 = null
-	set pl_7 = null
-	set pl_8 = null
-	set pl_9 = null
-	set which_player_10 = null
-	set which_player_11 = null
-	set which_player_12 = null
-	set whichPlayer_6 = null
-	set f_6 = null
-	set pl_10 = null
-	set pl_11 = null
-	set pl_12 = null
-	set which_player_13 = null
-	set which_player_14 = null
-	set which_player_15 = null
-	set whichPlayer_7 = null
-	set f_7 = null
-	set pl_13 = null
-	set pl_14 = null
-	set pl_15 = null
-endfunction
-
 function bridge_action_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call action_3("Diplomacy, line 100")
+	call action_3("OnPlayerLeave, line 14")
 endfunction
 
 function initializeTable takes string stackPos returns nothing
@@ -18035,7 +18131,7 @@ function new_Table takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this_2 = Table_maxIndex
-			set Table_typeId[this_2] = 6
+			set Table_typeId[this_2] = 7
 		else
 			call error("Out of memory: Could not create Table.", "when calling error in Table, line 6")
 			set this_2 = 0
@@ -18043,7 +18139,7 @@ function new_Table takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this_2 = Table_nextFree[Table_firstFree]
-		set Table_typeId[this_2] = 6
+		set Table_typeId[this_2] = 7
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set this = this_2
@@ -18361,7 +18457,7 @@ function SetPlayersAtStart takes string stackPos returns nothing
 	local real tuple_temp_12
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set pl_left = 22
+	set pl_left = 24
 	set pl_in_ring = 6
 	set rad = 100.0
 	set tuple_temp = MainInit_SPAWN_POINT_x
@@ -18397,16 +18493,16 @@ function SetPlayersAtStart takes string stackPos returns nothing
 			set tuple_temp_12 = this_y + v_y
 			set pos_x = tuple_temp_11
 			set pos_y = tuple_temp_12
-			set curpl = Player_players[22 - pl_left + i - 1]
+			set curpl = Player_players[24 - pl_left + i - 1]
 			set this = GlobalConstFunc_player_stats[GetPlayerId(curpl)]
-			set stackPos_2 = "when calling isInGame in MainInit, line 46"
+			set stackPos_2 = "when calling isInGame in MainInit, line 47"
 			set wurst_stack[wurst_stack_depth] = stackPos_2
 			set wurst_stack_depth = wurst_stack_depth + 1
 			if PlayerStats_typeId[this] == 0 then
 				if this == 0 then
-					call error("Nullpointer exception when calling PlayerStats.isInGame", "when calling error in GlobalConstFunc, line 36")
+					call error("Nullpointer exception when calling PlayerStats.isInGame", "when calling error in GlobalConstFunc, line 147")
 				else
-					call error("Called PlayerStats.isInGame on invalid object.", "when calling error in GlobalConstFunc, line 36")
+					call error("Called PlayerStats.isInGame on invalid object.", "when calling error in GlobalConstFunc, line 147")
 				endif
 			endif
 			set this_2 = this
@@ -18459,6 +18555,75 @@ function SetPlayersAtStart takes string stackPos returns nothing
 	set temp_8 = null
 endfunction
 
+function construct_City takes integer this, unit u, string n, integer f_id, string stackPos returns nothing
+	local player this_2
+	local unit this_3
+	local integer this_4
+	local string new_name
+	local string stackPos_2
+	local string new_name_2
+	local string this_5
+	local integer start
+	local integer stop
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set City_city_unit[this] = u
+	set this_3 = City_city_unit[this]
+	set this_2 = GetOwningPlayer(this_3)
+	call GetPlayerId(this_2)
+	set this_4 = this
+	set new_name = n
+	set stackPos_2 = "when calling ChangeCityName in GlobalConstFunc, line 111"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if City_typeId[this_4] == 0 then
+		if this_4 == 0 then
+			call error("Nullpointer exception when calling City.ChangeCityName", "when calling error in GlobalConstFunc, line 90")
+		else
+			call error("Called City.ChangeCityName on invalid object.", "when calling error in GlobalConstFunc, line 90")
+		endif
+	endif
+	set new_name_2 = new_name
+	set this_5 = new_name_2
+	set start = 0
+	set stop = 24
+	call SubString(this_5, start, stop)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set this_2 = null
+	set this_3 = null
+endfunction
+
+function new_City takes unit u, string n, integer f_id, string stackPos returns integer
+	local integer this
+	local string stackPos_2
+	local integer this_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackPos_2 = "when calling City in GlobalConstFunc, line 104"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if City_firstFree == 0 then
+		if City_maxIndex < 32768 then
+			set City_maxIndex = City_maxIndex + 1
+			set this_2 = City_maxIndex
+			set City_typeId[this_2] = 1
+		else
+			call error("Out of memory: Could not create City.", "when calling error in GlobalConstFunc, line 79")
+			set this_2 = 0
+		endif
+	else
+		set City_firstFree = City_firstFree - 1
+		set this_2 = City_nextFree[City_firstFree]
+		set City_typeId[this_2] = 1
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set this = this_2
+	call construct_City(this, u, n, f_id, "when calling construct_City in GlobalConstFunc, line 104")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
 function new_PlayerStats takes player which_player, string stackPos returns integer
 	local integer this
 	local string stackPos_2
@@ -18470,41 +18635,41 @@ function new_PlayerStats takes player which_player, string stackPos returns inte
 	local integer temp
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackPos_2 = "when calling PlayerStats in GlobalConstFunc, line 56"
+	set stackPos_2 = "when calling PlayerStats in GlobalConstFunc, line 169"
 	set wurst_stack[wurst_stack_depth] = stackPos_2
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if PlayerStats_firstFree == 0 then
 		if PlayerStats_maxIndex < 32768 then
 			set PlayerStats_maxIndex = PlayerStats_maxIndex + 1
 			set this_2 = PlayerStats_maxIndex
-			set PlayerStats_typeId[this_2] = 3
+			set PlayerStats_typeId[this_2] = 4
 		else
-			call error("Out of memory: Could not create PlayerStats.", "when calling error in GlobalConstFunc, line 15")
+			call error("Out of memory: Could not create PlayerStats.", "when calling error in GlobalConstFunc, line 126")
 			set this_2 = 0
 		endif
 	else
 		set PlayerStats_firstFree = PlayerStats_firstFree - 1
 		set this_2 = PlayerStats_nextFree[PlayerStats_firstFree]
-		set PlayerStats_typeId[this_2] = 3
+		set PlayerStats_typeId[this_2] = 4
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set this = this_2
 	set this_3 = this
 	set which_player_2 = which_player
-	set stackPos_3 = "when calling construct_PlayerStats in GlobalConstFunc, line 56"
+	set stackPos_3 = "when calling construct_PlayerStats in GlobalConstFunc, line 169"
 	set wurst_stack[wurst_stack_depth] = stackPos_3
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set PlayerStats_is_in_game[this_3] = false
 	set PlayerStats_unhappiness[this_3] = 0
 	set PlayerStats_pl[this_3] = which_player_2
 	set i = 0
-	set temp = 22 - 1
+	set temp = 24 - 1
 	loop
 		exitwhen i > temp
 		if Player_players[i] == which_player_2 then
-			call PlayerStats_alliance_states_set(this_3, i, -1, "when writing array PlayerStats_alliance_states in GlobalConstFunc, line 61")
+			call PlayerStats_alliance_states_set(this_3, i, -1, "when writing array PlayerStats_alliance_states in GlobalConstFunc, line 174")
 		else
-			call PlayerStats_alliance_states_set(this_3, i, bj_ALLIANCE_UNALLIED, "when writing array PlayerStats_alliance_states in GlobalConstFunc, line 63")
+			call PlayerStats_alliance_states_set(this_3, i, bj_ALLIANCE_UNALLIED, "when writing array PlayerStats_alliance_states in GlobalConstFunc, line 176")
 		endif
 		set i = i + 1
 	endloop
@@ -18515,24 +18680,42 @@ function new_PlayerStats takes player which_player, string stackPos returns inte
 endfunction
 
 function init_MainInit takes string stackPos returns boolean
+	local group units
+	local group iterator
+	local unit u
 	local integer i
 	local integer temp
 	local trigger receiver
 	local trigger receiver_2
 	local string msg
 	local string msg_2
-	local integer this
+	local rect r
+	local rect r_2
+	local boolexpr filter
+	local group g
+	local group this
+	local group this_2
+	local group this_3
+	local unit iterUnit
+	local rect r_3
+	local unit whichUnit
+	local rect r_4
+	local unit whichUnit_2
+	local group this_4
+	local group this_5
+	local group this_6
+	local integer this_7
 	local boolean flag
 	local string stackPos_2
-	local integer this_2
+	local integer this_8
 	local boolean flag_2
-	local player this_3
-	local player this_4
-	local player this_5
-	local trigger this_6
+	local player this_9
+	local player this_10
+	local player this_11
+	local trigger this_12
 	local real timeout
 	local boolean periodic
-	local trigger this_7
+	local trigger this_13
 	local code actionFunc
 	local boolean andLeft
 	local real tuple_temp
@@ -18556,6 +18739,44 @@ function init_MainInit takes string stackPos returns boolean
 		set msg_2 = "Debug mode is on."
 		call DisplayTimedTextToPlayer(Player_localPlayer, 0., 0., 45., msg_2)
 	endif
+	set r = bj_mapInitialPlayableArea
+	set r_2 = r
+	set filter = null
+	set g = CreateGroup()
+	call GroupEnumUnitsInRect(g, r_2, filter)
+	call DestroyBoolExpr(filter)
+	set units = g
+	set this = units
+	set Group_iterGroup = CreateGroup()
+	call ForGroup(this, ref_function_Group_closure_impl)
+	set iterator = Group_iterGroup
+	loop
+		set this_2 = iterator
+		exitwhen  not (FirstOfGroup(this_2) != null)
+		set this_3 = iterator
+		set iterUnit = FirstOfGroup(this_3)
+		call GroupRemoveUnit(this_3, iterUnit)
+		set u = iterUnit
+		set r_3 = gg_rct_CITY_BYZ_Adrianopolis
+		set whichUnit = u
+		if RectContainsCoords(r_3, GetUnitX(whichUnit), GetUnitY(whichUnit)) then
+			call new_City(u, "Adrianopolis", 3, "when calling new_City in MainInit, line 80")
+		else
+			set r_4 = gg_rct_CITY_BYZ_Arta
+			set whichUnit_2 = u
+			if RectContainsCoords(r_4, GetUnitX(whichUnit_2), GetUnitY(whichUnit_2)) then
+				call new_City(u, "Arta", 3, "when calling new_City in MainInit, line 82")
+			else
+				set GlobalConstFunc_cityCount = GlobalConstFunc_cityCount - 1
+			endif
+		endif
+		set GlobalConstFunc_cityCount = GlobalConstFunc_cityCount + 1
+	endloop
+	set this_4 = iterator
+	set this_5 = this_4
+	call GroupClear(this_5)
+	set this_6 = this_4
+	call DestroyGroup(this_6)
 	call SetForceAllianceStateBJ(bj_FORCE_ALL_PLAYERS, bj_FORCE_PLAYER[PLAYER_NEUTRAL_PASSIVE], bj_ALLIANCE_NEUTRAL)
 	call SetForceAllianceStateBJ(bj_FORCE_ALL_PLAYERS, bj_FORCE_ALL_PLAYERS, bj_ALLIANCE_UNALLIED)
 	call SetForceAllianceStateBJ(GlobalConstFunc_fWE, GlobalConstFunc_fWE, bj_ALLIANCE_NEUTRAL)
@@ -18563,56 +18784,74 @@ function init_MainInit takes string stackPos returns boolean
 	call SetForceAllianceStateBJ(GlobalConstFunc_fME, GlobalConstFunc_fME, bj_ALLIANCE_NEUTRAL)
 	call SetForceAllianceStateBJ(GlobalConstFunc_fBZ, GlobalConstFunc_fBZ, bj_ALLIANCE_NEUTRAL)
 	set i = 0
-	set temp = 22 - 1
+	set temp = 24 - 1
 	loop
 		exitwhen i > temp
 		call SetPlayerState(Player_players[i], PLAYER_STATE_RESOURCE_GOLD, 260)
 		call SetPlayerState(Player_players[i], PLAYER_STATE_RESOURCE_LUMBER, 250)
-		set GlobalConstFunc_player_stats[i] = new_PlayerStats(Player_players[i], "when calling new_PlayerStats in MainInit, line 99")
-		set this = GlobalConstFunc_player_stats[i]
-		set this_3 = Player_players[i]
-		set this_4 = this_3
-		if GetPlayerSlotState(this_4) == PLAYER_SLOT_STATE_PLAYING then
-			set this_5 = this_3
-			set andLeft = GetPlayerController(this_5) == MAP_CONTROL_USER
+		set GlobalConstFunc_player_stats[i] = new_PlayerStats(Player_players[i], "when calling new_PlayerStats in MainInit, line 104")
+		set this_7 = GlobalConstFunc_player_stats[i]
+		set this_9 = Player_players[i]
+		set this_10 = this_9
+		if GetPlayerSlotState(this_10) == PLAYER_SLOT_STATE_PLAYING then
+			set this_11 = this_9
+			set andLeft = GetPlayerController(this_11) == MAP_CONTROL_USER
 		else
 			set andLeft = false
 		endif
 		set flag = andLeft
-		set stackPos_2 = "when calling SetInGame in MainInit, line 100"
+		set stackPos_2 = "when calling SetInGame in MainInit, line 105"
 		set wurst_stack[wurst_stack_depth] = stackPos_2
 		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this] == 0 then
-			if this == 0 then
-				call error("Nullpointer exception when calling PlayerStats.SetInGame", "when calling error in GlobalConstFunc, line 38")
+		if PlayerStats_typeId[this_7] == 0 then
+			if this_7 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.SetInGame", "when calling error in GlobalConstFunc, line 150")
 			else
-				call error("Called PlayerStats.SetInGame on invalid object.", "when calling error in GlobalConstFunc, line 38")
+				call error("Called PlayerStats.SetInGame on invalid object.", "when calling error in GlobalConstFunc, line 150")
 			endif
 		endif
-		set this_2 = this
+		set this_8 = this_7
 		set flag_2 = flag
-		set PlayerStats_is_in_game[this_2] = flag_2
+		set PlayerStats_is_in_game[this_8] = flag_2
 		set wurst_stack_depth = wurst_stack_depth - 1
 		set i = i + 1
 	endloop
-	call SetPlayersAtStart("when calling SetPlayersAtStart in MainInit, line 102")
+	call SetPlayersAtStart("when calling SetPlayersAtStart in MainInit, line 107")
 	set receiver = CreateTrigger()
-	set this_6 = receiver
+	set this_12 = receiver
 	set timeout = 0.01
 	set periodic = false
-	call TriggerRegisterTimerEvent(this_6, timeout, periodic)
+	call TriggerRegisterTimerEvent(this_12, timeout, periodic)
 	set receiver_2 = receiver
-	set this_7 = receiver_2
+	set this_13 = receiver_2
 	set actionFunc = ref_function_CinematicTutorial
-	call TriggerAddAction(this_7, actionFunc)
+	call TriggerAddAction(this_13, actionFunc)
 	set wurst_stack_depth = wurst_stack_depth - 1
+	set units = null
+	set iterator = null
+	set u = null
 	set receiver = null
 	set receiver_2 = null
+	set r = null
+	set r_2 = null
+	set filter = null
+	set g = null
+	set this = null
+	set this_2 = null
 	set this_3 = null
+	set iterUnit = null
+	set r_3 = null
+	set whichUnit = null
+	set r_4 = null
+	set whichUnit_2 = null
 	set this_4 = null
 	set this_5 = null
 	set this_6 = null
-	set this_7 = null
+	set this_9 = null
+	set this_10 = null
+	set this_11 = null
+	set this_12 = null
+	set this_13 = null
 	return true
 endfunction
 
@@ -18742,7 +18981,7 @@ function init_Commands takes nothing returns boolean
 	call TriggerAddAction(this_2, actionFunc)
 	set t = receiver_2
 	set i = 0
-	set temp = 22
+	set temp = 24
 	loop
 		exitwhen i > temp
 		set this_3 = t
@@ -18833,6 +19072,7 @@ function init_GlobalConstFunc takes nothing returns boolean
 	set GlobalConstFunc_fEE = CreateForce()
 	set GlobalConstFunc_fME = CreateForce()
 	set GlobalConstFunc_fBZ = CreateForce()
+	set GlobalConstFunc_cityCount = 0
 	set GlobalConstFunc_ksWarningWE[0] = "God save us! Terrible news, my lord!"
 	set GlobalConstFunc_ksWarningWE[1] = "The messenger came to us with horrific news! May we execute him?"
 	set GlobalConstFunc_ksWarningWE[2] = "A mere nightmare, Your Mightiness!"
@@ -18922,7 +19162,7 @@ function init_OnPlayerLeave takes nothing returns boolean
 	call TriggerAddAction(this, actionFunc)
 	set t = receiver
 	set i = 0
-	set temp = 22 - 1
+	set temp = 24 - 1
 	loop
 		exitwhen i > temp
 		set this_2 = t
@@ -19061,7 +19301,9 @@ function initGlobals takes nothing returns nothing
 	set udg_THDEATH = null
 	set gg_rct_Tax_Region = null
 	set gg_rct_Iron_Region = null
+	set gg_rct_CITY_BYZ_Adrianopolis = null
 	set gg_rct_Faction = null
+	set gg_rct_CITY_BYZ_Arta = null
 	set gg_snd_Warning = null
 	set gg_trg_Melee_Initialization = null
 	set gg_trg_F9 = null
@@ -19534,11 +19776,11 @@ function initGlobals takes nothing returns nothing
 	set ref_function_cond = function cond
 	set ref_function_action = function action
 	set ref_function_cond_2 = function cond_2
-	set ref_function_bridge_action = function bridge_action_2
+	set ref_function_bridge_action = function bridge_action
 	set ref_function_GameTimer_closure_impl = function GameTimer_closure_impl
-	set ref_function_CinematicTutorial = function CinematicTutorial
-	set ref_function_bridge_action_2 = function bridge_action
 	set ref_function_Group_closure_impl = function Group_closure_impl
+	set ref_function_CinematicTutorial = function CinematicTutorial
+	set ref_function_bridge_action_2 = function bridge_action_2
 endfunction
 
 function main takes nothing returns nothing
@@ -19555,7 +19797,7 @@ function main takes nothing returns nothing
 	call SetMapMusic("Music", true, 0)
 	set gg_snd_Warning = CreateSound("Sound\\Interface\\Warning.wav", false, false, false, 10, 10, "")
 	call SetSoundParamsFromLabel(gg_snd_Warning, "Warning")
-	call SetSoundDuration(gg_snd_Warning, 1903)
+	call SetSoundDuration(gg_snd_Warning, 1904)
 	call Rect(11872.0,  - 24096.0, 13376.0,  - 18304.0)
 	call Rect(14080.0,  - 30720.0, 16256.0,  - 25664.0)
 	call Rect(12096.0,  - 26240.0, 14944.0,  - 23776.0)
@@ -19572,11 +19814,11 @@ function main takes nothing returns nothing
 	call Rect( - 24704.0,  - 30208.0,  - 24064.0,  - 29696.0)
 	call Rect( - 17440.0, 21952.0,  - 17024.0, 22496.0)
 	call Rect( - 19072.0, 17728.0,  - 18688.0, 18080.0)
-	call Rect( - 22048.0, 22944.0,  - 21632.0, 23328.0)
+	call Rect( - 22464.0, 22208.0,  - 22112.0, 22560.0)
 	call Rect( - 3776.0, 4416.0,  - 3392.0, 4768.0)
 	call Rect( - 3872.0, 1664.0,  - 3456.0, 2016.0)
 	call Rect( - 416.0,  - 2592.0,  - 128.0,  - 2272.0)
-	call Rect(4992.0,  - 2048.0, 5376.0,  - 1696.0)
+	set gg_rct_CITY_BYZ_Adrianopolis = Rect(4992.0,  - 2048.0, 5376.0,  - 1696.0)
 	call Rect(2528.0,  - 3168.0, 2848.0,  - 2880.0)
 	call Rect(7744.0,  - 2528.0, 8096.0,  - 2208.0)
 	call Rect( - 17504.0, 18080.0,  - 17056.0, 18496.0)
@@ -19595,7 +19837,7 @@ function main takes nothing returns nothing
 	call Rect( - 6464.0, 21184.0,  - 6080.0, 21568.0)
 	call Rect( - 7904.0, 22048.0,  - 7488.0, 22464.0)
 	call Rect( - 5344.0, 14304.0,  - 4960.0, 14720.0)
-	call Rect(2848.0, 0.0, 3264.0, 352.0)
+	call Rect(2880.0, 32.0, 3264.0, 352.0)
 	call Rect(608.0, 15680.0, 992.0, 16096.0)
 	call Rect( - 2496.0, 15872.0,  - 2112.0, 16224.0)
 	call Rect(1056.0, 10848.0, 1344.0, 11136.0)
@@ -19632,8 +19874,8 @@ function main takes nothing returns nothing
 	call Rect(5952.0, 18400.0, 6304.0, 18688.0)
 	call Rect(9120.0, 19872.0, 9408.0, 20192.0)
 	call Rect(23328.0,  - 14080.0, 30688.0, 17792.0)
-	call Rect(13920.0,  - 320.0, 14272.0,  - 32.0)
-	call Rect(10592.0,  - 7584.0, 11072.0,  - 7168.0)
+	call Rect(13984.0,  - 288.0, 14336.0, 0.0)
+	call Rect(10624.0,  - 7552.0, 11008.0,  - 7200.0)
 	call Rect(15168.0,  - 5792.0, 15552.0,  - 5408.0)
 	call Rect(15328.0,  - 7712.0, 15648.0,  - 7424.0)
 	call Rect(12640.0,  - 7104.0, 12992.0,  - 6752.0)
@@ -19642,7 +19884,7 @@ function main takes nothing returns nothing
 	call Rect(13760.0,  - 11168.0, 14112.0,  - 10752.0)
 	call Rect(16768.0,  - 16416.0, 17120.0,  - 16032.0)
 	call Rect(18880.0,  - 7616.0, 19232.0,  - 7296.0)
-	call Rect(6784.0,  - 6720.0, 7136.0,  - 6464.0)
+	call Rect(6816.0,  - 6752.0, 7136.0,  - 6464.0)
 	call Rect(12512.0,  - 4064.0, 12832.0,  - 3712.0)
 	call Rect(9056.0,  - 4576.0, 9408.0,  - 4224.0)
 	call Rect( - 26464.0,  - 8896.0,  - 26144.0,  - 8544.0)
@@ -19681,16 +19923,94 @@ function main takes nothing returns nothing
 	call Rect(17760.0,  - 10400.0, 23360.0,  - 1344.0)
 	call Rect(12384.0,  - 5984.0, 13824.0,  - 4352.0)
 	call Rect( - 10944.0, 3968.0,  - 7680.0, 5120.0)
-	call Rect( - 11168.0, 5632.0,  - 11136.0, 5664.0)
 	call Rect( - 6528.0, 7808.0,  - 6176.0, 8160.0)
 	call Rect( - 8864.0, 6912.0,  - 8448.0, 7264.0)
-	call Rect( - 11552.0, 14304.0,  - 11136.0, 14752.0)
+	call Rect( - 11680.0, 14304.0,  - 11264.0, 14752.0)
 	call Rect( - 9760.0, 12928.0,  - 9472.0, 13280.0)
 	call Rect( - 7552.0, 16928.0,  - 7232.0, 17248.0)
 	call Rect( - 17472.0,  - 3328.0,  - 17120.0,  - 2976.0)
 	call Rect( - 24576.0,  - 1376.0,  - 24224.0,  - 1024.0)
 	call Rect(23392.0, 10912.0, 23712.0, 11232.0)
 	call Rect(17280.0, 19456.0, 17632.0, 19808.0)
+	call Rect( - 16928.0, 24000.0,  - 16544.0, 24352.0)
+	call Rect( - 15904.0, 25952.0,  - 15520.0, 26304.0)
+	call Rect( - 17312.0, 26624.0,  - 16896.0, 27008.0)
+	call Rect( - 16096.0, 20352.0,  - 15712.0, 20768.0)
+	call Rect( - 20448.0, 21440.0,  - 20064.0, 21792.0)
+	call Rect( - 22560.0, 19808.0,  - 22240.0, 20160.0)
+	call Rect( - 18752.0, 19520.0,  - 18400.0, 19872.0)
+	call Rect( - 16128.0, 16896.0,  - 15808.0, 17248.0)
+	call Rect( - 17952.0, 15904.0,  - 17632.0, 16224.0)
+	call Rect( - 19936.0, 16352.0,  - 19648.0, 16672.0)
+	call Rect( - 17376.0, 12736.0,  - 17056.0, 13120.0)
+	call Rect( - 13728.0, 11968.0,  - 13408.0, 12352.0)
+	call Rect( - 15232.0, 10624.0,  - 14880.0, 10976.0)
+	call Rect( - 13856.0, 7872.0,  - 13568.0, 8256.0)
+	call Rect( - 16192.0, 5824.0,  - 15840.0, 6208.0)
+	call Rect( - 16864.0, 3392.0,  - 16576.0, 3776.0)
+	call Rect( - 18880.0, 5568.0,  - 18528.0, 5920.0)
+	call Rect( - 20288.0, 1216.0,  - 19936.0, 1600.0)
+	call Rect( - 17216.0, 352.0,  - 16896.0, 736.0)
+	call Rect( - 24512.0, 3744.0,  - 24128.0, 4064.0)
+	call Rect( - 22720.0, 2368.0,  - 22432.0, 2752.0)
+	call Rect( - 23552.0,  - 256.0,  - 23200.0, 128.0)
+	call Rect( - 25376.0, 1312.0,  - 25056.0, 1632.0)
+	call Rect( - 28736.0,  - 192.0,  - 28352.0, 160.0)
+	call Rect( - 21024.0, 2944.0,  - 20704.0, 3360.0)
+	call Rect( - 13792.0, 2144.0,  - 13440.0, 2592.0)
+	call Rect( - 13568.0, 14912.0,  - 13216.0, 15296.0)
+	call Rect( - 12736.0, 16128.0,  - 12352.0, 16512.0)
+	call Rect( - 10880.0, 3360.0,  - 10528.0, 3712.0)
+	call Rect( - 10048.0, 5280.0,  - 9696.0, 5600.0)
+	call Rect( - 6880.0, 3936.0,  - 6560.0, 4256.0)
+	call Rect( - 8224.0, 3040.0,  - 7904.0, 3392.0)
+	call Rect( - 8960.0, 1760.0,  - 8608.0, 2176.0)
+	call Rect( - 6624.0, 1088.0,  - 6304.0, 1472.0)
+	call Rect( - 7296.0,  - 960.0,  - 6944.0,  - 544.0)
+	call Rect( - 23712.0,  - 4704.0,  - 23392.0,  - 4416.0)
+	call Rect( - 25184.0,  - 3168.0,  - 24864.0,  - 2848.0)
+	call Rect( - 21888.0,  - 4416.0,  - 21536.0,  - 4032.0)
+	call Rect( - 20928.0,  - 2304.0,  - 20576.0,  - 1888.0)
+	call Rect( - 7776.0, 11040.0,  - 7456.0, 11392.0)
+	call Rect( - 11648.0, 7072.0,  - 11296.0, 7360.0)
+	call Rect( - 13728.0, 4928.0,  - 13376.0, 5408.0)
+	call Rect( - 5152.0, 21696.0,  - 4832.0, 22080.0)
+	call Rect( - 5248.0, 24416.0,  - 4960.0, 24768.0)
+	call Rect( - 6688.0, 28096.0,  - 6368.0, 28480.0)
+	call Rect( - 9024.0, 26496.0,  - 8736.0, 26880.0)
+	call Rect( - 10048.0, 28224.0,  - 9696.0, 28576.0)
+	call Rect( - 1408.0, 23776.0,  - 1152.0, 24096.0)
+	call Rect( - 2720.0, 26176.0,  - 2432.0, 26560.0)
+	call Rect( - 28032.0,  - 2944.0,  - 27680.0,  - 2560.0)
+	call Rect( - 29760.0,  - 10016.0,  - 29408.0,  - 9632.0)
+	call Rect(15296.0,  - 26976.0, 15648.0,  - 26624.0)
+	call Rect( - 20544.0, 12032.0,  - 20160.0, 12416.0)
+	call Rect( - 18368.0, 10624.0,  - 18016.0, 11008.0)
+	call Rect( - 10880.0,  - 576.0,  - 10528.0,  - 224.0)
+	call Rect( - 11104.0,  - 4768.0,  - 10816.0,  - 4448.0)
+	call Rect( - 5728.0,  - 2912.0,  - 5440.0,  - 2560.0)
+	call Rect( - 3904.0,  - 6720.0,  - 3552.0,  - 6336.0)
+	call Rect( - 3616.0,  - 3040.0,  - 3328.0,  - 2688.0)
+	call Rect( - 7200.0,  - 8000.0,  - 6880.0,  - 7616.0)
+	call Rect( - 5504.0,  - 9344.0,  - 5248.0,  - 9056.0)
+	call Rect( - 11616.0, 10848.0,  - 11296.0, 11168.0)
+	call Rect( - 1792.0,  - 320.0,  - 1440.0, 64.0)
+	call Rect(3232.0,  - 7488.0, 3552.0,  - 7136.0)
+	call Rect(8224.0,  - 10496.0, 8512.0,  - 10208.0)
+	call Rect(1344.0, 29280.0, 1696.0, 29632.0)
+	call Rect(10848.0,  - 2144.0, 11136.0,  - 1824.0)
+	call Rect( - 26496.0,  - 1568.0,  - 26144.0,  - 1248.0)
+	call Rect( - 27168.0, 2528.0,  - 26880.0, 2816.0)
+	call Rect( - 2016.0, 27552.0,  - 1696.0, 27936.0)
+	call Rect( - 3488.0, 23040.0,  - 3200.0, 23392.0)
+	call Rect(2016.0,  - 7904.0, 2336.0,  - 7584.0)
+	set gg_rct_CITY_BYZ_Arta = Rect(640.0,  - 5760.0, 992.0,  - 5376.0)
+	call Rect(5216.0,  - 12384.0, 5504.0,  - 12064.0)
+	call Rect(18272.0,  - 17504.0, 18656.0,  - 17056.0)
+	call Rect(26848.0,  - 11680.0, 27168.0,  - 11360.0)
+	call Rect(6464.0,  - 4672.0, 6816.0,  - 4288.0)
+	call Rect(20672.0, 21312.0, 21024.0, 21696.0)
+	call Rect( - 1824.0, 5792.0,  - 1440.0, 6144.0)
 	call CreateAllUnits()
 	call InitBlizzard()
 	call InitGlobals()

@@ -6,10 +6,121 @@ public let dbg_mode = true
 public let dbg_player = 0
 
 // Maximum number of players.
-public let PLAYER_SLOTS = 22
+public let PLAYER_SLOTS = 24
+
+// Players and forces
+public let fWEsize = 6
+public let fEEsize = 6
+public let fMEsize = 6
+public let fBZsize = 4
+
+public let fWE = CreateForce()
+public let fEE = CreateForce()
+public let fME = CreateForce()
+public let fBZ = CreateForce()
+
+public let kWE = 0
+public let kEE = 1
+public let kME = 2
+public let kBZ = 3
+
+public constant force array forces = [fWE, fEE, fME, fBZ]
+public constant color array forces_colors = [color(102, 2, 60)]
+
+// Starting resources
+public let kStartGold = 260
+public let kStartLumber = 250
 
 
-// Player-related
+// Units
+public let uSettler = 'h00J'
+
+// CAPITOL
+public let uCapitol1 = 'h001'
+public let uCapitol2 = 'h002'
+public let uCapitol3 = 'h003'
+// AUTO
+public let uAutonomousTH = 'h043'
+// HALLS - CASTLES
+public let uTH = 'h031'
+public let uCH = 'h03M'
+public let uMotteBailey = 'h02C'
+public let uCastle = 'h02D'
+public let uStronghold = 'h01l'
+
+// Cities
+
+public let kCityTypesSize = 9
+public constant int array kCityTypes = [uCapitol1, uCapitol2, uCapitol3, uAutonomousTH, uTH, uCH, uMotteBailey, uCastle, uStronghold]
+
+// Changes only in main init
+public var cityCount = 0
+
+public let kCityNameSize = 6.0
+public let kCityNameLimit = 24 
+
+public let kCityNameXYZ = vec3(0.0, 100.0, 0.0)
+// For every second char, text will be moved to this position in x
+public let kCityNameAlignFactor = -15.0
+
+
+// Abilities
+public let aWar = 'A01T'
+public let aAlly = 'A01U'
+public let aNeutral = 'A01V'
+public let aUnally = 'A01X'
+public let aShareUnits = 'A01W'
+
+
+
+
+
+// - - - - - - - - - - - - - - - - - - - - - CITIES - - - - - - - - - - - - - - - - - - - - -
+public class City
+	// Remember to change unit every time!
+	private unit city_unit
+	private string city_name
+	// Everyone can see this. Only?
+	private texttag city_name_tt
+	// id -- int, not big force type.
+	private int force_id
+	private int player_id
+
+	// Limit - kCityNameLimit
+	function ChangeCityName(string new_name)
+		city_name = new_name.substring(0, kCityNameLimit)
+		// Floating text limit :(
+		//city_name_tt.setText(city_name, kCityNameSize)
+		// city point + upper + align it to center
+		//city_name_tt.setPos(city_unit.getPos3Real() + kCityNameXYZ + vec3(kCityNameAlignFactor * city_name.length()/2, 0.0, 0.0))
+
+	function ShowCityNameTT()
+		city_name_tt = CreateTextTag()
+		city_name_tt.setText(city_name, kCityNameSize)
+		// city point + upper + align it to center
+		city_name_tt.setPos(city_unit.getPos3Real() + kCityNameXYZ + vec3(kCityNameAlignFactor * city_name.length()/2, 0.0, 0.0))
+
+	// City unit, name of City, Force id(int).
+	construct(unit u, string n, int f_id)
+		city_unit = u
+		city_name = n
+		
+		force_id = f_id
+		player_id = city_unit.getOwner().getId()
+
+		ChangeCityName(n)
+
+public City array cities
+
+public function isCity(unit u) returns bool
+	int id = u.getTypeId()
+	for i = 0 to kCityTypesSize - 1
+		if id == kCityTypes[i]
+			return true
+	return false
+
+
+// - - - - - - - - - - - - - - - - - - - - - - PLAYERS - - - - - - - - - - - - - - - - - - - - - - - - 
 // Player stat for every player. Contains many things.
 let PLAYER_SELF = -1
 public class PlayerStats
@@ -22,7 +133,7 @@ public class PlayerStats
 		if not is_in_game
 			return
 		// REMOVE WHEN YOU'RE DONE WITH CONVERTING
-		udg_Unhappiness[GetPlayerId(pl)] += change
+		udg_Unhappiness[pl.getId()] += change
 		unhappiness += change
 		if (change > 0)
 			AttentionToPlayer("Unhappiness of your people has risen by " + change.toString() + " points!\nNow you have " + unhappiness.toString(), pl)
@@ -35,22 +146,24 @@ public class PlayerStats
 
 	function isInGame() returns bool
 		return is_in_game
+		
 	function SetInGame(bool flag)
 		is_in_game = flag
 
 	// - - - - - - - - - - - ALLIANCES - - - - - - - - -  - - - - - - - -
 	function SetAlliance(player which_player, int alliance_state)
+		int id = which_player.getId()
 		if not is_in_game
 			return
-		if GetPlayerId(which_player) >= PLAYER_SLOTS
+		if id >= PLAYER_SLOTS
 			return 
-		if alliance_states[GetPlayerId(which_player)] == alliance_state or which_player == pl
+		if alliance_states[id] == alliance_state or which_player == pl
 			return
-		alliance_states[GetPlayerId(which_player)] = alliance_state
+		alliance_states[id] = alliance_state
 		SetPlayerAllianceStateBJ(pl, which_player, alliance_state)
 
 	function GetAllianceState(player which_player) returns int
-		return alliance_states[GetPlayerId(which_player)]
+		return alliance_states[which_player.getId()]
 
 	// - - - - - - - - - - - CONSTRUCT - - - - - - - - - - - - - - - - - -
 	construct(player which_player)
@@ -64,34 +177,11 @@ public class PlayerStats
 
 public PlayerStats array player_stats
 
-// Players and forces
-public let fWEsize = 6
-public let fEEsize = 6
-public let fMEsize = 6
-public let fBZsize = 4
-
-public let fWE = CreateForce()
-public let fEE = CreateForce()
-public let fME = CreateForce()
-public let fBZ = CreateForce()
-
-// Starting resources
-public let kStartGold = 260
-public let kStartLumber = 250
 
 
-// Units
-public let uSettler = 'h00J'
 
 
-// Abilities
-public let aWar = 'A01T'
-public let aAlly = 'A01U'
-public let aNeutral = 'A01V'
-public let aUnally = 'A01X'
-public let aShareUnits = 'A01W'
-
-// - - - - - - - - - - - - - - - - PRIVATE - - - - - - - - - - - - - - - - - - 
+// - - - - - - - - - - - - - - - - MESSAGES - - - - - - - - - - - - - - - - - - 
 
 // Messages
 // For all players

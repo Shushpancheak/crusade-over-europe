@@ -38,6 +38,7 @@ function SetPlayersAtStart()
 	var pos = SPAWN_POINT
 	player curpl
 	angle ang = angle(0.0)
+
 	while pl_left > 0
 		for i = 1 to pl_in_ring
 			ang = angle(i * PI2 / pl_in_ring)
@@ -45,6 +46,7 @@ function SetPlayersAtStart()
 			curpl = players[PLAYER_SLOTS - pl_left + i - 1]
 			if player_stats[GetPlayerId(curpl)].isInGame()
 				CreateNUnitsAtLocFacingLocBJ(1, uSettler, curpl, Location(pos.x, pos.y), Location(SPAWN_POINT.x, SPAWN_POINT.y))
+
 		rad += SPWN_players_radius_change
 		pl_left -= pl_in_ring
 		pl_in_ring += SPWN_players_add
@@ -60,24 +62,27 @@ function CinematicTutorial()
 		TriggerSleepAction(kCTchange)
 	CinematicModeBJ(false, GetPlayersAll())
 
+
+
+// ----------------------------------INIT------------------------------------------------------
 init
 	if (dbg_msg)
 		dbg("Debug info is enabled. Only for Red.")
 	if (dbg_mode) 
 		print("Debug mode is on.")
 
-	// Forces
-
-	/* Will see...
-	for i = 0 to fWEsize - 1
-		ForceAddPlayer(fWE, paWE[i])
-	for i = 0 to fEEsize - 1
-		ForceAddPlayer(fEE, paEE[i])
-	for i = 0 to fMEsize - 1
-		ForceAddPlayer(fME, paME[i])
-	for i = 0 to fBZsize - 1
-		ForceAddPlayer(fBZ, paBZ[i])
-	*/
+	// ---------------------------------SETTING CITIES----------------------------------------------
+	// Better to have it before everything related to unit placing, since it could screw it up.
+	let units = GetUnitsInRectAll(GetPlayableMapRect())
+	
+	for u in units
+		if RectContainsUnit(gg_rct_CITY_BYZ_Adrianopolis, u)
+			cities[cityCount] = new City(u, "Adrianopolis", kBZ)
+		else if RectContainsUnit(gg_rct_CITY_BYZ_Arta, u)
+			cities[cityCount] = new City(u, "Arta", kBZ)
+		else
+			cityCount--
+		cityCount++
 
 	// - - - - - - - - - - - - - - - - PLAYERS - - - - - - - - - - - - - - - - - 
 	
@@ -100,6 +105,7 @@ init
 		player_stats[i].SetInGame(players[i].isIngame())
 	
 	SetPlayersAtStart()
+
 
 	// - - - - - - - - - - - - - - -CINEMATIC TUTORIAL- - - - - - - - - - - - - - -
 	CreateTrigger()
