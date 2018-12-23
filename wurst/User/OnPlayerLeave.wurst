@@ -1,0 +1,17 @@
+package OnPlayerLeave
+import GlobalConstFunc
+
+function action()
+	WarningToForce("As the last ruler of " + GetTriggerPlayer().getNameColored() + " died without having an heir, his country plunged into darkness. Countless riots are now taking place throughout remains of once a great country", GetPlayersAll())
+	
+	player_stats[GetPlayerId(GetTriggerPlayer())].SetInGame(false)
+
+	group g = GetUnitsOfPlayerAll(GetTriggerPlayer())
+	for u in g
+		u.setOwner(players[PLAYER_NEUTRAL_AGGRESSIVE], true)
+
+init
+	let t = CreateTrigger()
+		..addAction(function action)
+	for i = 0 to PLAYER_SLOTS - 1
+		t.registerPlayerEvent(players[i], EVENT_PLAYER_LEAVE)

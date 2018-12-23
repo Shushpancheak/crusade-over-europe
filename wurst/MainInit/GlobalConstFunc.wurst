@@ -1,0 +1,235 @@
+package GlobalConstFunc
+// Contains global functions and consts
+
+public let dbg_msg = false
+public let dbg_mode = true
+public let dbg_player = 0
+
+// Maximum number of players.
+public let PLAYER_SLOTS = 22
+
+
+// Player-related
+// Player stat for every player. Contains many things.
+let PLAYER_SELF = -1
+public class PlayerStats
+	private int unhappiness
+	private player pl
+	private int array[PLAYER_SLOTS] alliance_states
+	private bool is_in_game = false
+
+	function ChangeUnhapiness(int change)
+		if not is_in_game
+			return
+		// REMOVE WHEN YOU'RE DONE WITH CONVERTING
+		udg_Unhappiness[GetPlayerId(pl)] += change
+		unhappiness += change
+		if (change > 0)
+			AttentionToPlayer("Unhappiness of your people has risen by " + change.toString() + " points!\nNow you have " + unhappiness.toString(), pl)
+		else if (change < 0)
+			GoodNewsToPlayer("Unhappiness of your people has dropped down by " + (-change).toString() + " points!\nNow you have " + unhappiness.toString(), pl)
+	
+	function GetUnhapiness() returns int
+		return unhappiness
+
+
+	function isInGame() returns bool
+		return is_in_game
+	function SetInGame(bool flag)
+		is_in_game = flag
+
+	// - - - - - - - - - - - ALLIANCES - - - - - - - - -  - - - - - - - -
+	function SetAlliance(player which_player, int alliance_state)
+		if not is_in_game
+			return
+		if GetPlayerId(which_player) >= PLAYER_SLOTS
+			return 
+		if alliance_states[GetPlayerId(which_player)] == alliance_state or which_player == pl
+			return
+		alliance_states[GetPlayerId(which_player)] = alliance_state
+		SetPlayerAllianceStateBJ(pl, which_player, alliance_state)
+
+	function GetAllianceState(player which_player) returns int
+		return alliance_states[GetPlayerId(which_player)]
+
+	// - - - - - - - - - - - CONSTRUCT - - - - - - - - - - - - - - - - - -
+	construct(player which_player)
+		unhappiness = 0
+		pl = which_player
+		for i = 0 to PLAYER_SLOTS - 1
+			if players[i] == which_player
+				alliance_states[i] = PLAYER_SELF
+			else
+				alliance_states[i] = bj_ALLIANCE_UNALLIED
+
+public PlayerStats array player_stats
+
+// Players and forces
+public let fWEsize = 6
+public let fEEsize = 6
+public let fMEsize = 6
+public let fBZsize = 4
+
+public let fWE = CreateForce()
+public let fEE = CreateForce()
+public let fME = CreateForce()
+public let fBZ = CreateForce()
+
+// Starting resources
+public let kStartGold = 260
+public let kStartLumber = 250
+
+
+// Units
+public let uSettler = 'h00J'
+
+
+// Abilities
+public let aWar = 'A01T'
+public let aAlly = 'A01U'
+public let aNeutral = 'A01V'
+public let aUnally = 'A01X'
+public let aShareUnits = 'A01W'
+
+// - - - - - - - - - - - - - - - - PRIVATE - - - - - - - - - - - - - - - - - - 
+
+// Messages
+// For all players
+let kWarningDur = 30.0
+constant string array ksWarning = ["Warning!"]
+let ksMsgCount = 3 // So every array should be 3 strings long
+constant string array ksWarningWE = ["God save us! Terrible news, my lord!", "The messenger came to us with horrific news! May we execute him?", "A mere nightmare, Your Mightiness!"]
+constant string array ksWarningEE = ["My Tsar, we have horrific news!", "The God is angry, my Tsar!", "My Tsar, we have horrific news!"]
+constant string array ksWarningME = ["Oh, Great Caliph! We have terrible news", "Oh, Great Caliph! We have terrible news", "Oh, Great Caliph! We have terrible news"]
+constant string array ksWarningBZ = ["My Basileus, may the God bless you. We have horrific news!", "My Basileus, may the God bless you. We have horrific news!", "My Basileus, may the God bless you. We have horrific news!"]
+
+let kNoteDur = 15.0
+constant string array ksNote = ["Note:"]
+constant string array ksNoteWE = ["Your Majesty, there is something you need to know", "The messenger came to us with news. No matter, could I execute him?", "Fresh news from the messenger, milord!"]
+constant string array ksNoteEE = ["My Tsar, a messenger came with news", "May the God bless you, my Tsar, we have some news", "There is something you should know, my Tsar"]
+constant string array ksNoteME = ["May Allah bless you, Caliph! We have some news", "May Allah bless you, Caliph! We have some news", "May Allah bless you, Caliph! We have some news"]
+constant string array ksNoteBZ = ["My Basileus, we have some news", "My Basileus, we have some news", "My Basileus, we have some news"]
+
+let kGoodNewsDur = 15.0
+constant string array ksGoodNews = ["Good news!"]
+constant string array ksGoodNewsWE = ["Good news indeed, my lord!", "The God has blessed us, Your Majesty! We have good news", "The messenger with good news came to us. May I torture him a little?"]
+constant string array ksGoodNewsEE = ["Great news, my Tsar!", "Great news, my Tsar!", "Great news, my Tsar!"]
+constant string array ksGoodNewsME = ["The Allah loves us, Caliph! We have great news", "The Allah loves us, Caliph! We have great news", "The Allah loves us, Caliph! We have great news"]
+constant string array ksGoodNewsBZ = ["Good news, my Basileus!", "Good news, my Basileus!", "Good news, my Basileus!"]
+
+let kAttentionDur = 30.0
+constant string array ksAttention = ["Attention!"]
+constant string array ksAttentionWE = ["Your Majesty, important news!", "May the God bless you, my lord. There is somthing you must know!", "There is something that needs your attention, my lord!"]
+constant string array ksAttentionEE = ["You need to see this, my Tsar!", "You need to see this, my Tsar!", "You need to see this, my Tsar!"]
+constant string array ksAttentionME = ["My Caliph, there is something you need to know!", "My Caliph, there is something you need to know!", "My Caliph, there is something you need to know!"]
+constant string array ksAttentionBZ = ["My Basileus, there is something you need to know!", "My Basileus, there is something you need to know!", "My Basileus, there is something you need to know!"]
+
+
+
+function GetWarningStringForPlayer(player pl) returns string
+	force f = GetForceOfPlayer(pl)
+	int r = GetRandomInt(0, ksMsgCount)
+	string s = ""
+	if f == fWE
+		s = ksWarningWE[r]
+	else if f == fEE
+		s = ksWarningEE[r]
+	else if f == fME
+		s = ksWarningME[r]
+	else if f == fBZ
+		s = ksWarningBZ[r]
+	else
+		s = ksWarning[0]
+	return "|cffff0000" + s + "|r"
+	
+function GetNoteStringForPlayer(player pl) returns string
+	force f = GetForceOfPlayer(pl)
+	int r = GetRandomInt(0, ksMsgCount)
+	string s = ""
+	if f == fWE
+		s = ksNoteWE[r]
+	else if f == fEE
+		s = ksNoteEE[r]
+	else if f == fME
+		s = ksNoteME[r]
+	else if f == fBZ
+		s = ksNoteBZ[r]
+	else
+		s = ksNote[0]
+	return "|cff00ccff" + s + "|r"
+
+function GetGoodNewsStringForPlayer(player pl) returns string
+	force f = GetForceOfPlayer(pl)
+	int r = GetRandomInt(0, ksMsgCount)
+	string s = ""
+	if f == fWE
+		s = ksGoodNewsWE[r]
+	else if f == fEE
+		s = ksGoodNewsEE[r]
+	else if f == fME
+		s = ksGoodNewsME[r]
+	else if f == fBZ
+		s = ksGoodNewsBZ[r]
+	else
+		s = ksGoodNews[0]
+	return "|cff00ff00" + s + "|r"
+
+function GetAttentionStringForPlayer(player pl) returns string
+	force f = GetForceOfPlayer(pl)
+	int r = GetRandomInt(0, ksMsgCount)
+	string s = ""
+	if f == fWE
+		s = ksAttentionWE[r]
+	else if f == fEE
+		s = ksAttentionEE[r]
+	else if f == fME
+		s = ksAttentionME[r]
+	else if f == fBZ
+		s = ksAttentionBZ[r]
+	else
+		s = ksAttention[0]
+	return "|cffffa600" + s + "|r"
+
+public function dbg(string msg)
+	DisplayTimedTextToPlayer(players[dbg_player], 0, 0, 60, msg)
+
+public function dbgt(string msg, real sec)
+	DisplayTimedTextToPlayer(players[dbg_player], 0, 0, sec, msg)
+
+public function WarningToPlayer(string msg, player pl)
+	DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, GetWarningStringForPlayer(pl))
+	DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, msg)
+public function NoteToPlayer(string msg, player pl)
+	DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, GetNoteStringForPlayer(pl))
+	DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, msg)
+public function GoodNewsToPlayer(string msg, player pl)
+	DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, GetGoodNewsStringForPlayer(pl))
+	DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
+public function AttentionToPlayer(string msg, player pl)
+	DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, GetAttentionStringForPlayer(pl))
+	DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
+
+public function WarningToForce(string msg, force f)
+	for i = 0 to PLAYER_SLOTS - 1
+		if GetForceOfPlayer(players[i]) == f
+			let pl = players[i]
+			DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, GetWarningStringForPlayer(pl))
+			DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, msg)
+public function NoteToForce(string msg, force f)
+	for i = 0 to PLAYER_SLOTS - 1
+		if GetForceOfPlayer(players[i]) == f
+			let pl = players[i]
+			DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, GetNoteStringForPlayer(pl))
+			DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, msg)
+public function GoodNewsToForce(string msg, force f)
+	for i = 0 to PLAYER_SLOTS - 1
+		if GetForceOfPlayer(players[i]) == f
+			let pl = players[i]
+			DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, GetGoodNewsStringForPlayer(pl))
+			DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
+public function AttentionToForce(string msg, force f)
+	for i = 0 to PLAYER_SLOTS - 1
+		if GetForceOfPlayer(players[i]) == f
+			let pl = players[i]
+			DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, GetAttentionStringForPlayer(pl))
+			DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
