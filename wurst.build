@@ -1,5 +1,5 @@
 ---
-projectName: "CoE2"
+projectName: "CoE"
 dependencies:
 - "https://github.com/wurstscript/wurstStdlib2"
 buildMapData:

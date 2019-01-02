@@ -121,28 +121,28 @@ let kWarningDur = 30.0
 constant string array ksWarning = ["Warning!"]
 let ksMsgCount = 3 // So every array should be 3 strings long
 constant string array ksWarningWE = ["God save us! Terrible news, my lord!", "The messenger came to us with horrific news! May we execute him?", "A mere nightmare, Your Mightiness!"]
-constant string array ksWarningEE = ["My Tsar, we have horrific news!", "The God is angry, my Tsar!", "My Tsar, we have horrific news!"]
+constant string array ksWarningEE = ["Great Prince, we have horrific news!", "The God is angry, Great Prince!", "Great Prince, we have horrific news!"]
 constant string array ksWarningME = ["Oh, Great Caliph! We have terrible news", "Oh, Great Caliph! We have terrible news", "Oh, Great Caliph! We have terrible news"]
 constant string array ksWarningBZ = ["My Basileus, may the God bless you. We have horrific news!", "My Basileus, may the God bless you. We have horrific news!", "My Basileus, may the God bless you. We have horrific news!"]
 
 let kNoteDur = 15.0
 constant string array ksNote = ["Note:"]
 constant string array ksNoteWE = ["Your Majesty, there is something you need to know", "The messenger came to us with news. No matter, could I execute him?", "Fresh news from the messenger, milord!"]
-constant string array ksNoteEE = ["My Tsar, a messenger came with news", "May the God bless you, my Tsar, we have some news", "There is something you should know, my Tsar"]
+constant string array ksNoteEE = ["Great Prince, a messenger came with news", "May the God bless you, Great Prince, we have some news", "There is something you should know, Great Prince"]
 constant string array ksNoteME = ["May Allah bless you, Caliph! We have some news", "May Allah bless you, Caliph! We have some news", "May Allah bless you, Caliph! We have some news"]
 constant string array ksNoteBZ = ["My Basileus, we have some news", "My Basileus, we have some news", "My Basileus, we have some news"]
 
 let kGoodNewsDur = 15.0
 constant string array ksGoodNews = ["Good news!"]
 constant string array ksGoodNewsWE = ["Good news indeed, my lord!", "The God has blessed us, Your Majesty! We have good news", "The messenger with good news came to us. May I torture him a little?"]
-constant string array ksGoodNewsEE = ["Great news, my Tsar!", "Great news, my Tsar!", "Great news, my Tsar!"]
+constant string array ksGoodNewsEE = ["Great news, Prince!", "Great news, Prince!", "Great news, Prince!"]
 constant string array ksGoodNewsME = ["The Allah loves us, Caliph! We have great news", "The Allah loves us, Caliph! We have great news", "The Allah loves us, Caliph! We have great news"]
 constant string array ksGoodNewsBZ = ["Good news, my Basileus!", "Good news, my Basileus!", "Good news, my Basileus!"]
 
 let kAttentionDur = 30.0
 constant string array ksAttention = ["Attention!"]
 constant string array ksAttentionWE = ["Your Majesty, important news!", "May the God bless you, my lord. There is somthing you must know!", "There is something that needs your attention, my lord!"]
-constant string array ksAttentionEE = ["You need to see this, my Tsar!", "You need to see this, my Tsar!", "You need to see this, my Tsar!"]
+constant string array ksAttentionEE = ["You need to see this, Great Prince!", "You need to see this, Great Prince!", "You need to see this, Great Prince!"]
 constant string array ksAttentionME = ["My Caliph, there is something you need to know!", "My Caliph, there is something you need to know!", "My Caliph, there is something you need to know!"]
 constant string array ksAttentionBZ = ["My Basileus, there is something you need to know!", "My Basileus, there is something you need to know!", "My Basileus, there is something you need to know!"]
 
