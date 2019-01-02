@@ -1,5 +1,5 @@
 package Commands
-import GlobalConstFunc
+import Main
 
 // Constants
 // Commands
@@ -46,6 +46,6 @@ init
 		..addCondition(Condition(function cond))
 		..addAction(function action)
 	
-	for i = 0 to PLAYER_SLOTS
+	for i = 0 to PLAYER_SLOTS - 1
 		t.registerPlayerChatEvent(players[i], "-", false)
 	

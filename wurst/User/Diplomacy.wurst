@@ -1,5 +1,5 @@
 package Diplomacy
-import GlobalConstFunc
+import Main
 
 let kChangeUnhappinessOnWar = 600
 
@@ -53,9 +53,9 @@ function action()
 				if players[i] == target
 					NoteToPlayer(source_s + " is now neutral towards you", players[i])
 				else if current_f == f1 or current_f == f2
-					NoteToPlayer(source_s + " now sees " + target_s + " as neutral", players[i])
+					NoteToPlayer(source_s + " shows " + target_s + " neutrality", players[i])
 				else
-					NoteToPlayer(source_s + " now sees " + target_s + " as neutral", players[i])
+					NoteToPlayer(source_s + " shows " + target_s + " neutrality", players[i])
 		
 		case aUnally
 			if player_stats[source_id].GetAllianceState(target) == bj_ALLIANCE_NEUTRAL
@@ -88,8 +88,9 @@ function action()
 
 
 function cond() returns bool
-	//Player cannot do diplomacy with himself
-	if GetSpellAbilityUnit().getOwner() == GetSpellTargetUnit().getOwner()
+	// Player cannot do diplomacy with himself
+	// and with someone who's absent
+	if GetSpellAbilityUnit().getOwner() == GetSpellTargetUnit().getOwner() or not GetSpellTargetUnit().getOwner().isIngame()
 		return false
 	
 	var id = GetSpellAbilityId()

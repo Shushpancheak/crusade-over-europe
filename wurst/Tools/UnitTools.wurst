@@ -1,0 +1,14 @@
+package UnitTools
+import Main
+
+public function unit.isCity() returns bool
+	return isCity(this)
+public function unit.getLifePercent() returns real
+	return GetUnitLifePercent(this)
+public function unit.getCityId() returns int
+	return GetCityId(this)
+
+public function unit.setLifePercent(real p)
+	SetUnitLifePercentBJ(this, p)
+public function unit.setManaPercent(real p)
+	SetUnitManaPercentBJ(this, p)
