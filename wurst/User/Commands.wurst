@@ -10,7 +10,11 @@ public let kMedDistance = 2300.0
 public let ksFar = "far"
 public let ksMed = "med"
 public let ksName = "name"
-public let ksNameTown = "nametown"
+public let ksRenameCity = "rename"
+
+// Errs
+
+public let kseNotYourCity = "The city you wanted to rename so eagerly is not belong to you!"
 
 
 function action()
@@ -37,6 +41,13 @@ function action()
 		SetCameraFieldForPlayer(GetTriggerPlayer(), CAMERA_FIELD_TARGET_DISTANCE, kMedDistance, 0)
 	else if (args[0] == ksName)
 		SetPlayerName(GetTriggerPlayer(), arg)
+	else if args[0] == ksRenameCity
+		int city_id = player_stats[pl.getId()].GetSelectedCityId()
+		if city_id >= 0 and city_id < cityCount
+			if cities[city_id].GetCityUnit().getOwner() != pl
+				NoteToPlayer(kseNotYourCity, pl)
+			else
+				cities[city_id].ChangeCityName(arg)
 
 function cond() returns bool
 	return GetEventPlayerChatString().startsWith("-")

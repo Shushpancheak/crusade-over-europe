@@ -1,0 +1,35 @@
+package MutliboardTools
+
+public function multiboard.setItem(int x, int y, string val)
+	let mbi = this.getItem(y, x)
+	MultiboardSetItemValue(mbi, val)
+public function multiboard.setItem(int x, int y, real width, bool showIcon, bool showValue, string val)
+	let mbi = this.getItem(y, x)
+	MultiboardSetItemStyle(mbi, showValue, showIcon)
+	MultiboardSetItemWidth(mbi, width)
+	MultiboardSetItemValue(mbi, val)
+public function multiboard.setItem(int x, int y, real width, string val)
+	let mbi = this.getItem(y, x)
+	MultiboardSetItemWidth(mbi, width)
+	MultiboardSetItemValue(mbi, val)
+
+// multiboard API doesn't prvide getwidth :(
+let kWidthPerChar = 0.004
+
+public function multiboard.setItemCentered(int x, int y, string val, real width)
+	let mbi = this.getItem(y, x)
+	var centered = val
+	let chars = (width / kWidthPerChar).toInt()
+	let spaces_num = ((chars - val.length()) / 2).toInt()
+
+	var spaces_chars = ""
+	for i = 0 to spaces_num - 1
+		spaces_chars += "-"
+	if spaces_num % 2 == 1
+		centered = "-" + centered
+
+	centered = spaces_chars + centered + spaces_chars
+
+	// @TODO Optimize this thing by creating an array of items of each mb, and checking if the 
+	// string is equal to the one we are going to set
+	MultiboardSetItemValue(mbi, centered)

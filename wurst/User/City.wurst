@@ -22,10 +22,7 @@ function Settle()
 	let city_id = GetCityId(GetSpellTargetUnit())
 	let force_id = cities[city_id].GetCityForceId()
 	let player_id = GetSpellAbilityUnit().getOwner().getId()
-	player_stats[player_id].ChangeForce(force_id)
-
-	if (dbg_msg)
-		AttentionToPlayer("force of city = " + force_id.toString() + "; ", players[dbg_player])
+	player_stats[player_id].ChangeForce(force_id)	
 
 	// Spawning starting units
 	for u in kStartingUnits[force_id]
@@ -46,6 +43,7 @@ init
 		
 	for i = 0 to PLAYER_SLOTS
 		t_click.registerPlayerUnitEvent(players[i], EVENT_PLAYER_UNIT_SELECTED, Filter(() -> isCity(GetFilterUnit()))) // O(n)
+
 	//-----------------------------------------------------SETTLE--------------------------------------------------------
 	let t_settle = CreateTrigger()
 		..addCondition(Condition(() -> GetSpellAbilityUnit().getTypeId() == uSettlerReadyToSettle 

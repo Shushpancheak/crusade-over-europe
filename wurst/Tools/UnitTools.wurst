@@ -12,3 +12,6 @@ public function unit.setLifePercent(real p)
 	SetUnitLifePercentBJ(this, p)
 public function unit.setManaPercent(real p)
 	SetUnitManaPercentBJ(this, p)
+
+public function unit.isVisibleForPlayer(player pl) returns bool
+	return not IsUnitFogged(this, pl)

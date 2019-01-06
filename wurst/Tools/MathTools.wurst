@@ -1,0 +1,23 @@
+package MathTools
+
+public let e = EULER
+
+public function exp(real x) returns real
+	return Pow(e, x)
+public function sign(real x) returns real
+	if x > 0
+		return 1
+	else if x < 0
+		return -1
+	else
+		return 0
+
+// Gaussian Distribution
+
+public function GetRandomValWithNormalDistribution(real lower, real upper, real sigma, real mean) returns real
+	real r = GetRandomReal(-5.0, 5.0)
+	real add = (upper - lower) / 2 - lower
+	real mul = exp(-(r - mean)*(r - mean)/(2 * sigma * sigma))/SquareRoot(2*PI*sigma*sigma)
+
+	real bas = (upper - lower) / 2
+	return bas + sign(r) * add * mul

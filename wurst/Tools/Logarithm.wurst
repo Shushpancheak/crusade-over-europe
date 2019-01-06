@@ -1,0 +1,126 @@
+/**
+ * A package for calculating the logarithm to different bases.
+ */
+package Logarithm
+
+/**
+ * Eulers number e.
+ */
+public constant real E = 2.718282
+
+constant real INV_LOG_2_E = 0.6931472
+constant real INV_LOG_2_10 = 0.3010300
+
+constant real inf = Pow(2.0, 128.0)
+
+/**
+ * Calculates the logarithm to base 2 of the absolute value of the argument.
+ * This is the binary logarithm or logarithm dualis.
+ *
+ * real a - the argument of the logarithm
+ *
+ * returns the result of log2|a|
+ *
+ * error - a = 0.0
+ */
+public function log2(real a) returns real
+    real x = a
+    real sign = 1
+    real res = 0.0
+    real p = 0.5
+    
+    if x == 0.0
+        return -inf
+    
+    if x < 0.0
+        x = -x
+
+    if x < 1
+        x = 1.0 / x
+        sign = -1.0
+        
+    while x >= 2
+        res += 1
+        x *= 0.5
+    
+    for int i = 1 to 23
+        x *= x
+        if x >= 2.
+            x *= 0.5
+            res += p
+        p *= 0.5
+    
+    return sign * res
+
+/**
+ * This is just a wrapper for log2(a).
+ *
+ * real a - the argument of the logarithm
+ *
+ * returns the result of lb|a|
+ *
+ * error - a = 0
+ */
+public function lb(real a) returns real
+    return log2(a)
+
+/**
+ * This is just a wrapper for log2(a).
+ *
+ * real a - the argument of the logarithm
+ *
+ * returns the result of ld|a|
+ *
+ * error - a = 0
+ */
+public function ld(real a) returns real
+    return log2(a)
+
+/**
+ * Calculates the logarithm to base 10.
+ *
+ * real a - the argument of the logarithm
+ *
+ * returns the result of lg|a|
+ *
+ * error - a = 0
+ */
+public function lg(real a) returns real
+    return log2(a) * INV_LOG_2_10
+
+/**
+ * Calculates the logarithm to base e.
+ * This is the natural logarithm.
+ *
+ * real a - the argument of the logarithm
+ *
+ * returns the result of ln|a|
+ *
+ * error - a = 0
+ */
+public function ln(real a) returns real
+    return log2(a) * INV_LOG_2_E
+
+/**
+ * Calculates the logarithm to an arbitrary base.
+ *
+ * real a - the argument of the logarithm
+ * real b - the base of the logarithm
+ *
+ * returns the result of log_{|b|}(|a|)
+ *
+ * error - b = 0
+ *       - b = 1
+ *       - b = -1
+ *       - a = 0
+ */
+public function log(real a, real b) returns real
+    if (b == 1.0) or (b == -1.0) or (b == 0.0)
+        if (b == 0)
+            return 0.0
+        else if (a.abs() > 1)
+            return inf
+        else if (a.abs() < 1)
+            return -inf
+        return 1.0
+    return log2(a) / log2(b)
