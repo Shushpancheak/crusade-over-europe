@@ -1,0 +1,265 @@
+package City
+import initlater Main
+
+//-----------------------------CONSTANTS---------------------------------------
+public let kCityRadius = 1000.0
+
+public let kCityLifePercentToCapture = 50.0
+public let kCityLifePercentOnceItCaptured = 60.0
+public let kCityManaPercentOnceItCapruted = 30.0
+
+public let kCityTypes =   asList(uCapitol1, uCapitol2, uCapitol3, uAutonomousTH, uTH, uCH, uMotteBailey, uCastle, uStronghold, uDummyMotteBailey, uDummyCH, uDummyCH2Castle, uDummyTH)
+public let kCityBaseTax = asList(20       , 50       , 120      , 5            , 10 , 30 , 15          , 20     , 40         ) // Should not go here
+
+// Changes only in main init
+public var cityCount = 0
+
+public let kCityNameSize = 6.0
+public let kCityNameLimit = 24 
+
+public let kCityNameXYZ = vec3(0.0, 100.0, 0.0)
+// For every second char, text will be moved to this position in x
+public let kCityNameAlignFactor = -15.0
+
+// Messages OUTDATED
+public let ksCityDescPrefix = "- - - - - - "
+public let ksCityDescSuffix = " - - - - - -"
+
+// If the city unit is upgraded, uses this.
+let kCityRadiusCheckUpgrade = 300.0
+let kCityPopCountRate = 5.0
+// Per month
+let kCityPopGrowthRateMinMax = [0.0015, 0.0035]
+// Separated by tier
+let kCityPopInit = [
+	asList(10000, 100000),
+	asList(80000, 200000),
+	asList(130000, 400000)
+]
+
+///////////////////////////////////CITY CLASS//////////////////////////////////
+public class City
+	
+	// Remember to change unit every time!
+	private unit city_unit
+	private string city_name
+	// number of the city in array
+	private int city_id
+	// Everyone can see this. Only?
+	private texttag city_name_tt
+	// id -- int, not big force type.
+	private int force_id
+	private int player_id
+	private vec2 city_pos
+	
+	// pop consts
+	private int population
+	// with deviation
+	private int last_pop_growth
+	private real population_growth_rate
+	// Count public order() if you want the true one, this is the last counted
+	private real public_order_last
+
+
+	// Limit - kCityNameLimit
+	function changeCityName(string new_name)
+		city_name = new_name.substring(0, kCityNameLimit)
+
+		refreshMultiboardIfPossible()
+
+	function showCityNameTT()
+		city_name_tt = CreateTextTag()
+		city_name_tt.setText(city_name, kCityNameSize)
+		// city point + upper + align it to center
+		city_name_tt.setPos(city_unit.getPos3Real() + kCityNameXYZ + vec3(kCityNameAlignFactor * city_name.length()/2, 0.0, 0.0))
+	
+	function getCityNameColored() returns string
+		return forces_colors[force_id].toColorString() + city_name + "|r"
+
+	function getCityNameWithForce() returns string
+		return ksFactionAdjColored[force_id]  + " city of " + city_name
+
+	function getCityNameWith__Fixes() returns string
+		return ksCityDescPrefix + ksFactionAdjColored[force_id]  + " city of " + city_name + ksCityDescSuffix
+
+	function onCityClick(player pl)
+		player_stats[pl.getId()].setSelectedCityId(city_id)
+
+	function getCityUnit() returns unit
+		return city_unit
+
+	function getCityForceId() returns int
+		return force_id
+
+	function replaceCity(int unit_id)
+		city_unit = ReplaceUnitBJ(city_unit, unit_id, bj_UNIT_STATE_METHOD_RELATIVE)
+
+	function changeOwner(int pl_id)
+		city_unit.setOwner(players[pl_id], true)
+		player_id = pl_id
+		force_id = GetForceId(pl_id)
+
+		refreshMultiboardIfPossible()
+
+	function settleCity(int pl_id)
+		replaceCity(uCapitol1)
+		changeOwner(pl_id)
+
+	function grantIndependence()
+		replaceCity(uAutonomousTH)
+
+	function capture(player whoCaptures)
+		changeOwner(whoCaptures.getId())
+		SetUnitLifePercentBJ(city_unit, kCityLifePercentOnceItCaptured)
+		SetUnitManaPercentBJ(city_unit, kCityManaPercentOnceItCapruted)
+
+	function refreshMultiboardIfPossible()
+		for i = 0 to PLAYER_SLOTS - 1
+			if player_stats[i].getSelectedCityId() == city_id
+				player_stats[i].refreshMultiboardCity()
+
+	//========================COUNT TAX=================================
+	function countTax() returns int
+		var tax = 0
+		 
+		// Base Tax count
+		var base_tax = 0
+		for i = 0 to kCityTypes.size()
+			if city_unit.getTypeId() == kCityTypes.get(i)
+				base_tax = kCityBaseTax.get(i)
+
+		tax += base_tax
+
+		// Count tax by watching to units surrounding city
+		var count_tax = 0
+		let surrounds = GetUnitsInRangeOfLocAll(kCityRadius, Location(city_pos.x, city_pos.y))
+		//@TODO do this
+		for u in surrounds
+		
+
+		tax += count_tax
+
+		// Count tax by population
+		var pop_tax = (SquareRoot(population.toReal()) * countPublicOrder() / 500).toInt()
+
+		tax += pop_tax
+
+		// Reduce tax if city is constructing
+		//@TODO
+		
+
+		return tax
+
+	//========================COUNT PUBLIC ORDER=================================
+	function countPublicOrder() returns real
+		public_order_last = 100.0 - population_growth_rate * 1000 - SquareRoot(population.toReal()) / 17
+		return public_order_last
+
+	function getPublicOrderStr() returns string
+		real po = countPublicOrder()
+		color clr = color((255 - po / 100 * 255).toInt(), (po / 100 * 255).toInt(), 0)
+		return clr.toColorString().toLowerCase() + po.toInt().toString() + "%|r"
+
+	//========================COUNT POP==========================================
+	function getPopulation() returns int
+		return population
+
+	function getPopulationGrowthRate() returns real
+		return population_growth_rate
+
+	function getPopulationGrowthRateStr() returns string
+		if dbg_msg
+			return (population_growth_rate * 100).toString(2) + "%"
+		
+		return getStringColoredBasedOnSign((population * population_growth_rate).toInt())
+
+	function getPopulationGrowthStr() returns string
+		return getStringColoredBasedOnSign(last_pop_growth)
+
+	function getPopulationStr() returns string
+		if dbg_msg
+			return population.toString()
+
+		var str = ""
+		if population < 100000
+			str = (population / 1000).toInt().toString() + "," + ((population % 1000) / 100).toInt().toString() + "k"
+		else
+			str = (population / 1000).toInt().toString() + "k"
+		return str
+
+	//=-=-=-=-=-=-=-=-=-=-=-=-=-CONSTRUCT-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-
+	// City unit, name of City, Force id(int).
+	// tier - is it big city, or a minor one (0, 1)
+	construct(unit u, string n, int f_id, int tier)
+		city_unit = u
+		// So that we will know where is it
+		city_pos = city_unit.getPos()
+		city_name = n
+		
+		force_id = f_id
+		player_id = city_unit.getOwner().getId()
+
+		city_name = n.substring(0, kCityNameLimit)
+
+		city_id = cityCount
+		cityCount++
+
+		//=================POPULATION MANAGEMENT===================================
+
+		population_growth_rate = getRandomValWithNormalDistribution(kCityPopGrowthRateMinMax[0], kCityPopGrowthRateMinMax[1], 1.0, 0)
+		population = getRandomValWithNormalDistribution(kCityPopInit[tier].get(0).toReal(), kCityPopInit[tier].get(1).toReal(), 10.0, 0).toInt()
+
+
+		//===========================POP COUNT=================================
+		doPeriodically(kCityPopCountRate) cbPOP ->
+			population_growth_rate += GetRandomReal(-0.008, 0.009) * population_growth_rate
+			if population_growth_rate >= GetRandomReal(0.002, 0.01)
+				population_growth_rate -= GetRandomReal(0.001, 0.002)
+			
+			int pop_prev = population
+
+			population += (population * population_growth_rate).toInt()
+			int pop_growth = population - pop_prev
+			
+			int deviation = GetRandomInt(-2 * pop_growth, pop_growth)
+			population += deviation
+			
+			last_pop_growth = population - pop_prev
+
+		// Change the unit if it was upgraded.
+		//============================UPGRADE======================================
+		EventListener.add(EVENT_PLAYER_UNIT_UPGRADE_FINISH) ->
+			let un = GetTriggerUnit()
+			if isCity(un) and un.getPos().inRange(city_pos, kCityRadiusCheckUpgrade)
+				// SHOULD BE OUTDATED
+				if un.getTypeId() == uDummyCH
+					ReplaceUnitBJ(un, uCH, bj_UNIT_STATE_METHOD_RELATIVE)
+				if un.getTypeId() == uDummyTH
+					ReplaceUnitBJ(un, uTH, bj_UNIT_STATE_METHOD_RELATIVE)
+				if un.getTypeId() == uDummyCH2Castle
+					ReplaceUnitBJ(un, uCastle, bj_UNIT_STATE_METHOD_RELATIVE)
+				if un.getTypeId() == uDummyMotteBailey
+					ReplaceUnitBJ(un, uMotteBailey, bj_UNIT_STATE_METHOD_RELATIVE)
+				city_unit = un
+				if dbg_msg
+					attentionToPlayer("city unit changed", players[dbg_player])
+	
+//////////////////////////////////CITY CLASS///////////////////////////////////
+
+public City array cities
+
+// O(1)
+public function isCity(unit u) returns bool
+	int id = u.getTypeId()
+	for city_type_id in kCityTypes
+		if id == city_type_id
+			return true
+	return false
+
+// -1 - not a city
+// O(n)     
+public function getCityId(unit u) returns int
+	for i = 0 to cityCount - 1
+		if cities[i].getCityUnit() == u
+			return i
+	return -1

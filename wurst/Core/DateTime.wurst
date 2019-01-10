@@ -1,8 +1,8 @@
 package DateTime
 import Main
-import ClosureTimers
+import Economy
 
-// Starting year
+// Starting year OBSOLETE
 public let kStartingDate = 1080
 public let kSecondsPerMonth = 5.0
 public constant string array months = [
@@ -20,17 +20,30 @@ public constant string array months = [
 	"December"
 ]
 
+// Secs (from ECONOMY package)
+public let kIncomeTime = kIncomeCountRate
+public let kSecondsPerSecond = 1.0 // Obvious, innit?
+
+
 init
 	var j = 0
 	var year = 0
+	var sec = kIncomeTime 
 	
-	for i = 0 to PLAYER_SLOTS - 1
-		doPeriodically(kSecondsPerMonth) cb ->
-			//----------------------------------------------------------------------------------------------
-			j++
+	doPeriodically(kSecondsPerSecond) cb ->
+		sec--
+		for i = 0 to PLAYER_SLOTS - 1
+		
+			//----------------------YEAR COUNT (OBSOLETE)----------------------------
+			/* j++
 			if j == 12
 				year++
 				j = 0
 			multiboards[i]
-				..setTitle(months[j] + ", " + (kStartingDate + year).toString())
-			//---------------------------------------------------------------------------------------------
+				..setTitle(months[j] + ", " + (kStartingDate + year).toString()) */
+			//-----------------------------------------------------------------------
+
+			multiboards[i]
+				..setTitle("Income: " + (sec / 60).toInt().toString() + ":" + ((sec % 60) / 10).toInt().toString() + ((sec % 60) % 10).toInt().toString())
+		if sec <= 0
+			sec = kIncomeTime

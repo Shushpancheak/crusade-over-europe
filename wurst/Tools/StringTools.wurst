@@ -1,7 +1,7 @@
 package StringTools
 import MathTools
 
-public function GetStringColoredBasedOnSign(int x) returns string
+public function getStringColoredBasedOnSign(int x) returns string
 	string sgn = "|cff15ff00+"
 	if sign(x.toReal()) == -1
 		sgn = "|cffff0000"

@@ -1,0 +1,18 @@
+package NoShipsNearRivers
+import Main
+import PlayerTools
+
+let ksNo = ""
+let kLumberCost = 150
+
+init
+	EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->
+		let u = GetTriggerUnit()
+		if u.getTypeId() == uShipyard
+			let upos = u.getPos()
+			for r in kRiverRects
+				if r.contains(upos)
+					u.kill()
+					addLumber(u.getOwner(), kLumberCost)
+					attentionToPlayer("Unfortunately, you cannot build shipyards near rivers", u.getOwner())
+					

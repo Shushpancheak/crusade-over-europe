@@ -42,12 +42,13 @@ function action()
 	else if (args[0] == ksName)
 		SetPlayerName(GetTriggerPlayer(), arg)
 	else if args[0] == ksRenameCity
-		int city_id = player_stats[pl.getId()].GetSelectedCityId()
+		int city_id = player_stats[pl.getId()].getSelectedCityId()
 		if city_id >= 0 and city_id < cityCount
-			if cities[city_id].GetCityUnit().getOwner() != pl
-				NoteToPlayer(kseNotYourCity, pl)
+			if cities[city_id].getCityUnit().getOwner() != pl
+				noteToPlayer(kseNotYourCity, pl)
 			else
-				cities[city_id].ChangeCityName(arg)
+				cities[city_id].changeCityName(arg)
+				
 
 function cond() returns bool
 	return GetEventPlayerChatString().startsWith("-")

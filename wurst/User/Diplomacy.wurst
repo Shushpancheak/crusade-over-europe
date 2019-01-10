@@ -9,81 +9,80 @@ function action()
 	var source_s = source.getNameColored()
 	var target_s = target.getNameColored()
 	var source_id = GetPlayerId(source)
-	var target_id = GetPlayerId(target)
 	var f1 = GetForceOfPlayer(source)
 	var f2 = GetForceOfPlayer(source)
 	switch GetSpellAbilityId()
 		case aWar
-			if player_stats[source_id].GetAllianceState(target) == bj_ALLIANCE_UNALLIED
+			if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_UNALLIED
 				return
-			player_stats[source_id].SetAlliance(target, bj_ALLIANCE_UNALLIED)
+			player_stats[source_id].setAlliance(target, bj_ALLIANCE_UNALLIED)
 
 			for i = 0 to PLAYER_SLOTS - 1
 				let current_f = GetForceOfPlayer(players[i])
 				if players[i] == target
-					WarningToPlayer(source_s + " has declared war on you!", players[i])
+					warningToPlayer(source_s + " has declared war on you!", players[i])
 				else if current_f == f1 or current_f == f2
-					AttentionToPlayer(source_s + " has declared war on your brother-in-arms, " + target_s + "!", players[i])
+					attentionToPlayer(source_s + " has declared war on your brother-in-arms, " + target_s + "!", players[i])
 				else
-					NoteToPlayer(source_s + " has declared war on " + target_s, players[i])
+					noteToPlayer(source_s + " has declared war on " + target_s, players[i])
 			
-			player_stats[source_id].ChangeUnhapiness(kChangeUnhappinessOnWar)
+			player_stats[source_id].changeUnhapiness(kChangeUnhappinessOnWar)
 
 		case aAlly
-			if player_stats[source_id].GetAllianceState(target) == bj_ALLIANCE_ALLIED_VISION
+			if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_ALLIED_VISION
 				return
-			player_stats[source_id].SetAlliance(target, bj_ALLIANCE_ALLIED_VISION)
+			player_stats[source_id].setAlliance(target, bj_ALLIANCE_ALLIED_VISION)
 			
 			for i = 0 to PLAYER_SLOTS - 1
 				let current_f = GetForceOfPlayer(players[i])
 				if players[i] == target
-					GoodNewsToPlayer(source_s + " wants to ally you", players[i])
+					goodNewsToPlayer(source_s + " wants to ally you", players[i])
 				else if current_f == f1 or current_f == f2
-					NoteToPlayer(source_s + " allied " + target_s, players[i])
+					noteToPlayer(source_s + " allied " + target_s, players[i])
 				else
-					NoteToPlayer(source_s + " allied " + target_s, players[i])
+					noteToPlayer(source_s + " allied " + target_s, players[i])
 		
 		case aNeutral
-			if player_stats[source_id].GetAllianceState(target) == bj_ALLIANCE_NEUTRAL
+			if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_NEUTRAL
 				return
-			player_stats[source_id].SetAlliance(target, bj_ALLIANCE_NEUTRAL)
+			player_stats[source_id].setAlliance(target, bj_ALLIANCE_NEUTRAL)
 			
 			for i = 0 to PLAYER_SLOTS - 1
 				let current_f = GetForceOfPlayer(players[i])
 				if players[i] == target
-					NoteToPlayer(source_s + " is now neutral towards you", players[i])
+					noteToPlayer(source_s + " is now neutral towards you", players[i])
 				else if current_f == f1 or current_f == f2
-					NoteToPlayer(source_s + " shows " + target_s + " neutrality", players[i])
+					noteToPlayer(source_s + " shows " + target_s + " neutrality", players[i])
 				else
-					NoteToPlayer(source_s + " shows " + target_s + " neutrality", players[i])
+					noteToPlayer(source_s + " shows " + target_s + " neutrality", players[i])
 		
 		case aUnally
-			if player_stats[source_id].GetAllianceState(target) == bj_ALLIANCE_NEUTRAL
+			if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_NEUTRAL
 				return
-			player_stats[source_id].SetAlliance(target, bj_ALLIANCE_NEUTRAL)
+			player_stats[source_id].setAlliance(target, bj_ALLIANCE_NEUTRAL)
 			
 			for i = 0 to PLAYER_SLOTS - 1
 				let current_f = GetForceOfPlayer(players[i])
 				if players[i] == target
-					NoteToPlayer(source_s + " unallies you!", players[i])
+					noteToPlayer(source_s + " unallies you!", players[i])
 				else if current_f == f1 or current_f == f2
-					NoteToPlayer(source_s + " unallied " + target_s, players[i])
+					noteToPlayer(source_s + " unallied " + target_s, players[i])
 				else
-					NoteToPlayer(source_s + " unallied " + target_s, players[i])
+					noteToPlayer(source_s + " unallied " + target_s, players[i])
 		
 		case aShareUnits
-			if player_stats[source_id].GetAllianceState(target) == bj_ALLIANCE_ALLIED_ADVUNITS
+			if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_ALLIED_ADVUNITS
 				return
-			player_stats[source_id].SetAlliance(target, bj_ALLIANCE_ALLIED_ADVUNITS)
+			player_stats[source_id].setAlliance(target, bj_ALLIANCE_ALLIED_ADVUNITS)
 			
 			for i = 0 to PLAYER_SLOTS - 1
 				let current_f = GetForceOfPlayer(players[i])
 				if players[i] == target
-					GoodNewsToPlayer(source_s + " wants to share his rule with you!", players[i])
+					goodNewsToPlayer(source_s + " wants to share his rule with you!", players[i])
 				else if current_f == f1 or current_f == f2
-					NoteToPlayer(source_s + " now shares rule with " + target_s, players[i])
+					noteToPlayer(source_s + " now shares rule with " + target_s, players[i])
 				else
-					NoteToPlayer(source_s + " now shares rule with " + target_s, players[i])
+					noteToPlayer(source_s + " now shares rule with " + target_s, players[i])
 
 
 
@@ -98,7 +97,7 @@ function cond() returns bool
 	return id == aWar or id == aAlly or id == aNeutral or id == aUnally or id == aShareUnits
 
 init
-	let t = CreateTrigger()
+	CreateTrigger()
 		..registerAnyUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT)
 		..addCondition(Condition(function cond))
 		..addAction(function action)
