@@ -1,9 +1,0 @@
-package Abilities
-
-public let aWar = 'A01T'
-public let aAlly = 'A01U'
-public let aNeutral = 'A01V'
-public let aUnally = 'A01X'
-public let aShareUnits = 'A01W'
-public let aGrantIndependence = 'A02Z'
-public let aSubjugate = 'A030'

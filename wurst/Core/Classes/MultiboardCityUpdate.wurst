@@ -1,0 +1,34 @@
+package MultiboardCityUpdate
+import Main
+
+init
+	doAfter(0.01) ->
+		for i = 0 to PLAYER_SLOTS - 1
+			if player_stats[i].isInGame()
+				multiboards[i] = CreateMultiboardBJ(kMultiboardColC, kMultiboardRowC, "Income: 2:00")
+				multiboards[i]
+					..minimalize(true)
+					..setItemsStyle(true, false)
+					..display(players[i], true)
+				for j = 0 to kMultiboardRowC - 1
+					for k = 0 to kMultiboardColC - 1
+						multiboards[i].setItem(k, j, kMultiboardInitWidths[j].get(k), kMultiboardInitStrings[j].get(k))
+
+	doPeriodically(kMultiboardCityRefreshRate) cbCITY ->
+		for i = 0 to PLAYER_SLOTS - 1
+			if player_stats[i].isInGame()
+				player_stats[i].refreshMultiboardCity()
+
+
+	//@TODO it doesn't work, disabling it
+	// Checks if city visible for players, if not - selected city = -1 (no refresh)
+	/* doPeriodically(kMultiboardCityRefreshRate / 10) cbCITY_CHECK_IF_VISIBLE ->
+		for i = 0 to PLAYER_SLOTS - 1
+			if player_stats[i].isInGame()
+				int city_id = player_stats[i].GetSelectedCityId()
+				if city_id >= 0 and city_id < cityCount
+					if not cities[city_id].GetCityUnit().isVisibleForPlayer(players[i])
+						player_stats[i]	
+							..SetSelectedCityId(-1)
+							..RefreshMultiboardCity() */
+						

@@ -1,0 +1,117 @@
+package Messages
+import initlater Main
+
+function getWarningStringForPlayer(player pl) returns string
+	let f = player_stats[pl.getId()].getForceId()
+	int r = GetRandomInt(0, ksMsgCount - 1)
+	string s
+	if f == kWE
+		s = ksWarningWE[r]
+	else if f == kEE
+		s = ksWarningEE[r]
+	else if f == kME
+		s = ksWarningME[r]
+	else if f == kBZ
+		s = ksWarningBZ[r]
+	else
+		s = ksWarning[0]
+	return "|cffff0000" + s + "|r"
+	
+function getNoteStringForPlayer(player pl) returns string
+	let f = player_stats[pl.getId()].getForceId()
+	int r = GetRandomInt(0, ksMsgCount - 1)
+	string s
+	if f == kWE
+		s = ksNoteWE[r]
+	else if f == kEE
+		s = ksNoteEE[r]
+	else if f == kME
+		s = ksNoteME[r]
+	else if f == kBZ
+		s = ksNoteBZ[r]
+	else
+		s = ksNote[0]
+	return "|cff00ccff" + s + "|r"
+
+function getGoodNewsStringForPlayer(player pl) returns string
+	let f = player_stats[pl.getId()].getForceId()
+	int r = GetRandomInt(0, ksMsgCount - 1)
+	string s
+	if f == kWE
+		s = ksGoodNewsWE[r]
+	else if f == kEE
+		s = ksGoodNewsEE[r]
+	else if f == kME
+		s = ksGoodNewsME[r]
+	else if f == kBZ
+		s = ksGoodNewsBZ[r]
+	else
+		s = ksGoodNews[0]
+	return "|cff00ff00" + s + "|r"
+
+function getAttentionStringForPlayer(player pl) returns string
+	let f = player_stats[pl.getId()].getForceId()
+	int r = GetRandomInt(0, ksMsgCount - 1)
+	string s
+	if f == kWE
+		s = ksAttentionWE[r]
+	else if f == kEE
+		s = ksAttentionEE[r]
+	else if f == kME
+		s = ksAttentionME[r]
+	else if f == kBZ
+		s = ksAttentionBZ[r]
+	else
+		s = ksAttention[0]
+	return "|cffffa600" + s + "|r"
+
+public function dbg(string msg)
+	if not dbg_msg and not dbg_mode
+		return
+	DisplayTimedTextToPlayer(players[dbg_player], 0, 0, 60, msg)
+
+public function dbgt(string msg, real sec)
+	if not dbg_msg and not dbg_mode
+		return
+	DisplayTimedTextToPlayer(players[dbg_player], 0, 0, sec, msg)
+
+public function warningToPlayer(string msg, player pl)
+	DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, getWarningStringForPlayer(pl))
+	DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, msg)
+public function noteToPlayer(string msg, player pl)
+	DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, getNoteStringForPlayer(pl))
+	DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, msg)
+public function goodNewsToPlayer(string msg, player pl)
+	DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, getGoodNewsStringForPlayer(pl))
+	DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
+public function attentionToPlayer(string msg, player pl)
+	DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, getAttentionStringForPlayer(pl))
+	DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
+public function somethingToPlayer(string msg1, string msg2, player pl, real dur)
+	DisplayTimedTextToPlayer(pl, 0, 0, dur, msg1)
+	DisplayTimedTextToPlayer(pl, 0, 0, dur, msg2)
+
+public function warningToForce(string msg, force f)
+	for i = 0 to PLAYER_SLOTS - 1
+		if GetForceOfPlayer(players[i]) == f
+			let pl = players[i]
+			DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, getWarningStringForPlayer(pl))
+			DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, msg)
+public function noteToForce(string msg, force f)
+	for i = 0 to PLAYER_SLOTS - 1
+		if GetForceOfPlayer(players[i]) == f
+			let pl = players[i]
+			DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, getNoteStringForPlayer(pl))
+			DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, msg)
+public function goodNewsToForce(string msg, force f)
+	for i = 0 to PLAYER_SLOTS - 1
+		if GetForceOfPlayer(players[i]) == f
+			let pl = players[i]
+			DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, getGoodNewsStringForPlayer(pl))
+			DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
+public function attentionToForce(string msg, force f)
+	for i = 0 to PLAYER_SLOTS - 1
+		if GetForceOfPlayer(players[i]) == f
+			let pl = players[i]
+			DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, getAttentionStringForPlayer(pl))
+			DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)

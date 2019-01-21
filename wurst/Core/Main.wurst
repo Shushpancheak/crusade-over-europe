@@ -13,6 +13,8 @@ import public Abilities
 import public Multiboards
 import public PlayerStats
 import public Messages
+import public AbilityObjEditing
+import public CityModifiers
 
 public let dbg_msg = false
 public let dbg_mode = false
@@ -33,6 +35,7 @@ public function getElapsedTime() returns real
 	return elapsed_time
 
 init
+
 	global_timer.startPeriodic(0.01) ->
 		elapsed_time += 0.01
 				

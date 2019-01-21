@@ -1,0 +1,131 @@
+package CityModifiers
+import LinkedList
+import initlater Main
+
+public enum CityModifier
+	recently_conquered
+	recently_revolted
+	population_boom
+	plague_outburst
+	on_fire
+	more_trade_estabilished
+	massacred_pop
+	prospering
+	sieged
+
+	NULL
+
+// Used as tiers in addPop function, which adds this portion of pop to the total pop
+public let mPortions = [
+	asList(0.0001, 0.0005),
+	asList(0.0005, 0.003),
+	asList(0.003, 0.01)
+]
+
+
+public let mRecentlyConqueredPOReduction = 30.0
+public let mRecentlyConqueredTime = 240.0
+
+public let mRecentlyRevoltedTime = 120.0
+public let mRecentlyRevoltedPOIncrease = 30.0
+
+public let mPopulationBoomTime = 120.0
+public let mPopulationBoomChance = 0.01
+
+public let mPlagueOutburstTime = 240.0
+public let mPlagueOutburstChance = 0.03
+
+public let mOnFireTime = 30.0
+public let mOnFireChance = 0.01
+
+public let mMoreTradeEstabilishedTime = 240.0
+public let mMoreTradeEstabilishedChance = 0.01
+public let mMoreTradeEstabilishedTaxIncrease = 0.15
+
+public let mMassacredPopTime = 120.0
+public let mMassacredPopChance = 0.05
+
+public let mProsperingTime = 240.0
+public let mProsperingChance = 0.01
+public let mProsperingTaxIncrease = 0.10
+// Will be constant
+public let mProsperingPOIncrease = 20.0
+
+public let mSiegedTime = 5.0
+
+public function getCityModifierTime(CityModifier cm) returns real
+	
+	switch cm
+		case recently_conquered
+			return mRecentlyConqueredTime
+		case recently_revolted
+			return mRecentlyRevoltedTime
+		case population_boom
+			return mPopulationBoomTime
+		case plague_outburst
+			return mPlagueOutburstTime
+		case on_fire
+			return mOnFireTime
+		case more_trade_estabilished
+			return mMoreTradeEstabilishedTime
+		case massacred_pop
+			return mMassacredPopTime
+		case prospering
+			return mProsperingTime
+		case sieged
+			return mSiegedTime
+
+		default
+			return 0.01
+public function getCityModifierName(CityModifier cm) returns string
+
+	switch cm	
+		case recently_conquered
+			return "|cffff0000Just conquered|r"
+		case recently_revolted
+			return "|cffffd900Just revolted|r"
+		case population_boom
+			return "|cff33ff00Population Boom|r"
+		case plague_outburst
+			return "|cffff0000Plague outburst|r"
+		case on_fire
+			dbg("ON FIRE REQUESTED")
+			return "|cffff0000Big Fire|r"
+		case more_trade_estabilished
+			return "|cff15ff00More trade estabilished|r"
+		case massacred_pop
+			return "|cffff0000Massacred population|r"
+		case prospering
+			return "|cff00ff00Prospering|r"
+		case sieged
+			return "|cffff0000Sieged|r"
+
+		default
+			return "missing name"
+
+public function getCityModifierDesc(CityModifier cm) returns string
+
+	switch cm	
+		case recently_conquered
+			return "|cffff0000-po, -pop|r"
+		case recently_revolted
+			return "|cffffd900+po, -pop|r"
+		case population_boom
+			return "|cff33ff00++pop|r"
+		case plague_outburst
+			return "|cffff0000--pop|r"
+		case on_fire
+			return "|cffff6600-pop|r"
+		case more_trade_estabilished
+			return "|cff15ff00+tax +pop|r"
+		case massacred_pop
+			return "|cffff0000--pop|r"
+		case prospering
+			return "|cff00ff00+pop +tax +po|r"
+		case sieged
+			return "|cffff0000-po -pop|r"
+
+		default
+			return "missing desc"
+
+///////////////////////////////////////////////////////////////////////////////

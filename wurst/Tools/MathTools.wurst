@@ -14,11 +14,15 @@ public function sign(real x) returns real
 		return 0
 
 
-// Gaussian Distribution
-public function getRandomValWithNormalDistribution(real lower, real upper, real sigma, real mean) returns real
-	real r = GetRandomReal(-5.0, 5.0)
-	real add = (upper - lower) / 2 - lower
-	real mul = exp(-(r - mean)*(r - mean)/(2 * sigma * sigma))/SquareRoot(2*PI*sigma*sigma)
+/** checks if a random real within range [0; 1] is less than or equal the given number */
+public function getChance(real ch) returns bool
+	return GetRandomReal(0.0, 1.0) <= ch
 
-	real bas = (upper - lower) / 2
-	return bas + sign(r) * add * mul
+/** Gaussian Distribution. Left and right - boundaries, whithin which picks random x */
+public function getRandomValWithNormalDistribution(real lower, real upper, real left, real right, real sigmasqr) returns real
+	let med = (lower + upper) / 2
+	let max_add = (upper - lower) / 2
+	// will be in range (0; 1]
+	let x = GetRandomReal(left, right)
+	let mul = sign(x) * exp(-Pow(x, 2) / 2 * sigmasqr) / (SquareRoot(2 * PI * sigmasqr))
+	return med + mul * max_add

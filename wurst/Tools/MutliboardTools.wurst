@@ -24,11 +24,11 @@ public function multiboard.setItemCentered(int x, int y, string val, real width)
 
 	var spaces_chars = ""
 	for i = 0 to spaces_num - 1
-		spaces_chars += "-"
+		spaces_chars += " "
 	if spaces_num % 2 == 1
-		centered = "-" + centered
+		centered = " " + centered
 
-	centered = spaces_chars + centered + spaces_chars
+	centered = spaces_chars + centered
 
 	// @TODO Optimize this thing by creating an array of items of each mb, and checking if the 
 	// string is equal to the one we are going to set

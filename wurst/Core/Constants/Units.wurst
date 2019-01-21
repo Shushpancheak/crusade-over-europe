@@ -1,0 +1,147 @@
+package Units
+import LinkedList
+// Unit constants and something related to them closely
+// Also contets some regions
+
+// prefixes:
+// u - unit type id
+// c - cost (g, l)
+
+public let kBuildingCheckRange = 1500.0
+
+public let uSettler = 'h00J'
+public let uSettlerReadyToSettle = 'h00I'
+public let uDiplomacy = 'H037'
+public let uEconomy = 'H03F'
+
+// WE
+public let uPeasantWE = 'h000'
+public let uWorkerWE = 'h004'
+public let uGeneralWE = 'H03A'
+public let uMilitiaSpearman = 'h02B'
+public let uChurchWE = 'h011'
+
+
+// EE
+public let uChurchEE = 'h06V'
+public let uSettlementEE = 'h07H'
+public let uPeasantEE = 'h07C'
+public let uWorkerEE = 'h07D'
+
+// ME
+public let uPeasantME = 'h06G'
+public let uWorkerME = 'h06H'
+public let uMosque = 'h05O'
+
+// BZ
+public let uPeasantBZ = 'h046'
+public let uWorkerBZ = 'h04G'
+public let uChurchBZ = 'h02S'
+public let uSettlementBZ = 'h021'
+
+
+// CAPITOL
+public let uCapitol1 = 'h001'
+public let uCapitol2 = 'h002'
+public let uCapitol3 = 'h003'
+// AUTO
+public let uAutonomousTH = 'h043'
+// HALLS - CASTLES
+public let uTH = 'h031'
+public let uCH = 'h03M'
+public let uMotteBailey = 'h02C'
+public let uCastle = 'h02D'
+public let uStronghold = 'h01l'
+//@TODO Remove this shit:
+public let uDummyMotteBailey = 'h051'
+public let uDummyCH = 'h04U'
+public let uDummyCH2Castle = 'h00K'
+public let uDummyTH = 'h00L'
+
+public let uUniversity = 'h015'
+public let uShipyard = 'h00Y'
+public let uSettlement = 'h00M'
+public let uSettlementAnc1 = 'h06U'
+public let uSettlementAnc2 = 'h042' 
+
+// Ores (Mined)
+public let uCopperMine = 'h03E'
+public let uGoldMine = 'h039'
+public let uIronMine = 'h03D'
+public let uSilverMine = 'h03C'
+public let usOres =       asList(uCopperMine, uGoldMine, uIronMine, uSilverMine)
+public let usIncomeOres = asList(15         , 50       , 25       , 40         )
+
+
+// Costs
+// For BZ, WE, EE Churches, as well as for the mosque
+public let cChurch = [100, 275]
+
+public let cSettlement = [100, 275]
+
+// Which units do players get once they are settled
+// correspondand to force id
+public let kStartingUnits = [ 
+	// WE
+	asList(
+	uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE,
+	uWorkerWE, uWorkerWE, uWorkerWE, uWorkerWE,
+	uGeneralWE,
+	uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman
+),asList(
+	// EE
+	uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE,
+	uWorkerEE, uWorkerEE, uWorkerEE, uWorkerEE,
+	uGeneralWE,
+	uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman
+),asList(
+	// ME
+	uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME,
+	uWorkerME, uWorkerME, uWorkerME, uWorkerME,
+	uGeneralWE,
+	uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman
+),asList(
+	// BZ
+	uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ,
+	uWorkerBZ, uWorkerBZ, uWorkerBZ, uWorkerBZ,
+	uGeneralWE,
+	uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman
+)]
+
+public let uPlebs = asList(
+	uPeasantBZ,
+	uPeasantEE,
+	uPeasantME,
+	uPeasantWE,
+
+	uWorkerBZ,
+	uWorkerEE,
+	uWorkerME,
+	uWorkerWE
+)
+
+
+public let kRiverRects = asList(
+	gg_rct_SHIP_Ankara_Lake,
+	gg_rct_SHIP_Caspian_Sea_and_Mesapotamia,
+	gg_rct_SHIP_Danube_1,
+	gg_rct_SHIP_Danube_2,
+	gg_rct_SHIP_French_River,
+	gg_rct_SHIP_Italy,
+	gg_rct_SHIP_Lake_Africa,
+	gg_rct_SHIP_Lake_Egypt,
+	gg_rct_SHIP_Lower_Nile,
+	gg_rct_SHIP_Mesapotamia,
+	gg_rct_SHIP_Nile_2,
+	gg_rct_SHIP_Region_Giant,
+	gg_rct_SHIP_River,
+	gg_rct_SHIP_River_GIANT,
+	gg_rct_SHIP_Seine_River,
+	gg_rct_SHIP_Spannish_River,
+	gg_rct_SHIP_Spannish_River_2,
+	gg_rct_SHIP_Spannish_River_3,
+	gg_rct_SHIP_Spannish_River_4,
+	gg_rct_SHIP_Swedish_Lake,
+	gg_rct_SHIP_Thames,
+	gg_rct_SHIP_Upper_Nile
+)
