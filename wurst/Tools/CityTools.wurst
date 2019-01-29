@@ -1,0 +1,85 @@
+package CityTools
+import Units
+import Forces
+
+public function getCapitolTier(int unit_type) returns int
+	switch unit_type
+		case uCapitolWE1
+			return 1
+		case uCapitolWE2
+			return 2
+		case uCapitolWE3
+			return 3
+		case uCapitolEE1
+			return 1
+		case uCapitolEE2
+			return 2
+		case uCapitolEE3
+			return 3
+		case uCapitolME1
+			return 1
+		case uCapitolME2
+			return 2
+		case uCapitolME3
+			return 3
+		case uCapitolBZ1
+			return 1
+		case uCapitolBZ2
+			return 2
+		case uCapitolBZ3
+			return 3
+		default
+			return 1
+
+
+public function getCapitolByFaction(int tier, int force_id) returns int
+
+	switch tier
+		case 1
+			switch force_id
+				case kWE
+					return uCapitolWE1
+				case kEE
+					return uCapitolEE1
+				case kME
+					return uCapitolME1
+				case kBZ
+					return uCapitolBZ1
+				default
+					return uCapitolWE1
+		case 2
+			switch force_id
+				case kWE
+					return uCapitolWE2
+				case kEE
+					return uCapitolEE2
+				case kME
+					return uCapitolME2
+				case kBZ
+					return uCapitolBZ2
+				default
+					return uCapitolWE2
+		case 3
+			switch force_id
+				case kWE
+					return uCapitolWE3
+				case kEE
+					return uCapitolEE3
+				case kME
+					return uCapitolME3
+				case kBZ
+					return uCapitolBZ3
+				default
+					return uCapitolWE3
+		default
+			switch force_id
+				case kWE
+					return uCapitolWE1
+				case kEE
+					return uCapitolEE1
+				case kME
+					return uCapitolME1
+				case kBZ
+					return uCapitolBZ1
+				default
+					return uCapitolWE1

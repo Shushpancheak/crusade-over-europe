@@ -1,6 +1,16 @@
 package CityModifiers
-import LinkedList
 import initlater Main
+import HashMap
+
+//@TODO get rid of enum if you think that would decrease lag
+
+// Used as tiers in addPop function, which adds this portion of pop to the total pop
+public let mPortions = [
+	asList(0.0005, 0.001),
+	asList(0.001, 0.003),
+	asList(0.003, 0.01),
+	asList(0.01, 0.02)
+]
 
 public enum CityModifier
 	recently_conquered
@@ -15,117 +25,134 @@ public enum CityModifier
 
 	NULL
 
-// Used as tiers in addPop function, which adds this portion of pop to the total pop
-public let mPortions = [
-	asList(0.0001, 0.0005),
-	asList(0.0005, 0.003),
-	asList(0.003, 0.01)
-]
+public class CityModifierClass
+	real time
+	real POIncrease
+	bool isPOIncreaseConstant
+	real chance
+	int popIncreaseTier
+	real popIncreaseMultiplier
+	real taxIncrease
+	string name
+	string desc
+
+	construct(
+		string name_,
+		string desc_,
+		real time_,
+		
+		real chance_,
+
+		real taxIncrease_,
+		
+		// see mPortions
+		int popIncreaseTier_,
+		// So if you don't want any pop increase, just set it to 0.
+		real popIncreaseMultiplier_,
+
+		real POIncrease_,
+		bool isPOIncreaseConstant_
+		)
+		time = time_
+		POIncrease = POIncrease_
+		isPOIncreaseConstant = isPOIncreaseConstant_
+		chance = chance_
+		popIncreaseTier = popIncreaseTier_
+		popIncreaseMultiplier = popIncreaseMultiplier_
+		taxIncrease = taxIncrease_
+		name = name_
+		desc = desc_
 
 
-public let mRecentlyConqueredPOReduction = 30.0
-public let mRecentlyConqueredTime = 240.0
+// - - - - - - - - - -  - - - - - -CLASS - - - - - - - - - - - - - - - - - - - 
 
-public let mRecentlyRevoltedTime = 120.0
-public let mRecentlyRevoltedPOIncrease = 30.0
+CityModifierClass cm_recently_conquered = new CityModifierClass(
+	"|cffff0000Just conquered|r",
+	"|cffc00000-PO -pop|r",
+	TURN_TIME * 2,
+	1.0,
+	0.0,
+	1, -1.0,
+	-30.0, false)
+CityModifierClass cm_recently_revolted = new CityModifierClass(
+	"|cfffffb00Just revolted|r", 
+	"|cff00af00+PO|r|cffc00000 -pop|r", 
+	TURN_TIME, 
+	1.0, 
+	0.0, 
+	0, 0, 
+	30.0, false)
+CityModifierClass cm_population_boom = new CityModifierClass(
+	"|cff33ff00Population Boom|r", 
+	"|cff33ff00++pop|r", 
+	TURN_TIME, 
+	0.01, 
+	0, 
+	0, 0, 
+	0, true)
+CityModifierClass cm_plague_outburst = new CityModifierClass(
+	"|cffff0000Plague outburst|r", 
+	"|cffff0000--pop|r", 
+	TURN_TIME * 2, 
+	0.03, 
+	0, 
+	2, -1, 
+	0, true)
+CityModifierClass cm_on_fire = new CityModifierClass(
+	"|cffaf0000Big Fire|r", 
+	"|cffc00000-pop|r",
+	TURN_TIME * 0.25, 
+	0.01, 
+	0, 
+	2, -1, 
+	0, true)
+CityModifierClass cm_more_trade_estabilished = new CityModifierClass(
+	"|cff15ff00More trade estabilished|r", 
+	"|cff00af00+tax +pop|r", 
+	TURN_TIME * 2, 
+	0.01, 
+	0.15, 
+	0, 1, 
+	0, true)
+CityModifierClass cm_massacred_pop = new CityModifierClass(
+	"|cffff0000Massacred population|r", 
+	"|cff00af00+PO |r|cffff0000--pop|r", 
+	TURN_TIME * 0.25, 
+	0.05,
+	0, 
+	3, -1, 
+	10, true)
+CityModifierClass cm_prospering = new CityModifierClass(
+	"|cff00ff00Prospering|r", 
+	"|cff00af00+PO +pop +tax|r", 
+	TURN_TIME * 2, 
+	0.01, 
+	0.10,
+	1, 1, 
+	20.0, true)
+CityModifierClass cm_sieged = new CityModifierClass(
+	"|cffff0000Sieged|r", 
+	"|cffc00000-PO -pop|r", 
+	TURN_TIME / 24, 
+	1.0, 
+	0, 
+	0, -1, 
+	-10.0, true)
 
-public let mPopulationBoomTime = 120.0
-public let mPopulationBoomChance = 0.01
 
-public let mPlagueOutburstTime = 240.0
-public let mPlagueOutburstChance = 0.03
+public var cityModifiers = new HashMap<CityModifier, CityModifierClass>()
 
-public let mOnFireTime = 30.0
-public let mOnFireChance = 0.01
-
-public let mMoreTradeEstabilishedTime = 240.0
-public let mMoreTradeEstabilishedChance = 0.01
-public let mMoreTradeEstabilishedTaxIncrease = 0.15
-
-public let mMassacredPopTime = 120.0
-public let mMassacredPopChance = 0.05
-
-public let mProsperingTime = 240.0
-public let mProsperingChance = 0.01
-public let mProsperingTaxIncrease = 0.10
-// Will be constant
-public let mProsperingPOIncrease = 20.0
-
-public let mSiegedTime = 5.0
-
-public function getCityModifierTime(CityModifier cm) returns real
-	
-	switch cm
-		case recently_conquered
-			return mRecentlyConqueredTime
-		case recently_revolted
-			return mRecentlyRevoltedTime
-		case population_boom
-			return mPopulationBoomTime
-		case plague_outburst
-			return mPlagueOutburstTime
-		case on_fire
-			return mOnFireTime
-		case more_trade_estabilished
-			return mMoreTradeEstabilishedTime
-		case massacred_pop
-			return mMassacredPopTime
-		case prospering
-			return mProsperingTime
-		case sieged
-			return mSiegedTime
-
-		default
-			return 0.01
-public function getCityModifierName(CityModifier cm) returns string
-
-	switch cm	
-		case recently_conquered
-			return "|cffff0000Just conquered|r"
-		case recently_revolted
-			return "|cffffd900Just revolted|r"
-		case population_boom
-			return "|cff33ff00Population Boom|r"
-		case plague_outburst
-			return "|cffff0000Plague outburst|r"
-		case on_fire
-			dbg("ON FIRE REQUESTED")
-			return "|cffff0000Big Fire|r"
-		case more_trade_estabilished
-			return "|cff15ff00More trade estabilished|r"
-		case massacred_pop
-			return "|cffff0000Massacred population|r"
-		case prospering
-			return "|cff00ff00Prospering|r"
-		case sieged
-			return "|cffff0000Sieged|r"
-
-		default
-			return "missing name"
-
-public function getCityModifierDesc(CityModifier cm) returns string
-
-	switch cm	
-		case recently_conquered
-			return "|cffff0000-po, -pop|r"
-		case recently_revolted
-			return "|cffffd900+po, -pop|r"
-		case population_boom
-			return "|cff33ff00++pop|r"
-		case plague_outburst
-			return "|cffff0000--pop|r"
-		case on_fire
-			return "|cffff6600-pop|r"
-		case more_trade_estabilished
-			return "|cff15ff00+tax +pop|r"
-		case massacred_pop
-			return "|cffff0000--pop|r"
-		case prospering
-			return "|cff00ff00+pop +tax +po|r"
-		case sieged
-			return "|cffff0000-po -pop|r"
-
-		default
-			return "missing desc"
 
 ///////////////////////////////////////////////////////////////////////////////
+
+init
+	cityModifiers
+		..put(CityModifier.recently_conquered, cm_recently_conquered)
+		..put(CityModifier.recently_revolted, cm_recently_revolted)
+		..put(CityModifier.population_boom, cm_population_boom)
+		..put(CityModifier.plague_outburst, cm_plague_outburst)
+		..put(CityModifier.on_fire, cm_on_fire)
+		..put(CityModifier.more_trade_estabilished, cm_more_trade_estabilished)
+		..put(CityModifier.massacred_pop, cm_massacred_pop)
+		..put(CityModifier.prospering, cm_prospering)
+		..put(CityModifier.sieged, cm_sieged)

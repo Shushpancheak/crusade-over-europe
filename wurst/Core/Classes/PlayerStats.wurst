@@ -51,6 +51,7 @@ public class PlayerStats
 			return
 		let pl_id = pl.getId()
 		// City name
+		multiboards[pl_id].display(pl, true)
 		multiboards[pl_id].setItemCentered(kMBCityName[0], kMBCityName[1], cities[selected_city_id].getCityNameColored(), kMBCityNameWidth)
 		
 		// Counting taxes, etc.
@@ -76,8 +77,8 @@ public class PlayerStats
 		var i = 0
 		for m in cities[selected_city_id].getModifiers()
 			multiboards[pl_id]
-				..setItem(kMBCityModifiersCol,     kMBCityModifiersStart + i, getCityModifierName(m))
-				..setItem(kMBCityModifiersDescCol, kMBCityModifiersStart + i, "(" + getCityModifierDesc(m) + ")")
+				..setItem(kMBCityModifiersCol,     kMBCityModifiersStart + i, cityModifiers.get(m).name)
+				..setItem(kMBCityModifiersDescCol, kMBCityModifiersStart + i, "(" + cityModifiers.get(m).desc + ")")
 
 			i++
 		
@@ -109,47 +110,27 @@ public class PlayerStats
 		forces[force_id].addPlayer(pl)
 
 		// CHANGE IF YOU ADD FORCES
+		SetPlayerUnitAvailableBJ(uPeasantME, false, pl)
+		SetPlayerUnitAvailableBJ(uWorkerME, false, pl)
+		SetPlayerUnitAvailableBJ(uPeasantBZ, false, pl)
+		SetPlayerUnitAvailableBJ(uWorkerBZ, false, pl)
+		SetPlayerUnitAvailableBJ(uPeasantEE, false, pl)
+		SetPlayerUnitAvailableBJ(uWorkerEE, false, pl)
+		SetPlayerUnitAvailableBJ(uPeasantWE, false, pl)
+		SetPlayerUnitAvailableBJ(uWorkerWE, false, pl)
 		switch force_id 
 			case kWE
 				SetPlayerUnitAvailableBJ(uPeasantWE, true, pl)
 				SetPlayerUnitAvailableBJ(uWorkerWE, true, pl)
-
-				SetPlayerUnitAvailableBJ(uPeasantME, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerME, false, pl)
-				SetPlayerUnitAvailableBJ(uPeasantBZ, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerBZ, false, pl)
-				SetPlayerUnitAvailableBJ(uPeasantEE, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerEE, false, pl)
 			case kEE
 				SetPlayerUnitAvailableBJ(uPeasantEE, true, pl)
 				SetPlayerUnitAvailableBJ(uWorkerEE, true, pl)
-
-				SetPlayerUnitAvailableBJ(uPeasantME, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerME, false, pl)
-				SetPlayerUnitAvailableBJ(uPeasantBZ, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerBZ, false, pl)
-				SetPlayerUnitAvailableBJ(uPeasantWE, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerWE, false, pl)
 			case kME
 				SetPlayerUnitAvailableBJ(uPeasantME, true, pl)
 				SetPlayerUnitAvailableBJ(uWorkerME, true, pl)
-
-				SetPlayerUnitAvailableBJ(uPeasantWE, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerWE, false, pl)
-				SetPlayerUnitAvailableBJ(uPeasantBZ, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerBZ, false, pl)
-				SetPlayerUnitAvailableBJ(uPeasantEE, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerEE, false, pl)
 			case kBZ
 				SetPlayerUnitAvailableBJ(uPeasantBZ, true, pl)
 				SetPlayerUnitAvailableBJ(uWorkerBZ, true, pl)
-
-				SetPlayerUnitAvailableBJ(uPeasantME, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerME, false, pl)
-				SetPlayerUnitAvailableBJ(uPeasantWE, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerWE, false, pl)
-				SetPlayerUnitAvailableBJ(uPeasantEE, false, pl)
-				SetPlayerUnitAvailableBJ(uWorkerEE, false, pl)
 
 	// - - - - - - - - - - - CONSTRUCT - - - - - - - - - - - - - - - - - -
 	construct(player which_player)

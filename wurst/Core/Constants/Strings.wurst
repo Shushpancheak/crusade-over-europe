@@ -30,7 +30,7 @@ public let kAttentionDur = 10.0
 public constant string array ksAttention = ["Attention!"]
 public constant string array ksAttentionWE = ["Your Majesty, important news!", "May the God bless you, my lord. There is something you must know!", "There is something that needs your attention, my lord!"]
 public constant string array ksAttentionEE = ["You need to see this, Great Prince!", "You need to see this, Great Prince!", "You need to see this, Great Prince!"]
-public constant string array ksAttentionME = ["My Caliph, there is something you need to know!", "My Caliph, there is something you need to know!", "My Caliph, there is something you need to know!"]
+public constant string array ksAttentionME = ["Your Holiness, there is something you need to know!", "Your Holiness, there is something you need to know!", "Your Holiness, there is something you need to know!"]
 public constant string array ksAttentionBZ = ["My Basileus, there is something you need to know!", "My Basileus, there is something you need to know!", "My Basileus, there is something you need to know!"]
 
 
@@ -41,6 +41,8 @@ public let ksTooCloseChurchBZ   = "Unfortunately, you cannot build churches too 
 public let ksTooCloseMosque     = "Unfortunately, you cannot build mosques too close to each other. Construction of one has been canceled"
 public let ksTooCloseSettlement = "Unfortunately, you cannot build settlements too close to each other. Construction of one has been canceled"
 
+public let kDiscordTime = 20.0
+public let ksDiscord = "Enjoying the map? Join the |cffe100ffofficial CoE discord channel|r! Link: |cffffff00discord.gg/V6kmxsy|r"
 
 public let ksTaxLevels = [
 	"|cffffd900Med.",

@@ -18,8 +18,12 @@ public let uEconomy = 'H03F'
 public let uPeasantWE = 'h000'
 public let uWorkerWE = 'h004'
 public let uGeneralWE = 'H03A'
-public let uMilitiaSpearman = 'h02B'
+public let uSpearmanWE = 'h02B'
 public let uChurchWE = 'h011'
+public let uCapitolWE1 = 'h001'
+public let uCapitolWE2 = 'h002'
+public let uCapitolWE3 = 'h003'
+public let uBarracksWE = 'h00A'
 
 
 // EE
@@ -27,23 +31,35 @@ public let uChurchEE = 'h06V'
 public let uSettlementEE = 'h07H'
 public let uPeasantEE = 'h07C'
 public let uWorkerEE = 'h07D'
+public let uCapitolEE1 = 'h076'
+public let uCapitolEE2 = 'h077'
+public let uCapitolEE3 = 'h078'
+public let uBarracksEE = 'h070'
+public let uSpearmanEE = 'h08A'
 
 // ME
 public let uPeasantME = 'h06G'
 public let uWorkerME = 'h06H'
 public let uMosque = 'h05O'
+public let uCapitolME1 = 'h06D'
+public let uCapitolME2 = 'h06G'
+public let uCapitolME3 = 'h06E'
+public let uBarracksME = 'h05U'
+public let uSpearmanME = 'h059'
 
 // BZ
 public let uPeasantBZ = 'h046'
 public let uWorkerBZ = 'h04G'
 public let uChurchBZ = 'h02S'
 public let uSettlementBZ = 'h021'
+public let uCapitolBZ1 = 'h04V'
+public let uCapitolBZ2 = 'h04W'
+public let uCapitolBZ3 = 'h04X'
+public let uBarracksBZ = 'h04l'
+public let uSpearmanBZ = 'h04C'
 
 
-// CAPITOL
-public let uCapitol1 = 'h001'
-public let uCapitol2 = 'h002'
-public let uCapitol3 = 'h003'
+
 // AUTO
 public let uAutonomousTH = 'h043'
 // HALLS - CASTLES
@@ -73,12 +89,6 @@ public let usOres =       asList(uCopperMine, uGoldMine, uIronMine, uSilverMine)
 public let usIncomeOres = asList(15         , 50       , 25       , 40         )
 
 
-// Costs
-// For BZ, WE, EE Churches, as well as for the mosque
-public let cChurch = [100, 275]
-
-public let cSettlement = [100, 275]
-
 // Which units do players get once they are settled
 // correspondand to force id
 public let kStartingUnits = [ 
@@ -87,25 +97,25 @@ public let kStartingUnits = [
 	uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE,
 	uWorkerWE, uWorkerWE, uWorkerWE, uWorkerWE,
 	uGeneralWE,
-	uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman
+	uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE
 ),asList(
 	// EE
 	uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE,
 	uWorkerEE, uWorkerEE, uWorkerEE, uWorkerEE,
 	uGeneralWE,
-	uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman
+	uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE
 ),asList(
 	// ME
 	uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME,
 	uWorkerME, uWorkerME, uWorkerME, uWorkerME,
 	uGeneralWE,
-	uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman
+	uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME
 ),asList(
 	// BZ
 	uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ,
 	uWorkerBZ, uWorkerBZ, uWorkerBZ, uWorkerBZ,
 	uGeneralWE,
-	uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman, uMilitiaSpearman
+	uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ
 )]
 
 public let uPlebs = asList(
@@ -120,6 +130,30 @@ public let uPlebs = asList(
 	uWorkerWE
 )
 
+public let uCapitols = asList(
+	uCapitolWE1,
+	uCapitolWE2,
+	uCapitolWE3,
+	uCapitolEE1,
+	uCapitolEE2,
+	uCapitolEE3,
+	uCapitolME1,
+	uCapitolME2,
+	uCapitolME3,
+	uCapitolBZ1,
+	uCapitolBZ2,
+	uCapitolBZ3
+)
+
+public let kCityTypes =   asList(
+	uCapitolWE1, uCapitolWE2, uCapitolWE3, 
+	uCapitolEE1, uCapitolEE2, uCapitolEE3,
+	uCapitolME1, uCapitolME2, uCapitolME3,
+	uCapitolBZ1, uCapitolBZ2, uCapitolBZ3,
+	uAutonomousTH, uTH, uCH,
+	uCastle, uStronghold, 
+	uDummyCH, uDummyCH2Castle, uDummyTH
+)
 
 public let kRiverRects = asList(
 	gg_rct_SHIP_Ankara_Lake,

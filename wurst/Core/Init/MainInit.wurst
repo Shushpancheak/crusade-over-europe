@@ -63,7 +63,6 @@ function CinematicTutorial()
 		TriggerSleepAction(kCTchange)
 	CinematicModeBJ(false, GetPlayersAll())
 
-
 // -----------------------SETTING CITIES----------------------------------------
 // Better to have it before everything related to unit placing, since it could
 // screw it up.
@@ -104,9 +103,7 @@ init
 		SetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD, kStartGold)
 		SetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER, kStartLumber)
 		if dbg_mode
-			SetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD, 99999999)
-			SetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER, 99999999)
-			CreateFogModifierRadiusLocBJ( true, players[i], FOG_OF_WAR_VISIBLE, GetRectCenter(GetPlayableMapRect()), 999999.00 )
+			enableDebugForPlayer(players[i])
 		// Uni limit
 		SetPlayerTechMaxAllowedSwap(uUniversity, 1, players[i])
 

@@ -16,8 +16,8 @@ import public Messages
 import public AbilityObjEditing
 import public CityModifiers
 
-public let dbg_msg = false
-public let dbg_mode = false
+public var dbg_msg = false
+public var dbg_mode = false
 public let dbg_player = 0
 
 // Maximum number of players.
@@ -27,9 +27,16 @@ public let PLAYER_SLOTS = 24
 public let kStartGold = 260
 public let kStartLumber = 250
 
+public let TURN_TIME = 120.0
+
 // - - - - - - - - - - - - - - - GLOBAL TIMER - - - - - - - - - - - - - - - - - 
 timer global_timer = CreateTimer()
 real elapsed_time
+
+public function enableDebugForPlayer(player pl)
+	SetPlayerState(pl, PLAYER_STATE_RESOURCE_GOLD, 99999999)
+	SetPlayerState(pl, PLAYER_STATE_RESOURCE_LUMBER, 99999999)
+	CreateFogModifierRadiusLocBJ(true, pl, FOG_OF_WAR_VISIBLE, GetRectCenter(GetPlayableMapRect()), 999999.00)
 
 public function getElapsedTime() returns real
 	return elapsed_time

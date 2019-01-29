@@ -3,7 +3,7 @@ projectName: "CoE"
 dependencies:
 - "https://github.com/wurstscript/wurstStdlib2"
 buildMapData:
-  name: "Crusade Over Europe 0.165"
-  fileName: "Crusade_Over_Europe_0.165"
+  name: "Crusade Over Europe 0.170"
+  fileName: "Crusade_Over_Europe_0_170"
   author: ""
   playerCount: 22

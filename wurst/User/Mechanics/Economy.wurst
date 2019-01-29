@@ -1,0 +1,53 @@
+package Economy
+// Manages Income, taxes, etc.
+// Updates Multiboard's "Income" and "Upkeep"
+import Main
+import ClosureForGroups
+
+
+// Income is given every:
+// once per x seconds
+public let kIncomeCountRate = 120.0
+
+// Counted and showd to the multiboard:
+public let kIncomeCountToMultiboardRate = 10.0
+
+
+int array gold_change
+int array lumb_change
+
+
+public function countIncomeForAll()
+	for i = 0 to PLAYER_SLOTS - 1
+		gold_change[i] = 0
+		lumb_change[i] = 0
+
+	for i = 0 to cityCount - 1
+		int pl_id = cities[i].getCityUnit().getOwner().getId()
+		if cities[i].getCityUnit().getOwner().isIngame()
+			gold_change[pl_id] += cities[i].countTax()
+
+		// Searching for ores
+	forUnitsAll() u ->
+		let pl_id = u.getOwner().getId()
+		let u_id = u.getTypeId()
+		if players[pl_id].isIngame()
+			for i = 0 to usOres.size() - 1
+				if usOres.get(i) == u_id
+					gold_change[pl_id] += usIncomeOres.get(i)
+
+init
+	doPeriodically(kIncomeCountToMultiboardRate) cbINCOME_MULTIBOARD ->
+		countIncomeForAll()
+		for i = 0 to PLAYER_SLOTS - 1
+			if player_stats[i].isInGame()
+				multiboards[i].setItem(kMBIncome[0], kMBIncome[1], getStringColoredBasedOnSign(gold_change[i]))
+
+	// Income to every player
+	doPeriodically(kIncomeCountRate) cbINCOME ->
+		for i = 0 to PLAYER_SLOTS - 1
+			if player_stats[i].isInGame()
+				let cur_gold = GetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD)
+				let cur_lumb = GetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER)
+				SetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD, cur_gold + gold_change[i])
+				SetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + lumb_change[i])

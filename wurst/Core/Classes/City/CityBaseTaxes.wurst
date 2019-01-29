@@ -1,0 +1,27 @@
+package CityBaseTaxes
+import HashMap
+import Units
+
+public var kCityBaseTaxes = new HashMap<int, int>
+
+init
+	kCityBaseTaxes
+		..saveInt(uCapitolWE1, 20)
+		..saveInt(uCapitolWE2, 50)
+		..saveInt(uCapitolWE3, 120)
+		..saveInt(uCapitolEE1, 20)
+		..saveInt(uCapitolEE2, 50)
+		..saveInt(uCapitolEE3, 120)
+		..saveInt(uCapitolME1, 20)
+		..saveInt(uCapitolME2, 50)
+		..saveInt(uCapitolME3, 120)
+		..saveInt(uCapitolBZ1, 20)
+		..saveInt(uCapitolBZ2, 50)
+		..saveInt(uCapitolBZ3, 120)
+
+		..saveInt(uAutonomousTH, 5)
+		..saveInt(uTH,           10)
+		..saveInt(uCH,           30)
+		..saveInt(uMotteBailey,  15)
+		..saveInt(uCastle,       20)
+		..saveInt(uStronghold,   40)

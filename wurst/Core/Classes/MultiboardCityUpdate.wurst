@@ -1,18 +1,26 @@
 package MultiboardCityUpdate
 import Main
 
+// You should display it after though (as shown in MultiboardCityUpdate pack.), cuz it doesn't work here for some reason
+public function createCoEMultiboard() returns multiboard
+	var mb = CreateMultiboardBJ(kMultiboardColC, kMultiboardRowC, "Income: 2:00")
+	mb
+		..minimalize(true)
+		..setItemsStyle(true, false)
+	for j = 0 to PLAYER_SLOTS - 1
+		mb.display(players[j], false)
+	for j = 0 to kMultiboardRowC - 1
+		for k = 0 to kMultiboardColC - 1
+			mb.setItem(k, j, kMultiboardInitWidths[j].get(k), kMultiboardInitStrings[j].get(k))
+	return mb
+
 init
 	doAfter(0.01) ->
 		for i = 0 to PLAYER_SLOTS - 1
 			if player_stats[i].isInGame()
-				multiboards[i] = CreateMultiboardBJ(kMultiboardColC, kMultiboardRowC, "Income: 2:00")
-				multiboards[i]
-					..minimalize(true)
-					..setItemsStyle(true, false)
-					..display(players[i], true)
-				for j = 0 to kMultiboardRowC - 1
-					for k = 0 to kMultiboardColC - 1
-						multiboards[i].setItem(k, j, kMultiboardInitWidths[j].get(k), kMultiboardInitStrings[j].get(k))
+				multiboards[i] = createCoEMultiboard()
+		for i = 0 to PLAYER_SLOTS - 1
+			multiboards[i].display(players[i], true)
 
 	doPeriodically(kMultiboardCityRefreshRate) cbCITY ->
 		for i = 0 to PLAYER_SLOTS - 1

@@ -1,6 +1,9 @@
 package City
 import initlater Main
 import ClosureForGroups
+import CityBaseTaxes
+import CityTools
+import Units
 
 //-----------------------------CONSTANTS---------------------------------------
 public let kCityRadius = 1500.0
@@ -12,22 +15,10 @@ public let kCityManaPercentOnceItCapruted = 30.0
 
 public let kCityUnitPOAdd = 0.5
 
-public let kCityTypes =   asList(uCapitol1, uCapitol2, uCapitol3, uAutonomousTH, uTH, uCH, uMotteBailey, uCastle, uStronghold, uDummyMotteBailey, uDummyCH, uDummyCH2Castle, uDummyTH)
-public let kCityBaseTax = asList(20       , 50       , 120      , 5            , 10 , 30 , 15          , 20     , 40         ) // Should not go here
-
-// Changes only in main init
 public var cityCount = 0
 
 public let kCityNameSize = 6.0
 public let kCityNameLimit = 24 
-
-public let kCityNameXYZ = vec3(0.0, 100.0, 0.0)
-// For every second char, text will be moved to this position in x
-public let kCityNameAlignFactor = -15.0
-
-// Messages OUTDATED
-public let ksCityDescPrefix = "- - - - - - "
-public let ksCityDescSuffix = " - - - - - -"
 
 // If the city unit is upgraded, uses this.
 let kCityRadiusCheckUpgrade = 300.0
@@ -35,25 +26,28 @@ let kCityPopCountRate = 5.0 //   fast count
 let kCityFastCount    = kCityPopCountRate
 let kCityLongCount    = 120.0 // long count
 // Per month
-let kCityPopGrowthRateMinMax = [0.0015, 0.0035]
-// Separated by tier
+let kCityPopGrowthRateMinMax = [0.0010, 0.0015]
+// tiers
 let kCityPopInit = [
-	asList(15000, 35000),
-	asList(45000, 70000),
-	asList(120000, 160000)
+	asList(10000, 20000),
+	asList(30000, 40000),
+	asList(60000, 90000),
+	asList(120000, 160000),
+	asList(180000, 220000)
 ]
-
+// Med, Low, High
 public let kCityTaxLevelMultipliers = [
 	1.0,
 	0.6,
-	1.3
+	1.4
 ]	
-
 public let kCityTaxLevelPOIncrease = [
 	0.0,
 	10.0,
-	-12.0
+	-10.0
 ]
+
+
 
 ///////////////////////////////////CITY CLASS//////////////////////////////////
 public class City
@@ -113,14 +107,12 @@ public class City
 		//===========================POP COUNT AND MODIFIERS=======================
 		// Fast count (for modifiers)
 		doPeriodically(kCityPopCountRate) cbPOP ->
-			population_growth_rate += GetRandomReal(-0.008, 0.009) * population_growth_rate
-			if population_growth_rate >= GetRandomReal(0.002, 0.01)
-				population_growth_rate -= GetRandomReal(0.001, 0.002)
+			population_growth_rate += GetRandomReal(-0.003, 0.005) * population_growth_rate
 			
 			int pop_prev = population
 			population += (population * population_growth_rate).toInt()
 			int pop_growth = population - pop_prev
-			int deviation = GetRandomInt(-2 * pop_growth, pop_growth)
+			int deviation = GetRandomInt((-0.25 * pop_growth).toInt(), (0.25 * pop_growth).toInt())
 			population += deviation
 			
 			last_pop_growth = population - pop_prev
@@ -128,18 +120,19 @@ public class City
 			for m in modifiers
 				this.getCityModifierOnFastCount(m)
 		
-		doPeriodically(kCityLongCount) cbLONG ->
-			if getChance(mPopulationBoomChance)
-				addModifier(CityModifier.population_boom)
-			if getChance(mMoreTradeEstabilishedChance)
-				addModifier(CityModifier.more_trade_estabilished)
-			if getChance(mProsperingChance)
-				addModifier(CityModifier.prospering)
-			if getChance(mPlagueOutburstChance)
-				addModifier(CityModifier.plague_outburst)
-			if getChance(mOnFireChance)
-				modifiers.add(CityModifier.on_fire)
+		//@TODO make sure it would not cause much lags (that is, accesing to HashMap)
 
+		doPeriodically(kCityLongCount) cbLONG ->
+			if getChance(cityModifiers.get(CityModifier.population_boom).chance)
+				addModifier(CityModifier.population_boom)
+			if getChance(cityModifiers.get(CityModifier.more_trade_estabilished).chance)
+				addModifier(CityModifier.more_trade_estabilished)
+			if getChance(cityModifiers.get(CityModifier.prospering).chance)
+				addModifier(CityModifier.prospering)
+			if getChance(cityModifiers.get(CityModifier.plague_outburst).chance)
+				addModifier(CityModifier.plague_outburst)
+			if getChance(cityModifiers.get(CityModifier.on_fire).chance)
+				addModifier(CityModifier.on_fire)
 			
 			for m in modifiers
 				this.getCityModifierOnLongCount(m)
@@ -170,12 +163,6 @@ public class City
 		city_name = new_name.substring(0, kCityNameLimit)
 
 		refreshMultiboardIfPossible()
-
-	function showCityNameTT()
-		city_name_tt = CreateTextTag()
-		city_name_tt.setText(city_name, kCityNameSize)
-		// city point + upper + align it to center
-		city_name_tt.setPos(city_unit.getPos3Real() + kCityNameXYZ + vec3(kCityNameAlignFactor * city_name.length()/2, 0.0, 0.0))
 	
 	function getTaxLevel() returns string
 		return ksTaxLevels[tax_level]
@@ -185,9 +172,6 @@ public class City
 
 	function getCityNameWithForce() returns string
 		return ksFactionAdjColored[force_id]  + " city of " + city_name
-
-	function getCityNameWith__Fixes() returns string
-		return ksCityDescPrefix + ksFactionAdjColored[force_id]  + " city of " + city_name + ksCityDescSuffix
 
 	function onCityClick(player pl)
 		player_stats[pl.getId()].setSelectedCityId(city_id)
@@ -209,19 +193,29 @@ public class City
 		refreshMultiboardIfPossible()
 
 	function settleCity(int pl_id)
-		replaceCity(uCapitol1)
+		switch force_id
+			case kWE
+				replaceCity(uCapitolWE1)
+			case kBZ
+				replaceCity(uCapitolBZ1)
+			case kEE
+				replaceCity(uCapitolEE1)
+			case kME
+				replaceCity(uCapitolME1)
 		changeOwner(pl_id)
 
 	function grantIndependence()
 		replaceCity(uAutonomousTH)
 
 	function capture(player whoCaptures)
+		if uCapitols.has(city_unit.getTypeId())
+			replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), getForceId(whoCaptures.getId())))
 		changeOwner(whoCaptures.getId())
 		SetUnitLifePercentBJ(city_unit, kCityLifePercentOnceItCaptured)
 		SetUnitManaPercentBJ(city_unit, kCityManaPercentOnceItCapruted)
 
 		addModifier(CityModifier.recently_conquered)
-		if getChance(mMassacredPopChance)
+		if getChance(cityModifiers.get(CityModifier.massacred_pop).chance)
 			addModifier(CityModifier.massacred_pop)
 
 	function refreshMultiboardIfPossible()
@@ -245,12 +239,7 @@ public class City
 		var tax = 0
 		 
 		// Base Tax count
-		var base_tax = 0
-		for i = 0 to kCityTypes.size()
-			if city_unit.getTypeId() == kCityTypes.get(i)
-				base_tax = kCityBaseTax.get(i)
-
-		tax += base_tax
+		tax += kCityBaseTaxes.get(city_unit.getTypeId())
 
 		// Count tax by watching to units surrounding city
 		var count_tax = 0
@@ -270,7 +259,7 @@ public class City
 		//@TODO
 		
 
-		tax = (tax * tax_multiplier * kCityTaxLevelMultipliers[tax_level]).toInt()
+		tax = (tax * tax_multiplier * kCityTaxLevelMultipliers[tax_level] * public_order_last / 90).toInt()
 
 		return tax
 
@@ -295,7 +284,7 @@ public class City
 		color clr = color((255 - po / 100 * 255).toInt(), (po / 100 * 255).toInt(), 0)
 		return clr.toColorString().toLowerCase() + po.toInt().toString() + "," + ((po * 10).toInt() % 10).toInt().toString() + "%|r"
 
-	//========================COUNT POP==========================================
+	//========================COUNT POP (get)====================================
 	function getPopulation() returns int
 		return population
 
@@ -329,9 +318,7 @@ public class City
 		modifiers.add(cm)
 		this.getCityModifierOnAdd(cm)
 
-		dbg("Modifier ADDED, REMOVE IN " + getCityModifierTime(cm).toString())
-
-		doAfter(getCityModifierTime(cm)) ->
+		doAfter(cityModifiers.get(cm).time) ->
 			removeModifier(cm)
 		return true
 
@@ -339,8 +326,6 @@ public class City
 		if not modifiers.has(cm)
 			return false
 		modifiers.remove(cm)
-
-		dbg("ON FIRE REMOVED")
 
 		this.getCityModifierOnRemove(cm)
 		return true
@@ -353,11 +338,12 @@ public class City
 	function getModifiers() returns LinkedList<CityModifier>
 		return modifiers
 
-	/** Adds the following portion of pop to the total pop with given multiplier
-	 *  
-   ** 0 - 0.0001, 0.0005
-	 ** 1 - 0.0005, 0.003
-	 ** 2 - 0.003, 0.01 */
+	/** Adds the following portion of pop to the total pop count every 5 secs
+	(picks random number within range)
+	** 0 - 0.05%, 0.1%
+	** 1 - 0.1%, 0.3%
+	** 2 - 0.3%, 1%
+	** 3 - 1%, 2% */
 	private function addPopulation(int tier, real multiplier)
 		let prev_pop = population
 		population += (multiplier * GetRandomReal(mPortions[tier].get(0), mPortions[tier].get(1)) * population).toInt()
@@ -365,89 +351,27 @@ public class City
 	
 	/** this should happen every fast count (5 secs for now) (after city pop counted) */
 	function getCityModifierOnFastCount(CityModifier cm)
-	
-		switch cm
-			case recently_conquered
-				addPopulation(1, -1)
+		let tier = cityModifiers.get(cm).popIncreaseTier
+		let mult = cityModifiers.get(cm).popIncreaseMultiplier
+		addPopulation(tier, mult)
 
-				// Adding PO so that it will be removed completely when the effect will be gone
-				public_order_add += mRecentlyConqueredPOReduction * kCityFastCount / mRecentlyConqueredTime
+		if cityModifiers.get(cm).isPOIncreaseConstant == false
+			public_order_add -= cityModifiers.get(cm).POIncrease * kCityFastCount / cityModifiers.get(cm).time
 
-			case massacred_pop
-				addPopulation(2, -1)
-
-			case recently_revolted
-				addPopulation(1, -1)
-
-				// Decreasing PO so that it will be removed completely when the effect will be gone
-				public_order_add -= mRecentlyRevoltedPOIncrease * kCityFastCount / mRecentlyRevoltedTime
-
-			case population_boom
-				addPopulation(2, 1)
-
-			case plague_outburst
-				addPopulation(2, -1)
-			
-			case on_fire
-				addPopulation(1, -1)
-
-			case more_trade_estabilished
-				addPopulation(1, 1)
-
-			case prospering
-				addPopulation(1, 1)
-
-			case sieged
-				addPopulation(1, -1)
-
-			default
-				return
-
-	/** this should happen every long count (120 secs for now) */
+	/** this should happen every long count (1 turn) (120 secs for now) */
 	function getCityModifierOnLongCount(CityModifier cm)
-		switch cm
-			case recently_conquered
-				return
 
-
-			default
-				return
 
 	/** this should happen when a cm added to the city*/
 	function getCityModifierOnAdd(CityModifier cm)
-		switch cm
-			case recently_conquered
-				public_order_add -= mRecentlyConqueredPOReduction
-			
-			case recently_revolted
-				public_order_add += mRecentlyRevoltedPOIncrease
-
-			case more_trade_estabilished
-				tax_multiplier += mMoreTradeEstabilishedTaxIncrease
-
-			case prospering
-				tax_multiplier += mProsperingTaxIncrease
-				// Let it be constant
-				public_order_add += mProsperingPOIncrease
-
-			default
-				return
+		public_order_add += cityModifiers.get(cm).POIncrease
+		tax_multiplier += cityModifiers.get(cm).taxIncrease
 
 	/** this should happen when a cm removed from the city*/
 	function getCityModifierOnRemove(CityModifier cm)
-		switch cm
-			case recently_conquered
-				return
-
-			case more_trade_estabilished
-				tax_multiplier -= mMoreTradeEstabilishedTaxIncrease
-
-			case prospering
-				tax_multiplier -= mProsperingTaxIncrease
-				public_order_add -= mProsperingPOIncrease
-
-			default
-				return
+		if cityModifiers.get(cm).isPOIncreaseConstant
+			public_order_add -= cityModifiers.get(cm).POIncrease
+		tax_multiplier -= cityModifiers.get(cm).taxIncrease
 
 	
 //////////////////////////////////CITY CLASS///////////////////////////////////

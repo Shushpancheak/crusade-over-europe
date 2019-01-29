@@ -1,0 +1,8 @@
+package OnPlayerLeave
+import Main
+
+init
+	EventListener.add(EVENT_PLAYER_LEAVE) ->
+		textToAll(GetTriggerPlayer().getNameColored() + " has left the game!", 5.0)
+		player_stats[GetPlayerId(GetTriggerPlayer())].setInGame(false)
+		SetPlayerUnitsOwner(GetTriggerPlayer(), PLAYER_NEUTRAL_AGGRESSIVE)

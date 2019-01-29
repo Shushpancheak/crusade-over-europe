@@ -355,7 +355,7 @@ import ObjEditingNatives
 
 @compiletime function create_w3a_A012()
 	let def = createObjectDefinition("w3a", 'A012', 'ACnr')
-	..setLvlDataString("anam", 0, 0, "Attachment/LeatherArmour")
+	..setLvlDataString("anam", 0, 0, "Attachment/EasternLeatherArmour2")
 	..setLvlDataInt("aite", 0, 0, 1)
 	..setLvlDataUnreal("Oar1", 1, 1, 0.0)
 	..setLvlDataUnreal("aare", 1, 0, 0.0)
@@ -363,7 +363,7 @@ import ObjEditingNatives
 	..setLvlDataString("atar", 1, 0, "self")
 	..setLvlDataString("ansf", 0, 0, "")
 	..setLvlDataInt("achd", 0, 0, 0)
-	..setLvlDataString("atat", 0, 0, "Attachment\\LeatherArmour2.mdx")
+	..setLvlDataString("atat", 0, 0, "Attachment\\Leather1.mdx")
 	..setLvlDataString("ata0", 0, 0, "chest")
 	..setLvlDataInt("atac", 0, 0, 1)
 
@@ -580,7 +580,7 @@ import ObjEditingNatives
 
 @compiletime function create_w3a_A01I()
 	let def = createObjectDefinition("w3a", 'A01I', 'ACnr')
-	..setLvlDataString("anam", 0, 0, "Attachment/LeatherArmour2")
+	..setLvlDataString("anam", 0, 0, "Attachment/TCLeatherArmour2")
 	..setLvlDataInt("aite", 0, 0, 1)
 	..setLvlDataUnreal("Oar1", 1, 1, 0.0)
 	..setLvlDataUnreal("aare", 1, 0, 0.0)
@@ -2137,36 +2137,6 @@ import ObjEditingNatives
 	..setLvlDataInt("abpx", 0, 0, 3)
 
 
-@compiletime function create_w3a_A02P()
-	let def = createObjectDefinition("w3a", 'A02P', 'Agyv')
-	..setLvlDataInt("Det1", 1, 1, 0)
-	..setLvlDataUnreal("aran", 1, 0, 0.0)
-	..setLvlDataString("aart", 0, 0, "ReplaceableTextures\\CommandButtons\\BTNScrollUber.blp")
-	..setLvlDataString("atp1", 1, 0, "Tax Information")
-	..setLvlDataString("anam", 0, 0, "Tax Information")
-	..setLvlDataString("aub1", 1, 0, "|cfff5da16Town Hall|r|n|cff00ff00-Low Tax: |r|cfff5da1620|r|n|cffffff00-Medium Tax: |r|cfff5da1630|r|n|cffff0000-High Tax: |r|cfff5da1640|r")
-	..setLvlDataString("ansf", 0, 0, "(Town)")
-	..setLvlDataString("arac", 0, 0, "other")
-	..setLvlDataInt("achd", 0, 0, 0)
-	..setLvlDataInt("abpy", 0, 0, 1)
-	..setLvlDataInt("abpx", 0, 0, 2)
-
-
-@compiletime function create_w3a_A03K()
-	let def = createObjectDefinition("w3a", 'A03K', 'Agyv')
-	..setLvlDataInt("Det1", 1, 1, 0)
-	..setLvlDataUnreal("aran", 1, 0, 0.0)
-	..setLvlDataString("aart", 0, 0, "ReplaceableTextures\\CommandButtons\\BTNScrollUber.blp")
-	..setLvlDataString("atp1", 1, 0, "Tax Information")
-	..setLvlDataString("anam", 0, 0, "Tax Information")
-	..setLvlDataString("aub1", 1, 0, "|cfff5da16City Hall|r|n|cff00ff00-Low Tax:|r|cfff5da16 40|n|r|cffffff00-Medium Tax: |r|cfff5da1660|n|r|cffff0000-High Tax: |r|cfff5da1680|r")
-	..setLvlDataString("ansf", 0, 0, "(City)")
-	..setLvlDataString("arac", 0, 0, "other")
-	..setLvlDataInt("achd", 0, 0, 0)
-	..setLvlDataInt("abpx", 0, 0, 2)
-	..setLvlDataInt("abpy", 0, 0, 1)
-
-
 @compiletime function create_w3a_A01R()
 	let def = createObjectDefinition("w3a", 'A01R', 'Awfb')
 	..setLvlDataString("anam", 0, 0, "Posess Town Hall")
@@ -2423,6 +2393,54 @@ import ObjEditingNatives
 	..setLvlDataString("anam", 0, 0, "Castle Aura")
 
 
+@compiletime function create_w3a_A02P()
+	let def = createObjectDefinition("w3a", 'A02P', 'Abrf')
+	..setLvlDataString("atp1", 1, 0, "Skirmish Weapons")
+	..setLvlDataString("aut1", 1, 0, "Melee Weapons")
+	..setLvlDataString("auu1", 1, 0, "Switches to Melee mode.")
+	..setLvlDataString("aub1", 1, 0, "Switches to Skirmish mode.")
+	..setLvlDataString("arqa", 0, 0, "")
+	..setLvlDataInt("achd", 0, 0, 0)
+	..setLvlDataString("arac", 0, 0, "orc")
+	..setLvlDataString("Eme1", 1, 1, "h08E")
+	..setLvlDataString("Emeu", 1, 0, "h08P")
+	..setLvlDataString("anam", 0, 0, "Junior Druzhina Skirmish (EE)")
+	..setLvlDataString("ahky", 0, 0, "Q")
+	..setLvlDataString("auhk", 0, 0, "Q")
+	..setLvlDataInt("abpx", 0, 0, 0)
+	..setLvlDataInt("aubx", 0, 0, 0)
+
+
+@compiletime function create_w3a_A03K()
+	let def = createObjectDefinition("w3a", 'A03K', 'Abrf')
+	..setLvlDataString("atp1", 1, 0, "Skirmish Weapons")
+	..setLvlDataString("aut1", 1, 0, "Melee Weapons")
+	..setLvlDataString("auu1", 1, 0, "Switches to Melee mode.")
+	..setLvlDataString("aub1", 1, 0, "Switches to Skirmish mode.")
+	..setLvlDataString("arqa", 0, 0, "")
+	..setLvlDataInt("achd", 0, 0, 0)
+	..setLvlDataString("arac", 0, 0, "orc")
+	..setLvlDataString("Eme1", 1, 1, "h08F")
+	..setLvlDataString("Emeu", 1, 0, "h08N")
+	..setLvlDataString("anam", 0, 0, "Boyar Son Skirmish (EE)")
+	..setLvlDataString("ahky", 0, 0, "Q")
+	..setLvlDataString("auhk", 0, 0, "Q")
+	..setLvlDataInt("abpx", 0, 0, 0)
+	..setLvlDataInt("aubx", 0, 0, 0)
+
+
+@compiletime function create_w3a_A043()
+	let def = createObjectDefinition("w3a", 'A043', 'Amil')
+	..setLvlDataString("aub1", 1, 0, "Run to the nearest Blacksmith to arm the Peasant, converting him into Militia.")
+	..setLvlDataString("arac", 0, 0, "orc")
+	..setLvlDataString("atp1", 1, 0, "Call to Arms |cffffcc00W|r")
+	..setLvlDataString("aut1", 1, 0, "Back to Work |cffffcc00W|r")
+	..setLvlDataString("auu1", 1, 0, "Run to the nearest Blacksmith to disarm the Militia, converting it into a Peasant.")
+	..setLvlDataUnreal("ahdu", 1, 0, 1500.0)
+	..setLvlDataUnreal("adur", 1, 0, 1500.0)
+	..setLvlDataString("Mil1", 1, 1, "h07C")
+
+
 @compiletime function create_w3a_AM01()
 	let def = createObjectDefinition("w3a", 'AM01', 'Adef')
 	..setLvlDataInt("wurs", 0, 0, 42)
@@ -2442,11 +2460,6 @@ import ObjEditingNatives
 	..setLvlDataUnreal("aran", 1, 0, 52.0)
 	..setLvlDataInt("Har3", 1, 3, 5)
 	..setLvlDataInt("Har2", 1, 2, 5)
-
-
-@compiletime function create_w3a_    ()
-	let def = createObjectDefinition("w3a", '    ', 'Amil')
-	..setLvlDataString("ansf", 0, 0, "")
 
 
 @compiletime function create_w3a_    ()
@@ -2543,5 +2556,10 @@ import ObjEditingNatives
 	..setLvlDataString("atp1", 1, 0, "Dispel (|cffffff00W|r)")
 	..setLvlDataString("anam", 0, 0, "Dispel")
 	..setLvlDataString("ahky", 0, 0, "W")
+
+
+@compiletime function create_w3a_    ()
+	let def = createObjectDefinition("w3a", '    ', 'Amil')
+	..setLvlDataString("aub1", 1, 0, "Run to the nearest Blacksmith to arm the Peasant, converting him into Militia.")
 
 

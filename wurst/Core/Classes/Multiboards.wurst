@@ -15,22 +15,22 @@ public let kMultiboardReservedRows = 3
 
 public let kMBVal = 0.03
 public let kMBText = 0.07
-public let kMBCityNameWidth = 0.32
+public let kMBCityNameWidth = 0.40
 
 let kMBLine = " "
 
 public let kMultiboardInitWidths = [
-	asList(kMBText, kMBVal, 0.01, kMBText, kMBVal, kMBText),
-	asList(kMBText, kMBVal, 0.01, kMBText, kMBVal, kMBText),
-	asList(kMBText, kMBVal, 0.01, kMBText, kMBVal, kMBText),
+	asList(kMBText, kMBVal, 0.01, kMBText, kMBVal, kMBText*2),
+	asList(kMBText, kMBVal, 0.01, kMBText, kMBVal, kMBText*2),
+	asList(kMBText, kMBVal, 0.01, kMBText, kMBVal, kMBText*2),
 
 	asList(0.0025, 0.0025, kMBCityNameWidth, 0.0025, 0.0025, 0.0025),
-	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.5, kMBText * 0.7),
-	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.5, kMBText * 0.7),
-	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.5, kMBText * 0.7),
-	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.5, kMBText * 0.7),
-	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.5, kMBText * 0.7),
-	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.5, kMBText * 0.7)
+	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.8, kMBText * 1.2),
+	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.8, kMBText * 1.2),
+	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.8, kMBText * 1.2),
+	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.8, kMBText * 1.2),
+	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.8, kMBText * 1.2),
+	asList(kMBText, kMBVal, kMBVal, 0.01, kMBText * 1.8, kMBText * 1.2)
 ]
 
 public let kMBFood = [1, 0]
@@ -58,7 +58,7 @@ public let kMultiboardInitStrings = [
 	asList("Stone", "0", "|", " ",      " ", " "),
 
 	asList(kMBLine, kMBLine, "                           City info", kMBLine, kMBLine, kMBLine),
-	asList("Tax",          "0", "|cffffbb00Med.", "|", " ", " "),
+	asList("Tax",          "0", " ", "|", " ", " "),
 	asList("Public order", "0", " ", "|", " ", " "),
 	asList("Population",   "0", " ", "|", " ", " "),
 	asList(" ",            " ", " ", "|", " ", " "),

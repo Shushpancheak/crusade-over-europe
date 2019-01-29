@@ -1,0 +1,6 @@
+package Credits
+import Main
+
+init
+	doPeriodically(TURN_TIME * 5) cb ->
+		textToAll(ksDiscord, kDiscordTime)
