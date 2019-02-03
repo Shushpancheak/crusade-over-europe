@@ -1,4 +1,5 @@
 package Abilities
+import LinkedList
 
 public let aWar = 'A01T'
 public let aAlly = 'A01U'
@@ -7,3 +8,19 @@ public let aUnally = 'A01X'
 public let aShareUnits = 'A01W'
 public let aGrantIndependence = 'A02Z'
 public let aSubjugate = 'A030'
+
+public let aLowTax = 'A02J'
+public let aMedTax = 'A02I'
+public let aHighTax = 'A02H'
+
+public let aTaxes = asList(aLowTax, aMedTax, aHighTax)
+
+public let aCallToArmsPeasant = 'A043'
+public let aCallToArmsWorker = 'A04D'
+public let aCallToArmsBlacksmith = 'A04E'
+
+public let aMassCommand = 'A04J'
+
+
+public let aTownHallCapitolAura = 'A03B'
+public let aCastleAura = 'A03H'

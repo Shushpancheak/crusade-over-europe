@@ -1,11 +1,11 @@
 package SettingCities
 import Main
+import UnitTools
 
 public function NewCity(rect r, string n, int f, int tier)
 	let g = GetUnitsInRectAll(r)
 	let u = g.next()
 	cities[cityCount] = new City(u, n, f, tier)
-
 
 public function SetupCities()
 

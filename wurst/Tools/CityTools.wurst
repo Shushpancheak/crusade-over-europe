@@ -2,6 +2,87 @@ package CityTools
 import Units
 import Forces
 
+public function getCastleTier(int unit_type) returns int
+	switch unit_type
+		case uCastleWE1
+			return 1
+		case uCastleWE2
+			return 2
+		case uCastleWE3
+			return 3
+		case uCastleEE1
+			return 1
+		case uCastleEE2
+			return 2
+		case uCastleEE3
+			return 3
+		case uCastleME1
+			return 1
+		case uCastleME2
+			return 2
+		case uCastleME3
+			return 3
+		case uCastleBZ1
+			return 1
+		case uCastleBZ2
+			return 2
+		case uCastleBZ3
+			return 3
+		default
+			return 1
+
+
+public function getCastleByFaction(int tier, int force_id) returns int
+	switch tier
+		case 1
+			switch force_id
+				case kWE
+					return uCastleWE1
+				case kEE
+					return uCastleEE1
+				case kME
+					return uCastleME1
+				case kBZ
+					return uCastleBZ1
+				default
+					return uCastleWE1
+		case 2
+			switch force_id
+				case kWE
+					return uCastleWE2
+				case kEE
+					return uCastleEE2
+				case kME
+					return uCastleME2
+				case kBZ
+					return uCastleBZ2
+				default
+					return uCastleWE2
+		case 3
+			switch force_id
+				case kWE
+					return uCastleWE3
+				case kEE
+					return uCastleEE3
+				case kME
+					return uCastleME3
+				case kBZ
+					return uCastleBZ3
+				default
+					return uCastleWE3
+		default
+			switch force_id
+				case kWE
+					return uCastleWE1
+				case kEE
+					return uCastleEE1
+				case kME
+					return uCastleME1
+				case kBZ
+					return uCastleBZ1
+				default
+					return uCastleWE1
+
 public function getCapitolTier(int unit_type) returns int
 	switch unit_type
 		case uCapitolWE1
@@ -33,7 +114,6 @@ public function getCapitolTier(int unit_type) returns int
 
 
 public function getCapitolByFaction(int tier, int force_id) returns int
-
 	switch tier
 		case 1
 			switch force_id

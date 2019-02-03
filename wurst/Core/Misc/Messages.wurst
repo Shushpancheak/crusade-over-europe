@@ -118,5 +118,4 @@ public function attentionToForce(string msg, force f)
 
 
 public function textToAll(string msg, real time)
-	for i = 0 to PLAYER_SLOTS - 1
-		DisplayTimedTextToPlayer(players[i], 0, 0, time, msg)
+	DisplayTimedTextToForce(GetPlayersAll(), time, msg)

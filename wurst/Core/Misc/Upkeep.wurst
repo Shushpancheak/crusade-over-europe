@@ -1,0 +1,25 @@
+package Upkeep
+
+import Main
+
+init
+	let t_enter = CreateTrigger()
+	TriggerRegisterEnterRectSimple(t_enter, GetEntireMapRect())
+	t_enter.addAction(() -> begin
+		let u = GetEnteringUnit()
+		let player_id = u.getOwner().getId()
+		if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
+			player_stats[player_id].changeUpkeep(-GetUnitLevel(u))
+	end)
+
+	let t_leave = CreateTrigger()
+	TriggerRegisterLeaveRectSimple(t_leave, GetPlayableMapRect())
+	t_leave.addAction(() -> begin
+		let u = GetDyingUnit()
+		let player_id = u.getOwner().getId()
+		if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
+			player_stats[player_id].changeUpkeep(GetUnitLevel(u))
+	end)
+
+
+	

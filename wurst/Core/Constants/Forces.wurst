@@ -17,12 +17,3 @@ public string array ksFactionAdjColored = [forces_colors[0].toColorString() + "W
 																					 forces_colors[1].toColorString() + "Eastern European|r",
 																					 forces_colors[2].toColorString() + "Middle Eastern|r",
 																					 forces_colors[3].toColorString() + "Byzantine|r"]
-
-
-
-
-public function getForceId(int player_id) returns int
-	for i = 0 to kForcesSize - 1
-		if forces[i].containsPlayer(players[player_id])
-			return i
-	return -1

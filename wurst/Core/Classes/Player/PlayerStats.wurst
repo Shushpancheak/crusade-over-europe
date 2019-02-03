@@ -1,0 +1,143 @@
+package PlayerStats
+import initlater Main
+
+
+let PLAYER_SELF = -1
+public class PlayerStats
+	private int force_id
+	private player pl
+	private int array[PLAYER_SLOTS] alliance_states
+	private bool is_in_game = false
+	private int selected_city_id
+	private int upkeep // <= 0
+
+	function isInGame() returns bool
+		return is_in_game
+		
+	function setInGame(bool flag)
+		is_in_game = flag
+	
+	function getUpkeep() returns int
+		return upkeep
+	
+	function changeUpkeep(int byHowMuch) 
+		upkeep += byHowMuch
+
+	// - - - - - - - - - - - ALLIANCES - - - - - - - - -  - - - - - - - - -- - - 
+	function setAlliance(player which_player, int alliance_state)
+		int id = which_player.getId()
+		if not is_in_game
+			return
+		if id >= PLAYER_SLOTS
+			return 
+		if alliance_states[id] == alliance_state or which_player == pl
+			return
+		alliance_states[id] = alliance_state
+		SetPlayerAllianceStateBJ(pl, which_player, alliance_state)
+
+	function getAllianceState(player which_player) returns int
+		return alliance_states[which_player.getId()]
+
+	// - -- - - - -- - -- -- - - -- - - CITY - - -- - - -- - - - -- - - - - - -  
+
+	function refreshMultiboardCity()
+		if selected_city_id == -1
+			return
+		let pl_id = pl.getId()
+		// City name
+		multiboards[pl_id].setItemCentered(kMBCityName[0], kMBCityName[1], cities[selected_city_id].getCityNameColored(), kMBCityNameWidth)
+		
+		// Counting taxes, etc.
+		int tax
+		string public_order_str
+		string population_str
+		string population_growth_str
+		string tax_level
+
+		tax = cities[selected_city_id].countTax()
+		tax_level = cities[selected_city_id].getTaxLevel()
+		public_order_str = cities[selected_city_id].getPublicOrderStr()
+		population_str = cities[selected_city_id].getPopulationStr()
+		population_growth_str = cities[selected_city_id].getPopulationGrowthStr()
+
+		multiboards[pl_id]
+			..setItem(kMBCityTax[0], kMBCityTax[1], tax.toString())
+			..setItem(kMBCityTax[0] + 1, kMBCityTax[1], tax_level)
+			..setItem(kMBCityPublicOrder[0], kMBCityPublicOrder[1], public_order_str)
+			..setItem(kMBCityPop[0], kMBCityPop[1], population_str)
+			..setItem(kMBCityPopGrowth[0], kMBCityPopGrowth[1], population_growth_str)
+
+		var i = 0
+		for m in cities[selected_city_id].getModifiers()
+			multiboards[pl_id]
+				..setItem(kMBCityModifiersCol,     kMBCityModifiersStart + i, cityModifiers.get(m).name)
+				..setItem(kMBCityModifiersDescCol, kMBCityModifiersStart + i, "(" + cityModifiers.get(m).desc + ")")
+
+			i++
+		
+		for j = i to kMBCityModifiersEnd
+			multiboards[pl_id]
+				..setItem(kMBCityModifiersCol,     kMBCityModifiersStart + j, " ")
+				..setItem(kMBCityModifiersDescCol, kMBCityModifiersStart + j, " ")
+
+	// -1 if no city was ever selected
+	function getSelectedCityId() returns int
+		return selected_city_id
+	
+	// also refreshses multiboard's city tab
+	function setSelectedCityId(int c_id)
+		if c_id >= 0 and c_id < cityCount
+			selected_city_id = c_id
+			refreshMultiboardCity()
+
+	// - - - - - - - - - - - - - - - FORCES  - - - - - - - - - - - - - - - - - - 
+	function getForceId() returns int
+		return force_id
+	
+	function changeForce(int f_id)
+		// if we haven't ever been in any force, just change it
+		if force_id != -1
+			forces[force_id].removePlayer(pl)
+
+		force_id = f_id
+		forces[force_id].addPlayer(pl)
+
+		// CHANGE IF YOU ADD FORCES
+		SetPlayerUnitAvailableBJ(uPeasantME, false, pl)
+		SetPlayerUnitAvailableBJ(uWorkerME, false, pl)
+		SetPlayerUnitAvailableBJ(uPeasantBZ, false, pl)
+		SetPlayerUnitAvailableBJ(uWorkerBZ, false, pl)
+		SetPlayerUnitAvailableBJ(uPeasantEE, false, pl)
+		SetPlayerUnitAvailableBJ(uWorkerEE, false, pl)
+		SetPlayerUnitAvailableBJ(uPeasantWE, false, pl)
+		SetPlayerUnitAvailableBJ(uWorkerWE, false, pl)
+		switch force_id 
+			case kWE
+				SetPlayerUnitAvailableBJ(uPeasantWE, true, pl)
+				SetPlayerUnitAvailableBJ(uWorkerWE, true, pl)
+			case kEE
+				SetPlayerUnitAvailableBJ(uPeasantEE, true, pl)
+				SetPlayerUnitAvailableBJ(uWorkerEE, true, pl)
+			case kME
+				SetPlayerUnitAvailableBJ(uPeasantME, true, pl)
+				SetPlayerUnitAvailableBJ(uWorkerME, true, pl)
+			case kBZ
+				SetPlayerUnitAvailableBJ(uPeasantBZ, true, pl)
+				SetPlayerUnitAvailableBJ(uWorkerBZ, true, pl)
+
+	// - - - - - - - - - - - CONSTRUCT - - - - - - - - - - - - - - - - - -
+	construct(player which_player)
+		upkeep = 0
+		force_id = -1
+		selected_city_id = -1
+		pl = which_player
+		is_in_game = which_player.isIngame()
+		for i = 0 to PLAYER_SLOTS - 1
+			if players[i] == which_player
+				alliance_states[i] = PLAYER_SELF
+			else
+				alliance_states[i] = bj_ALLIANCE_UNALLIED
+		
+
+
+public PlayerStats array player_stats

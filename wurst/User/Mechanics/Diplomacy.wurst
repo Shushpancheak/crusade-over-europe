@@ -17,6 +17,7 @@ function action()
 			if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_UNALLIED
 				return
 			player_stats[source_id].setAlliance(target, bj_ALLIANCE_UNALLIED)
+			player_stats[target.getId()].setAlliance(source, bj_ALLIANCE_UNALLIED)
 
 			for i = 0 to PLAYER_SLOTS - 1
 				let current_f = GetForceOfPlayer(players[i])

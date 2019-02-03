@@ -1,0 +1,21 @@
+package LimitMercenaryCamps
+
+import Main
+
+int array mercenary_camps
+
+init
+	EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
+		let u =  GetConstructingStructure()
+		if u.getTypeId() == uMercenaryCamp
+			mercenary_camps[u.getOwner().getId()]--
+	EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->
+		let u = GetConstructingStructure()
+		if u.getTypeId() == uMercenaryCamp
+			if mercenary_camps[u.getOwner().getId()] < 3
+				mercenary_camps[u.getOwner().getId()]++
+			else
+				attentionToPlayer(ksTooManyMercenaryCamps, u.getOwner())
+				doAfter(0.01) ->
+					IssueImmediateOrderById(u, 851976)
+				

@@ -3,7 +3,8 @@ import initlater Main
 import ClosureForGroups
 import CityBaseTaxes
 import CityTools
-import Units
+import Revolts
+import PublicOrderAddByUnits
 
 //-----------------------------CONSTANTS---------------------------------------
 public let kCityRadius = 1500.0
@@ -25,6 +26,9 @@ let kCityRadiusCheckUpgrade = 300.0
 let kCityPopCountRate = 5.0 //   fast count
 let kCityFastCount    = kCityPopCountRate
 let kCityLongCount    = 120.0 // long count
+
+let kCityTaxLevelTimeToChange = TURN_TIME
+
 // Per month
 let kCityPopGrowthRateMinMax = [0.0010, 0.0015]
 // tiers
@@ -38,13 +42,18 @@ let kCityPopInit = [
 // Med, Low, High
 public let kCityTaxLevelMultipliers = [
 	1.0,
-	0.6,
-	1.4
+	0.5,
+	1.6
 ]	
 public let kCityTaxLevelPOIncrease = [
 	0.0,
-	10.0,
-	-10.0
+	20.0,
+	-20.0
+]
+public let kCityTaxLevelPODecreasePerThousandPop = [
+	0.05,
+	0.0,
+	0.13
 ]
 
 
@@ -74,6 +83,7 @@ public class City
 	private real public_order_add
 	private real tax_multiplier
 	private int tax_level
+	private real last_time_tax_level_changed
 
 	private LinkedList<CityModifier> modifiers
 
@@ -83,6 +93,7 @@ public class City
 	// tier - is it big city, or a minor one (0, 1, 2)
 	construct(unit u, string n, int f_id, int tier)
 		tax_level = 0
+		last_time_tax_level_changed = 0
 		modifiers = new LinkedList<CityModifier>
 		tax_multiplier = 1.0
 		city_unit = u
@@ -103,6 +114,10 @@ public class City
 		population_growth_rate = getRandomValWithNormalDistribution(kCityPopGrowthRateMinMax[0], kCityPopGrowthRateMinMax[1], -5.0, 5.0, 0.15)
 		population = getRandomValWithNormalDistribution(kCityPopInit[tier].get(0).toReal(), kCityPopInit[tier].get(1).toReal(), -5.0, 5.0, 0.15).toInt()
 		public_order_add = 0
+
+		if uCastles.has(city_unit.getTypeId())
+			population = (population * 0.1).toInt() + 100
+			population_growth_rate *= 2
 
 		//===========================POP COUNT AND MODIFIERS=======================
 		// Fast count (for modifiers)
@@ -136,26 +151,6 @@ public class City
 			
 			for m in modifiers
 				this.getCityModifierOnLongCount(m)
-			
-
-		// Change the unit if it was upgraded.
-		//============================UPGRADE======================================
-		EventListener.add(EVENT_PLAYER_UNIT_UPGRADE_FINISH) ->
-			let un = GetTriggerUnit()
-			if isCity(un) and un.getPos().inRange(city_pos, kCityRadiusCheckUpgrade)
-				// SHOULD BE OUTDATED
-				if un.getTypeId() == uDummyCH
-					ReplaceUnitBJ(un, uCH, bj_UNIT_STATE_METHOD_RELATIVE)
-				if un.getTypeId() == uDummyTH
-					ReplaceUnitBJ(un, uTH, bj_UNIT_STATE_METHOD_RELATIVE)
-				if un.getTypeId() == uDummyCH2Castle
-					ReplaceUnitBJ(un, uCastle, bj_UNIT_STATE_METHOD_RELATIVE)
-				if un.getTypeId() == uDummyMotteBailey
-					ReplaceUnitBJ(un, uMotteBailey, bj_UNIT_STATE_METHOD_RELATIVE)
-				city_unit = un
-				if dbg_msg
-					attentionToPlayer("city unit changed", players[dbg_player])
-
 
 
 	// Limit - kCityNameLimit
@@ -183,12 +178,14 @@ public class City
 		return force_id
 
 	function replaceCity(int unit_id)
+		if not kCityTypes.has(unit_id)
+			return
 		city_unit = ReplaceUnitBJ(city_unit, unit_id, bj_UNIT_STATE_METHOD_RELATIVE)
 
 	function changeOwner(int pl_id)
 		city_unit.setOwner(players[pl_id], true)
 		player_id = pl_id
-		force_id = getForceId(pl_id)
+		force_id = player_stats[pl_id].getForceId()
 
 		refreshMultiboardIfPossible()
 
@@ -208,8 +205,6 @@ public class City
 		replaceCity(uAutonomousTH)
 
 	function capture(player whoCaptures)
-		if uCapitols.has(city_unit.getTypeId())
-			replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), getForceId(whoCaptures.getId())))
 		changeOwner(whoCaptures.getId())
 		SetUnitLifePercentBJ(city_unit, kCityLifePercentOnceItCaptured)
 		SetUnitManaPercentBJ(city_unit, kCityManaPercentOnceItCapruted)
@@ -217,6 +212,14 @@ public class City
 		addModifier(CityModifier.recently_conquered)
 		if getChance(cityModifiers.get(CityModifier.massacred_pop).chance)
 			addModifier(CityModifier.massacred_pop)
+
+		if uCastles.has(city_unit.getTypeId())
+			replaceCity(getCastleByFaction(getCastleTier(city_unit.getTypeId()), player_stats[whoCaptures.getId()].getForceId()))
+			UnitAddAbility(city_unit, aCastleAura)
+
+		if uCapitols.has(city_unit.getTypeId())
+			replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), player_stats[whoCaptures.getId()].getForceId()))
+			UnitAddAbility(city_unit, aTownHallCapitolAura)
 
 	function refreshMultiboardIfPossible()
 		for i = 0 to PLAYER_SLOTS - 1
@@ -230,10 +233,15 @@ public class City
 	 ** 2 - High
 	 */
 	function changeTaxLevel(int lvl)
-		public_order_add -= kCityTaxLevelPOIncrease[tax_level]
-		public_order_add += kCityTaxLevelPOIncrease[lvl]
+		if getElapsedTime() - last_time_tax_level_changed >= kCityTaxLevelTimeToChange
+			last_time_tax_level_changed = getElapsedTime()
 
-		tax_level = lvl
+			public_order_add -= kCityTaxLevelPOIncrease[tax_level]
+			public_order_add += kCityTaxLevelPOIncrease[lvl]
+
+			tax_level = lvl
+		else
+			noteToPlayer(ksCannotChangeTaxLevel, players[player_id])
 
 	function countTax() returns int
 		var tax = 0
@@ -241,17 +249,17 @@ public class City
 		// Base Tax count
 		tax += kCityBaseTaxes.get(city_unit.getTypeId())
 
-		// Count tax by watching to units surrounding city
-		var count_tax = 0
-		let surrounds = GetUnitsInRangeOfLocAll(kCityRadius, Location(city_pos.x, city_pos.y))
+		// Count tax by looking to units surrounding city
+		//var count_tax = 0
+		//let surrounds = GetUnitsInRangeOfLocAll(kCityRadius, Location(city_pos.x, city_pos.y))
 		//@TODO do this
-		for u in surrounds
+		//for u in surrounds
 		
 
-		tax += count_tax
+		//tax += count_tax
 
 		// Count tax by population
-		var pop_tax = (SquareRoot(population.toReal()) * countPublicOrder() / 500).toInt()
+		var pop_tax = (SquareRoot(population.toReal() * max(0.75, countPublicOrder() / 100)) / 6).toInt()
 
 		tax += pop_tax
 
@@ -259,13 +267,16 @@ public class City
 		//@TODO
 		
 
-		tax = (tax * tax_multiplier * kCityTaxLevelMultipliers[tax_level] * public_order_last / 90).toInt()
+		tax = (tax * tax_multiplier * kCityTaxLevelMultipliers[tax_level]).toInt()
+
+		if uCastles.has(city_unit.getTypeId())
+			tax = (tax * 0.4).toInt()
 
 		return tax
 
 	//========================COUNT PUBLIC ORDER=================================
 	function countPublicOrder() returns real
-		public_order_last = 100.0 - population_growth_rate * 1000 - SquareRoot(population.toReal()) / 17 + public_order_add
+		public_order_last = 100.0 - population_growth_rate * 1000 - SquareRoot(population.toReal()) / 17 + public_order_add - population / 1000 * kCityTaxLevelPODecreasePerThousandPop[tax_level]
 
 		// for units nearby
 		// 20 units will increase ~ 10% PO
@@ -273,10 +284,22 @@ public class City
 			if (not uPlebs.has(u.getTypeId())) and u.getOwner() == players[player_id]
 				public_order_last += kCityUnitPOAdd
 
+		forUnitsInRange(city_pos, kCityRange) u ->
+			if IsUnitType(u, UNIT_TYPE_STRUCTURE) and u.getOwner() == players[player_id]
+				public_order_last += getPublicOrderAddByUnit(u.getTypeId())
+
+
 		if public_order_last < 0.0
 			public_order_last = 0.0
 		if public_order_last > 100.0
 			public_order_last = 100.0
+
+		if public_order_last < 50.0 and getChance(0.01)
+			checkForRevolt(city_id)
+
+		return public_order_last
+
+	function getLastPublicOrder() returns real
 		return public_order_last
 
 	function getPublicOrderStr() returns string
@@ -380,11 +403,7 @@ public City array cities
 
 // O(1)
 public function isCity(unit u) returns bool
-	int id = u.getTypeId()
-	for city_type_id in kCityTypes
-		if id == city_type_id
-			return true
-	return false
+	return kCityTypes.has(u.getTypeId())
 
 // -1 - not a city
 // O(n)     

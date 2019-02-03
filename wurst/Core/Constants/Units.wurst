@@ -24,6 +24,10 @@ public let uCapitolWE1 = 'h001'
 public let uCapitolWE2 = 'h002'
 public let uCapitolWE3 = 'h003'
 public let uBarracksWE = 'h00A'
+public let uCastleWE1 = 'h02C'
+public let uCastleWE2 = 'h02D'
+public let uCastleWE3 = 'h01l'
+public let uUniversityWE = 'h015'
 
 
 // EE
@@ -36,6 +40,12 @@ public let uCapitolEE2 = 'h077'
 public let uCapitolEE3 = 'h078'
 public let uBarracksEE = 'h070'
 public let uSpearmanEE = 'h08A'
+public let uGeneralEE = 'H08S'
+public let uCastleEE1 = 'h07O'
+public let uCastleEE2 = 'h07P'
+public let uCastleEE3 = 'h07T'
+public let uInnEE = 'h07E'
+public let uUniversityEE = 'h06W'
 
 // ME
 public let uPeasantME = 'h06G'
@@ -46,6 +56,13 @@ public let uCapitolME2 = 'h06G'
 public let uCapitolME3 = 'h06E'
 public let uBarracksME = 'h05U'
 public let uSpearmanME = 'h059'
+public let uGeneralME = 'H08U'
+public let uCastleME1 = 'h03S'
+public let uCastleME2 = 'h07N'
+public let uCastleME3 = 'h051'
+public let uMilitiaCallToArms = 'h08Q'
+public let uMilitiaArcherCallToArms = 'h00M'
+public let uUniversityME = 'h05V'
 
 // BZ
 public let uPeasantBZ = 'h046'
@@ -57,17 +74,19 @@ public let uCapitolBZ2 = 'h04W'
 public let uCapitolBZ3 = 'h04X'
 public let uBarracksBZ = 'h04l'
 public let uSpearmanBZ = 'h04C'
-
-
+public let uGeneralBZ = 'H08T'
+public let uCastleBZ1 = 'h07Q'
+public let uCastleBZ2 = 'h07R'
+public let uCastleBZ3 = 'h07S'
+public let uMercenaryCamp = 'h08V'
+public let uUniversityBZ = 'h060'
 
 // AUTO
 public let uAutonomousTH = 'h043'
-// HALLS - CASTLES
+// HALLS 
 public let uTH = 'h031'
 public let uCH = 'h03M'
-public let uMotteBailey = 'h02C'
-public let uCastle = 'h02D'
-public let uStronghold = 'h01l'
+
 //@TODO Remove this shit:
 public let uDummyMotteBailey = 'h051'
 public let uDummyCH = 'h04U'
@@ -79,6 +98,13 @@ public let uShipyard = 'h00Y'
 public let uSettlement = 'h00M'
 public let uSettlementAnc1 = 'h06U'
 public let uSettlementAnc2 = 'h042' 
+public let uEncampment = 'h01H'
+public let uInn = 'h00X'
+
+public let uRebelSpreading = 'h03I'
+public let uRebel = 'h03H'
+public let uRebelKnight = 'h03N'
+public let uRebelRam = 'h03Y'
 
 // Ores (Mined)
 public let uCopperMine = 'h03E'
@@ -102,19 +128,19 @@ public let kStartingUnits = [
 	// EE
 	uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE,
 	uWorkerEE, uWorkerEE, uWorkerEE, uWorkerEE,
-	uGeneralWE,
+	uGeneralEE,
 	uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE
 ),asList(
 	// ME
 	uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME,
 	uWorkerME, uWorkerME, uWorkerME, uWorkerME,
-	uGeneralWE,
+	uGeneralME,
 	uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME
 ),asList(
 	// BZ
 	uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ,
 	uWorkerBZ, uWorkerBZ, uWorkerBZ, uWorkerBZ,
-	uGeneralWE,
+	uGeneralBZ,
 	uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ
 )]
 
@@ -145,15 +171,39 @@ public let uCapitols = asList(
 	uCapitolBZ3
 )
 
+public let uCastles = asList(
+	uCastleWE1,
+	uCastleWE2,
+	uCastleWE3,
+	uCastleEE1,
+	uCastleEE2,
+	uCastleEE3,
+	uCastleME1,
+	uCastleME2,
+	uCastleME3,
+	uCastleBZ1,
+	uCastleBZ2,
+	uCastleBZ3
+)
+
 public let kCityTypes =   asList(
 	uCapitolWE1, uCapitolWE2, uCapitolWE3, 
 	uCapitolEE1, uCapitolEE2, uCapitolEE3,
 	uCapitolME1, uCapitolME2, uCapitolME3,
 	uCapitolBZ1, uCapitolBZ2, uCapitolBZ3,
 	uAutonomousTH, uTH, uCH,
-	uCastle, uStronghold, 
+	uCastleWE1, uCastleWE2, uCastleWE3,
+	uCastleEE1, uCastleEE2, uCastleEE3, 
+	uCastleME1, uCastleME2, uCastleME3,
+	uCastleBZ1, uCastleBZ2, uCastleBZ3, 
 	uDummyCH, uDummyCH2Castle, uDummyTH
 )
+
+public let uRebels = [
+	asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading),
+	asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading),
+	asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelRam, uRebelRam)
+]
 
 public let kRiverRects = asList(
 	gg_rct_SHIP_Ankara_Lake,

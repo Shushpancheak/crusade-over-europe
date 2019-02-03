@@ -37,11 +37,20 @@ public function countIncomeForAll()
 					gold_change[pl_id] += usIncomeOres.get(i)
 
 init
+	doPeriodically(kIncomeCountToMultiboardRate / 10) cbUPKEEP_SHOWING ->
+		for i = 0 to PLAYER_SLOTS - 1
+			if player_stats[i].isInGame()
+				multiboards[i]
+					..setItem(kMBUpkeep[0], kMBUpkeep[1], getStringColoredBasedOnSign(player_stats[i].getUpkeep()))
+
+
 	doPeriodically(kIncomeCountToMultiboardRate) cbINCOME_MULTIBOARD ->
 		countIncomeForAll()
 		for i = 0 to PLAYER_SLOTS - 1
 			if player_stats[i].isInGame()
-				multiboards[i].setItem(kMBIncome[0], kMBIncome[1], getStringColoredBasedOnSign(gold_change[i]))
+				multiboards[i]
+					..setItem(kMBIncome[0], kMBIncome[1], getStringColoredBasedOnSign(gold_change[i]))
+					..setItem(kMBUpkeep[0], kMBUpkeep[1], getStringColoredBasedOnSign(player_stats[i].getUpkeep()))
 
 	// Income to every player
 	doPeriodically(kIncomeCountRate) cbINCOME ->
@@ -49,5 +58,5 @@ init
 			if player_stats[i].isInGame()
 				let cur_gold = GetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD)
 				let cur_lumb = GetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER)
-				SetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD, cur_gold + gold_change[i])
+				SetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD, cur_gold + gold_change[i] + player_stats[i].getUpkeep())
 				SetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + lumb_change[i])

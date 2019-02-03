@@ -1,0 +1,18 @@
+package Taxation
+
+import Main
+
+init
+	EventListener.add(EVENT_PLAYER_UNIT_SPELL_CAST) ->
+		if aTaxes.has(GetSpellAbilityId())
+			if isCity(GetSpellTargetUnit())
+				if GetSpellTargetUnit().getOwner() == GetSpellAbilityUnit().getOwner()
+					var lvl = 0
+					switch GetSpellAbilityId()
+						case aLowTax
+							lvl = 1
+						case aMedTax
+							lvl = 0
+						case aHighTax
+							lvl = 2
+					cities[getCityId(GetSpellTargetUnit())].changeTaxLevel(lvl)

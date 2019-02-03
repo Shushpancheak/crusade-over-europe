@@ -1,0 +1,38 @@
+package Revolts
+
+import initlater Main
+
+public let kPOtoRevolt1 = 50.0
+public let kPOtoRevolt2 = 30.0
+public let kPOtoRevolt3 = 15.0
+
+public real array last_time_city_revolted
+public let kCityMinTimeToRevolt = TURN_TIME / 2
+
+/* Checks if there should be a revolt in the city and fuels it up **/
+public function checkForRevolt(int city_id)
+	if city_id < 0 or city_id >= cityCount
+		return
+	if getElapsedTime() - last_time_city_revolted[city_id] <= kCityMinTimeToRevolt
+		return
+	let po = cities[city_id].getLastPublicOrder()
+	let city_u = cities[city_id].getCityUnit()
+	if not city_u.getOwner().isIngame()
+		return
+	if uCastles.has(cities[city_id].getCityUnit().getTypeId())
+	if po < kPOtoRevolt1
+		last_time_city_revolted[city_id] = getElapsedTime()
+		cities[city_id].addModifier(CityModifier.recently_revolted)
+		attentionToPlayer(ksRevolt + cities[city_id].getCityNameColored() + "!", city_u.getOwner())
+		if po >= kPOtoRevolt2
+			// Revolt 1 stage
+			for u in uRebels[0]
+				CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)
+		else if po >= kPOtoRevolt3
+			// Revolt 2 stage
+			for u in uRebels[1]
+				CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)
+		else
+			// Revol 3 stage
+			for u in uRebels[2]
+				CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)

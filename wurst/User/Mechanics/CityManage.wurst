@@ -28,33 +28,20 @@ init
 			KillUnit(GetSpellAbilityUnit())
 		end)
 		..registerAnyUnitEvent(EVENT_PLAYER_UNIT_SPELL_CAST)
-
-	//-----------------------------AUTONOMOUS------------------------------------
-	registerSpellEffectEvent(aGrantIndependence) ->
-		let city_id = getCityId(GetSpellAbilityUnit())
-		cities[city_id].replaceCity(uAutonomousTH)
-	
-	registerSpellEffectEvent(aSubjugate) ->
-		let city_id = getCityId(GetSpellAbilityUnit())
-		cities[city_id].replaceCity(uTH)
-
-
-	CreateTrigger()
-		..registerAnyUnitEvent(EVENT_PLAYER_UNIT_ATTACKED)
-		..addCondition(Condition(() -> GetAttackedUnitBJ().getTypeId() == uAutonomousTH))
-		..addAction(() -> cities[getCityId(GetAttackedUnitBJ())].changeOwner(PLAYER_NEUTRAL_AGGRESSIVE))
 	
 	//-------------------------------CONQUER-------------------------------------
 	EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
 		unit u = GetAttackedUnitBJ()
 		
-		if u.isCity() and u.getLifePercent() <= kCityLifePercentToCapture and u.getOwner() != GetAttacker().getOwner()
-			if (u.getPos() - GetAttacker().getPos()).length() > 300.0
+		if u.isCity()
+			if u.getLifePercent() <= kCityLifePercentToCapture and u.getOwner() != GetAttacker().getOwner()
+				if (u.getPos() - GetAttacker().getPos()).length() > 300.0
+					u.setLifePercent(kCityLifePercentToCapture)
+				else
+					let city_id = u.getCityId()
+					cities[city_id].capture(GetAttacker().getOwner())
+					let u_id = u.getTypeId()
+					if uCapitols.has(u_id)
+						attentionToForce(GetAttacker().getOwner().getNameColored() + " has just captured " + GetAttackedUnitBJ().getOwner().getNameColored() + " Capitol!", GetPlayersAll())
+			else if u.getLifePercent() <= kCityLifePercentToCapture 
 				u.setLifePercent(kCityLifePercentToCapture)
-			else
-				let city_id = u.getCityId()
-				cities[city_id].capture(GetAttacker().getOwner())
-				let u_id = u.getTypeId()
-				if uCapitols.has(u_id)
-					attentionToForce(GetAttacker().getOwner().getNameColored() + " has just captured " + GetAttackedUnitBJ().getOwner().getNameColored() + " Capitol!", GetPlayersAll())
-
