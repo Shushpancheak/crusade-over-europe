@@ -22,5 +22,5 @@ public let aCallToArmsBlacksmith = 'A04E'
 public let aMassCommand = 'A04J'
 
 
-public let aTownHallCapitolAura = 'A03B'
+public let aTownHallCapitolAura = 'A02B'
 public let aCastleAura = 'A03H'

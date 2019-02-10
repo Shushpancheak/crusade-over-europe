@@ -4581,6 +4581,10 @@ function OnUnitEnterLeave_closure_impl takes nothing returns nothing
 endfunction
 
 function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
+	call prepareUnit(GetFilterUnit())
+endfunction
+
+function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
 	local unit leavingUnit = GetTriggerUnit()
 	local unit this_6 = leavingUnit
 	local integer id = 1095577649
@@ -4598,10 +4602,6 @@ function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
 	set this_6 = null
 	set u_5 = null
 	set this_7 = null
-endfunction
-
-function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
-	call prepareUnit(GetFilterUnit())
 endfunction
 
 function Trig_Archer_1_Actions takes nothing returns nothing
@@ -11524,18 +11524,6 @@ function Trig_killing_Lumber_Ship_Conditions takes nothing returns boolean
 	return true
 endfunction
 
-function LinkedList_has takes integer this_6, integer elem returns boolean
-	local integer entry = LLEntry_next[LinkedList_dummy[this_6]]
-	loop
-		exitwhen  not (entry != LinkedList_dummy[this_6])
-		if LLEntry_elem[entry] == elem then
-			return true
-		endif
-		set entry = LLEntry_next[entry]
-	endloop
-	return false
-endfunction
-
 function Loglevel_getTag takes integer this_6 returns string
 	local integer temp = this_6
 	if temp == 0 then
@@ -11751,106 +11739,85 @@ function error takes string msg, string stackPos returns nothing
 	set showTo_4 = null
 endfunction
 
-function timer_setData takes timer this_6, integer data, string stackPos returns nothing
+function dispatch_LinkedList_LinkedList_LinkedList_get takes integer this_6, integer index, string stackPos returns integer
+	local integer LinkedList_LinkedList_get_result
 	local integer this_7
-	local integer parentKey
-	local integer value
+	local integer index_2
 	local string stackPos_2
+	local integer stackTrace_tempReturn
 	local integer this_8
-	local integer parentKey_2
-	local integer value_2
-	local hashtable this_9
-	local integer parentKey_3
-	local integer childKey
-	local integer value_3
-	local timer this_10
+	local integer index_3
+	local string stackPos_3
+	local integer LinkedList_LinkedList_getEntry_result
+	local integer this_9
+	local integer index_4
+	local integer entry
+	local integer i
+	local integer temp
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set this_7 = TimerUtils_timerData
-	set this_10 = this_6
-	set parentKey = GetHandleId(this_10)
-	set value = data
-	set stackPos_2 = "when calling saveInt in TimerUtils, line 17"
+	if LinkedList_typeId[this_6] == 0 then
+		if this_6 == 0 then
+			call error("Nullpointer exception when calling LinkedList.get", "when calling error in LinkedList, line 50")
+		else
+			call error("Called LinkedList.get on invalid object.", "when calling error in LinkedList, line 50")
+		endif
+	endif
+	set this_7 = this_6
+	set index_2 = index
+	set stackPos_2 = "when calling get in LinkedList, line 50"
 	set wurst_stack[wurst_stack_depth] = stackPos_2
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling Table.saveInt", "when calling error in Table, line 42")
-		else
-			call error("Called Table.saveInt on invalid object.", "when calling error in Table, line 42")
-		endif
-	endif
 	set this_8 = this_7
-	set parentKey_2 = parentKey
-	set value_2 = value
-	set this_9 = Table_ht
-	set parentKey_3 = this_8
-	set childKey = parentKey_2
-	set value_3 = value_2
-	call SaveInteger(this_9, parentKey_3, childKey, value_3)
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set this_9 = null
-	set this_10 = null
-endfunction
-
-function getTimer takes string stackPos returns timer
-	local timer receiver
-	local timer stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
+	set index_3 = index_2
+	set stackPos_3 = "when calling getEntry in LinkedList, line 51"
+	set wurst_stack[wurst_stack_depth] = stackPos_3
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if TimerUtils_freeTimersCount > 0 then
-		set TimerUtils_freeTimersCount = TimerUtils_freeTimersCount - 1
-		call timer_setData(TimerUtils_freeTimers[TimerUtils_freeTimersCount], 0, "when calling setData in TimerUtils, line 29")
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set receiver = null
-		set stackTrace_tempReturn = null
-		return TimerUtils_freeTimers[TimerUtils_freeTimersCount]
-	else
-		set receiver = CreateTimer()
-		call timer_setData(receiver, 0, "when calling setData in TimerUtils, line 32")
-		set stackTrace_tempReturn = receiver
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set getTimertempReturn = stackTrace_tempReturn
-		set receiver = null
-		set stackTrace_tempReturn = null
-		return getTimertempReturn
-	endif
-endfunction
-
-function CallbackSingle_start takes integer this_6, real time, string stackPos returns nothing
-	local timer receiver
-	local timer receiver_2
-	local timer this_7
-	local real time_2
-	local code timerCallBack
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set receiver = getTimer("when calling getTimer in ClosureTimers, line 68")
-	call timer_setData(receiver, this_6, "when calling setData in ClosureTimers, line 69")
-	set receiver_2 = receiver
-	set this_7 = receiver_2
-	set time_2 = time
-	set timerCallBack = ref_function_bridge_CallbackSingle_closure_impl
-	call TimerStart(this_7, time_2, false, timerCallBack)
-	set CallbackSingle_t[this_6] = receiver_2
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set receiver = null
-	set receiver_2 = null
-	set this_7 = null
-endfunction
-
-function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start takes integer this_6, real time, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if CallbackSingle_typeId[this_6] == 0 then
-		if this_6 == 0 then
-			call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+	if LinkedList_typeId[this_8] == 0 then
+		if this_8 == 0 then
+			call error("Nullpointer exception when calling LinkedList.getEntry", "when calling error in LinkedList, line 366")
 		else
-			call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+			call error("Called LinkedList.getEntry on invalid object.", "when calling error in LinkedList, line 366")
 		endif
 	endif
-	call CallbackSingle_start(this_6, time, "when calling start in ClosureTimers, line 67")
+	set this_9 = this_8
+	set index_4 = index_3
+	set entry = LinkedList_dummy[this_9]
+	set i = 0
+	set temp = index_4
+	loop
+		exitwhen i > temp
+		set entry = LLEntry_next[entry]
+		set i = i + 1
+	endloop
+	set LinkedList_LinkedList_getEntry_result = entry
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set stackTrace_tempReturn = LLEntry_elem[LinkedList_LinkedList_getEntry_result]
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set LinkedList_LinkedList_get_result = stackTrace_tempReturn
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return LinkedList_LinkedList_get_result
+endfunction
+
+function City_addPopulation takes integer this_6, integer tier, real multiplier, string stackPos returns nothing
+	local integer prev_pop
+	local real this_7
+	local integer index
+	local integer index_2
+	local real temp
+	local real temp_2
+	local integer temp_3
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set prev_pop = City_population[this_6]
+	set temp_3 = City_population[this_6]
+	set temp_2 = multiplier
+	set index = dispatch_LinkedList_LinkedList_LinkedList_get(CityModifiers_mPortions[tier], 0, "when calling get in City, line 372")
+	set temp = index / 1000.
+	set index_2 = dispatch_LinkedList_LinkedList_LinkedList_get(CityModifiers_mPortions[tier], 1, "when calling get in City, line 372")
+	set this_7 = temp_2 * GetRandomReal(temp, index_2 / 1000.) * City_population[this_6]
+	set City_population[this_6] = temp_3 + R2I(this_7)
+	set City_last_pop_growth[this_6] = City_last_pop_growth[this_6] + (City_population[this_6] - prev_pop)
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -11910,162 +11877,36 @@ function dispatch_HashMap_HashMap_HashMap_get takes integer this_6, integer key,
 	return HashMap_HashMap_get_result
 endfunction
 
-function dispatch_City_City_City_getCityModifierOnAdd takes integer this_6, integer cm_2, string stackPos returns nothing
+function City_getCityModifierOnFastCount takes integer this_6, integer cm_2, string stackPos returns nothing
+	local integer tier
+	local real mult
 	local integer this_7
-	local integer cm_3
+	local integer tier_2
+	local real multiplier
 	local string stackPos_2
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if City_typeId[this_6] == 0 then
-		if this_6 == 0 then
-			call error("Nullpointer exception when calling City.getCityModifierOnAdd", "when calling error in City, line 389")
-		else
-			call error("Called City.getCityModifierOnAdd on invalid object.", "when calling error in City, line 389")
-		endif
-	endif
+	set tier = CityModifierClass_popIncreaseTier[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 377")]
+	set mult = CityModifierClass_popIncreaseMultiplier[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 378")]
 	set this_7 = this_6
-	set cm_3 = cm_2
-	set stackPos_2 = "when calling getCityModifierOnAdd in City, line 389"
+	set tier_2 = tier
+	set multiplier = mult
+	set stackPos_2 = "when calling addPopulation in City, line 379"
 	set wurst_stack[wurst_stack_depth] = stackPos_2
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set City_public_order_add[this_7] = City_public_order_add[this_7] + CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_3, "when calling get in City, line 390")]
-	set City_tax_multiplier[this_7] = City_tax_multiplier[this_7] + CityModifierClass_taxIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_3, "when calling get in City, line 391")]
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function new_LLEntry takes integer elem, integer prev, integer next, string stackPos returns integer
-	local integer this_6
-	local string stackPos_2
-	local integer this_7
-	local integer this_8
-	local integer elem_2
-	local integer prev_2
-	local integer next_2
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackPos_2 = "when calling LLEntry in LinkedList, line 401"
-	set wurst_stack[wurst_stack_depth] = stackPos_2
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if LLEntry_firstFree == 0 then
-		if LLEntry_maxIndex < 32768 then
-			set LLEntry_maxIndex = LLEntry_maxIndex + 1
-			set this_7 = LLEntry_maxIndex
-			set LLEntry_typeId[this_7] = 695
-		else
-			call error("Out of memory: Could not create LLEntry.", "when calling error in LinkedList, line 396")
-			set this_7 = 0
-		endif
-	else
-		set LLEntry_firstFree = LLEntry_firstFree - 1
-		set this_7 = LLEntry_nextFree[LLEntry_firstFree]
-		set LLEntry_typeId[this_7] = 695
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set this_6 = this_7
-	set this_8 = this_6
-	set elem_2 = elem
-	set prev_2 = prev
-	set next_2 = next
-	set LLEntry_elem[this_8] = elem_2
-	set LLEntry_prev[this_8] = prev_2
-	set LLEntry_next[this_8] = next_2
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return this_6
-endfunction
-
-function dispatch_LinkedList_LinkedList_LinkedList_add_1 takes integer this_6, integer elems_0, string stackPos returns nothing
-	local integer this_7
-	local integer elems_0_2
-	local string stackPos_2
-	local integer entry
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if LinkedList_typeId[this_6] == 0 then
-		if this_6 == 0 then
-			call error("Nullpointer exception when calling LinkedList.add", "when calling error in LinkedList, line 37")
-		else
-			call error("Called LinkedList.add on invalid object.", "when calling error in LinkedList, line 37")
-		endif
-	endif
-	set this_7 = this_6
-	set elems_0_2 = elems_0
-	set stackPos_2 = "when calling add in LinkedList, line 37"
-	set wurst_stack[wurst_stack_depth] = stackPos_2
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set entry = new_LLEntry(elems_0_2, LLEntry_prev[LinkedList_dummy[this_7]], LinkedList_dummy[this_7], "when calling new_LLEntry in LinkedList, line 39")
-	set LLEntry_next[LLEntry_prev[LinkedList_dummy[this_7]]] = entry
-	set LLEntry_prev[LinkedList_dummy[this_7]] = entry
-	set LinkedList_size[this_7] = LinkedList_size[this_7] + 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function City_addModifier takes integer this_6, integer cm_2, string stackPos returns boolean
-	local integer clVar
-	local real temp
-	local integer this_7
-	local integer elem
-	local string stackPos_2
-	local boolean LinkedList_LinkedList_has_result
-	local string stackPos_3
-	local integer this_8
-	local real timeToWait
-	local integer cb
-	local string stackPos_4
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set this_7 = City_modifiers[this_6]
-	set elem = cm_2
-	set stackPos_2 = "when calling has in City, line 339"
-	set wurst_stack[wurst_stack_depth] = stackPos_2
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if LinkedList_typeId[this_7] == 0 then
+	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling LinkedList.has", "when calling error in LinkedList, line 103")
+			call error("Nullpointer exception when calling City.addPopulation", "when calling error in City, line 370")
 		else
-			call error("Called LinkedList.has on invalid object.", "when calling error in LinkedList, line 103")
+			call error("Called City.addPopulation on invalid object.", "when calling error in City, line 370")
 		endif
 	endif
-	set LinkedList_LinkedList_has_result = LinkedList_has(this_7, elem)
+	call City_addPopulation(this_7, tier_2, multiplier, "when calling addPopulation in City, line 370")
 	set wurst_stack_depth = wurst_stack_depth - 1
-	if LinkedList_LinkedList_has_result then
-		set wurst_stack_depth = wurst_stack_depth - 1
-		return false
-	endif
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(City_modifiers[this_6], cm_2, "when calling add in City, line 341")
-	call dispatch_City_City_City_getCityModifierOnAdd(this_6, cm_2, "when calling getCityModifierOnAdd in City, line 342")
-	set temp = CityModifierClass_time[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 344")]
-	set stackPos_3 = "when calling alloc_Closure in City, line 344"
-	set wurst_stack[wurst_stack_depth] = stackPos_3
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if CallbackSingle_firstFree == 0 then
-		if CallbackSingle_maxIndex < 32768 then
-			set CallbackSingle_maxIndex = CallbackSingle_maxIndex + 1
-			set this_8 = CallbackSingle_maxIndex
-			set CallbackSingle_typeId[this_8] = 640
-		else
-			call error("Out of memory: Could not create Closure.", "when calling error in City, line 344")
-			set this_8 = 0
-		endif
-	else
-		set CallbackSingle_firstFree = CallbackSingle_firstFree - 1
-		set this_8 = CallbackSingle_nextFree[CallbackSingle_firstFree]
-		set CallbackSingle_typeId[this_8] = 640
+	if CityModifierClass_isPOIncreaseConstant[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 381")] == false then
+		set City_public_order_add[this_6] = City_public_order_add[this_6] - CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 382")] * 5.0 / CityModifierClass_time[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 382")]
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
-	set clVar = this_8
-	set this_3[clVar] = this_6
-	set cm[clVar] = cm_2
-	set timeToWait = temp
-	set cb = clVar
-	set stackPos_4 = "when calling doAfter in City, line 344"
-	set wurst_stack[wurst_stack_depth] = stackPos_4
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb, timeToWait, "when calling start in ClosureTimers, line 15")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return true
 endfunction
 
 function dispatch_LLIterator_destroyLLIterator takes integer this_6, string stackPos returns nothing
@@ -12183,7 +12024,356 @@ function new_LLIterator takes integer parent, string stackPos returns integer
 	return this_6
 endfunction
 
-function City_closure_impl takes integer this_6, integer cbLONG, string stackPos returns nothing
+function City_closure_impl takes integer this_6, integer cbPOP, string stackPos returns nothing
+	local integer pop_prev
+	local integer pop_growth
+	local integer deviation
+	local integer iterator
+	local integer m
+	local real this_7
+	local real this_8
+	local real this_9
+	local integer this_10
+	local string stackPos_2
+	local integer stackTrace_tempReturn
+	local integer this_11
+	local integer this_12
+	local integer this_13
+	local integer cm_2
+	local string stackPos_3
+	local integer this_14
+	local string stackPos_4
+	local integer temp
+	local integer temp_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set City_population_growth_rate[this_4[this_6]] = City_population_growth_rate[this_4[this_6]] + GetRandomReal( - 0.003, 0.005) * City_population_growth_rate[this_4[this_6]]
+	set pop_prev = City_population[this_4[this_6]]
+	set temp = City_population[this_4[this_6]]
+	set this_7 = City_population[this_4[this_6]] * City_population_growth_rate[this_4[this_6]]
+	set City_population[this_4[this_6]] = temp + R2I(this_7)
+	set pop_growth = City_population[this_4[this_6]] - pop_prev
+	set this_8 =  - (0.25 * pop_growth)
+	set temp_2 = R2I(this_8)
+	set this_9 = 0.25 * pop_growth
+	set deviation = GetRandomInt(temp_2, R2I(this_9))
+	set City_population[this_4[this_6]] = City_population[this_4[this_6]] + deviation
+	set City_last_pop_growth[this_4[this_6]] = City_population[this_4[this_6]] - pop_prev
+	set this_10 = City_modifiers[this_4[this_6]]
+	set stackPos_2 = "when calling iterator in City, line 135"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = new_LLIterator(this_10, "when calling new_LLIterator in LinkedList, line 165")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set iterator = stackTrace_tempReturn
+	loop
+		set this_11 = iterator
+		exitwhen  not (LLEntry_next[LLIterator_current[this_11]] != LLIterator_dummy[this_11])
+		set this_12 = iterator
+		set LLIterator_current[this_12] = LLEntry_next[LLIterator_current[this_12]]
+		set m = LLEntry_elem[LLIterator_current[this_12]]
+		set this_13 = this_4[this_6]
+		set cm_2 = m
+		set stackPos_3 = "when calling getCityModifierOnFastCount in City, line 136"
+		set wurst_stack[wurst_stack_depth] = stackPos_3
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if City_typeId[this_13] == 0 then
+			if this_13 == 0 then
+				call error("Nullpointer exception when calling City.getCityModifierOnFastCount", "when calling error in City, line 376")
+			else
+				call error("Called City.getCityModifierOnFastCount on invalid object.", "when calling error in City, line 376")
+			endif
+		endif
+		call City_getCityModifierOnFastCount(this_13, cm_2, "when calling getCityModifierOnFastCount in City, line 376")
+		set wurst_stack_depth = wurst_stack_depth - 1
+	endloop
+	set this_14 = iterator
+	set stackPos_4 = "when calling close in City, line 135"
+	set wurst_stack[wurst_stack_depth] = stackPos_4
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if LLIterator_destroyOnClose[this_14] then
+		call dispatch_LLIterator_destroyLLIterator(this_14, "when calling LLIterator in LinkedList, line 450")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function timer_setData takes timer this_6, integer data, string stackPos returns nothing
+	local integer this_7
+	local integer parentKey
+	local integer value
+	local string stackPos_2
+	local integer this_8
+	local integer parentKey_2
+	local integer value_2
+	local hashtable this_9
+	local integer parentKey_3
+	local integer childKey
+	local integer value_3
+	local timer this_10
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this_7 = TimerUtils_timerData
+	set this_10 = this_6
+	set parentKey = GetHandleId(this_10)
+	set value = data
+	set stackPos_2 = "when calling saveInt in TimerUtils, line 17"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling Table.saveInt", "when calling error in Table, line 42")
+		else
+			call error("Called Table.saveInt on invalid object.", "when calling error in Table, line 42")
+		endif
+	endif
+	set this_8 = this_7
+	set parentKey_2 = parentKey
+	set value_2 = value
+	set this_9 = Table_ht
+	set parentKey_3 = this_8
+	set childKey = parentKey_2
+	set value_3 = value_2
+	call SaveInteger(this_9, parentKey_3, childKey, value_3)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set this_9 = null
+	set this_10 = null
+endfunction
+
+function getTimer takes string stackPos returns timer
+	local timer receiver
+	local timer stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if TimerUtils_freeTimersCount > 0 then
+		set TimerUtils_freeTimersCount = TimerUtils_freeTimersCount - 1
+		call timer_setData(TimerUtils_freeTimers[TimerUtils_freeTimersCount], 0, "when calling setData in TimerUtils, line 29")
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set receiver = null
+		set stackTrace_tempReturn = null
+		return TimerUtils_freeTimers[TimerUtils_freeTimersCount]
+	else
+		set receiver = CreateTimer()
+		call timer_setData(receiver, 0, "when calling setData in TimerUtils, line 32")
+		set stackTrace_tempReturn = receiver
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set getTimertempReturn = stackTrace_tempReturn
+		set receiver = null
+		set stackTrace_tempReturn = null
+		return getTimertempReturn
+	endif
+endfunction
+
+function CallbackSingle_start takes integer this_6, real time, string stackPos returns nothing
+	local timer receiver
+	local timer receiver_2
+	local timer this_7
+	local real time_2
+	local code timerCallBack
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set receiver = getTimer("when calling getTimer in ClosureTimers, line 68")
+	call timer_setData(receiver, this_6, "when calling setData in ClosureTimers, line 69")
+	set receiver_2 = receiver
+	set this_7 = receiver_2
+	set time_2 = time
+	set timerCallBack = ref_function_bridge_CallbackSingle_closure_impl
+	call TimerStart(this_7, time_2, false, timerCallBack)
+	set CallbackSingle_t[this_6] = receiver_2
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set receiver = null
+	set receiver_2 = null
+	set this_7 = null
+endfunction
+
+function LinkedList_has takes integer this_6, integer elem returns boolean
+	local integer entry = LLEntry_next[LinkedList_dummy[this_6]]
+	loop
+		exitwhen  not (entry != LinkedList_dummy[this_6])
+		if LLEntry_elem[entry] == elem then
+			return true
+		endif
+		set entry = LLEntry_next[entry]
+	endloop
+	return false
+endfunction
+
+function dispatch_City_City_City_getCityModifierOnAdd takes integer this_6, integer cm_2, string stackPos returns nothing
+	local integer this_7
+	local integer cm_3
+	local string stackPos_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if City_typeId[this_6] == 0 then
+		if this_6 == 0 then
+			call error("Nullpointer exception when calling City.getCityModifierOnAdd", "when calling error in City, line 389")
+		else
+			call error("Called City.getCityModifierOnAdd on invalid object.", "when calling error in City, line 389")
+		endif
+	endif
+	set this_7 = this_6
+	set cm_3 = cm_2
+	set stackPos_2 = "when calling getCityModifierOnAdd in City, line 389"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set City_public_order_add[this_7] = City_public_order_add[this_7] + CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_3, "when calling get in City, line 390")]
+	set City_tax_multiplier[this_7] = City_tax_multiplier[this_7] + CityModifierClass_taxIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_3, "when calling get in City, line 391")]
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function new_LLEntry takes integer elem, integer prev, integer next, string stackPos returns integer
+	local integer this_6
+	local string stackPos_2
+	local integer this_7
+	local integer this_8
+	local integer elem_2
+	local integer prev_2
+	local integer next_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackPos_2 = "when calling LLEntry in LinkedList, line 401"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if LLEntry_firstFree == 0 then
+		if LLEntry_maxIndex < 32768 then
+			set LLEntry_maxIndex = LLEntry_maxIndex + 1
+			set this_7 = LLEntry_maxIndex
+			set LLEntry_typeId[this_7] = 695
+		else
+			call error("Out of memory: Could not create LLEntry.", "when calling error in LinkedList, line 396")
+			set this_7 = 0
+		endif
+	else
+		set LLEntry_firstFree = LLEntry_firstFree - 1
+		set this_7 = LLEntry_nextFree[LLEntry_firstFree]
+		set LLEntry_typeId[this_7] = 695
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set this_6 = this_7
+	set this_8 = this_6
+	set elem_2 = elem
+	set prev_2 = prev
+	set next_2 = next
+	set LLEntry_elem[this_8] = elem_2
+	set LLEntry_prev[this_8] = prev_2
+	set LLEntry_next[this_8] = next_2
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this_6
+endfunction
+
+function dispatch_LinkedList_LinkedList_LinkedList_add_1 takes integer this_6, integer elems_0, string stackPos returns nothing
+	local integer this_7
+	local integer elems_0_2
+	local string stackPos_2
+	local integer entry
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if LinkedList_typeId[this_6] == 0 then
+		if this_6 == 0 then
+			call error("Nullpointer exception when calling LinkedList.add", "when calling error in LinkedList, line 37")
+		else
+			call error("Called LinkedList.add on invalid object.", "when calling error in LinkedList, line 37")
+		endif
+	endif
+	set this_7 = this_6
+	set elems_0_2 = elems_0
+	set stackPos_2 = "when calling add in LinkedList, line 37"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set entry = new_LLEntry(elems_0_2, LLEntry_prev[LinkedList_dummy[this_7]], LinkedList_dummy[this_7], "when calling new_LLEntry in LinkedList, line 39")
+	set LLEntry_next[LLEntry_prev[LinkedList_dummy[this_7]]] = entry
+	set LLEntry_prev[LinkedList_dummy[this_7]] = entry
+	set LinkedList_size[this_7] = LinkedList_size[this_7] + 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function City_addModifier takes integer this_6, integer cm_2, string stackPos returns boolean
+	local integer clVar
+	local real temp
+	local integer this_7
+	local integer elem
+	local string stackPos_2
+	local boolean LinkedList_LinkedList_has_result
+	local string stackPos_3
+	local integer this_8
+	local real timeToWait
+	local integer cb
+	local string stackPos_4
+	local integer this_9
+	local real time
+	local string stackPos_5
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this_7 = City_modifiers[this_6]
+	set elem = cm_2
+	set stackPos_2 = "when calling has in City, line 339"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if LinkedList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling LinkedList.has", "when calling error in LinkedList, line 103")
+		else
+			call error("Called LinkedList.has on invalid object.", "when calling error in LinkedList, line 103")
+		endif
+	endif
+	set LinkedList_LinkedList_has_result = LinkedList_has(this_7, elem)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	if LinkedList_LinkedList_has_result then
+		set wurst_stack_depth = wurst_stack_depth - 1
+		return false
+	endif
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(City_modifiers[this_6], cm_2, "when calling add in City, line 341")
+	call dispatch_City_City_City_getCityModifierOnAdd(this_6, cm_2, "when calling getCityModifierOnAdd in City, line 342")
+	set temp = CityModifierClass_time[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 344")]
+	set stackPos_3 = "when calling alloc_Closure in City, line 344"
+	set wurst_stack[wurst_stack_depth] = stackPos_3
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if CallbackSingle_firstFree == 0 then
+		if CallbackSingle_maxIndex < 32768 then
+			set CallbackSingle_maxIndex = CallbackSingle_maxIndex + 1
+			set this_8 = CallbackSingle_maxIndex
+			set CallbackSingle_typeId[this_8] = 640
+		else
+			call error("Out of memory: Could not create Closure.", "when calling error in City, line 344")
+			set this_8 = 0
+		endif
+	else
+		set CallbackSingle_firstFree = CallbackSingle_firstFree - 1
+		set this_8 = CallbackSingle_nextFree[CallbackSingle_firstFree]
+		set CallbackSingle_typeId[this_8] = 640
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set clVar = this_8
+	set this_3[clVar] = this_6
+	set cm[clVar] = cm_2
+	set timeToWait = temp
+	set cb = clVar
+	set stackPos_4 = "when calling doAfter in City, line 344"
+	set wurst_stack[wurst_stack_depth] = stackPos_4
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this_9 = cb
+	set time = timeToWait
+	set stackPos_5 = "when calling start in ClosureTimers, line 15"
+	set wurst_stack[wurst_stack_depth] = stackPos_5
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if CallbackSingle_typeId[this_9] == 0 then
+		if this_9 == 0 then
+			call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+		else
+			call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+		endif
+	endif
+	call CallbackSingle_start(this_9, time, "when calling start in ClosureTimers, line 67")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return true
+endfunction
+
+function City_closure_impl_2 takes integer this_6, integer cbLONG, string stackPos returns nothing
 	local integer iterator
 	local integer m
 	local real ch
@@ -12339,194 +12529,6 @@ function City_closure_impl takes integer this_6, integer cbLONG, string stackPos
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function dispatch_LinkedList_LinkedList_LinkedList_get takes integer this_6, integer index, string stackPos returns integer
-	local integer LinkedList_LinkedList_get_result
-	local integer this_7
-	local integer index_2
-	local string stackPos_2
-	local integer stackTrace_tempReturn
-	local integer this_8
-	local integer index_3
-	local string stackPos_3
-	local integer LinkedList_LinkedList_getEntry_result
-	local integer this_9
-	local integer index_4
-	local integer entry
-	local integer i
-	local integer temp
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if LinkedList_typeId[this_6] == 0 then
-		if this_6 == 0 then
-			call error("Nullpointer exception when calling LinkedList.get", "when calling error in LinkedList, line 50")
-		else
-			call error("Called LinkedList.get on invalid object.", "when calling error in LinkedList, line 50")
-		endif
-	endif
-	set this_7 = this_6
-	set index_2 = index
-	set stackPos_2 = "when calling get in LinkedList, line 50"
-	set wurst_stack[wurst_stack_depth] = stackPos_2
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set this_8 = this_7
-	set index_3 = index_2
-	set stackPos_3 = "when calling getEntry in LinkedList, line 51"
-	set wurst_stack[wurst_stack_depth] = stackPos_3
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if LinkedList_typeId[this_8] == 0 then
-		if this_8 == 0 then
-			call error("Nullpointer exception when calling LinkedList.getEntry", "when calling error in LinkedList, line 366")
-		else
-			call error("Called LinkedList.getEntry on invalid object.", "when calling error in LinkedList, line 366")
-		endif
-	endif
-	set this_9 = this_8
-	set index_4 = index_3
-	set entry = LinkedList_dummy[this_9]
-	set i = 0
-	set temp = index_4
-	loop
-		exitwhen i > temp
-		set entry = LLEntry_next[entry]
-		set i = i + 1
-	endloop
-	set LinkedList_LinkedList_getEntry_result = entry
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set stackTrace_tempReturn = LLEntry_elem[LinkedList_LinkedList_getEntry_result]
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set LinkedList_LinkedList_get_result = stackTrace_tempReturn
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return LinkedList_LinkedList_get_result
-endfunction
-
-function City_addPopulation takes integer this_6, integer tier, real multiplier, string stackPos returns nothing
-	local integer prev_pop
-	local real this_7
-	local integer index
-	local integer index_2
-	local real temp
-	local real temp_2
-	local integer temp_3
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set prev_pop = City_population[this_6]
-	set temp_3 = City_population[this_6]
-	set temp_2 = multiplier
-	set index = dispatch_LinkedList_LinkedList_LinkedList_get(CityModifiers_mPortions[tier], 0, "when calling get in City, line 372")
-	set temp = index / 1000.
-	set index_2 = dispatch_LinkedList_LinkedList_LinkedList_get(CityModifiers_mPortions[tier], 1, "when calling get in City, line 372")
-	set this_7 = temp_2 * GetRandomReal(temp, index_2 / 1000.) * City_population[this_6]
-	set City_population[this_6] = temp_3 + R2I(this_7)
-	set City_last_pop_growth[this_6] = City_last_pop_growth[this_6] + (City_population[this_6] - prev_pop)
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function City_getCityModifierOnFastCount takes integer this_6, integer cm_2, string stackPos returns nothing
-	local integer tier
-	local real mult
-	local integer this_7
-	local integer tier_2
-	local real multiplier
-	local string stackPos_2
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set tier = CityModifierClass_popIncreaseTier[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 377")]
-	set mult = CityModifierClass_popIncreaseMultiplier[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 378")]
-	set this_7 = this_6
-	set tier_2 = tier
-	set multiplier = mult
-	set stackPos_2 = "when calling addPopulation in City, line 379"
-	set wurst_stack[wurst_stack_depth] = stackPos_2
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if City_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.addPopulation", "when calling error in City, line 370")
-		else
-			call error("Called City.addPopulation on invalid object.", "when calling error in City, line 370")
-		endif
-	endif
-	call City_addPopulation(this_7, tier_2, multiplier, "when calling addPopulation in City, line 370")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	if CityModifierClass_isPOIncreaseConstant[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 381")] == false then
-		set City_public_order_add[this_6] = City_public_order_add[this_6] - CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 382")] * 5.0 / CityModifierClass_time[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 382")]
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function City_closure_impl_2 takes integer this_6, integer cbPOP, string stackPos returns nothing
-	local integer pop_prev
-	local integer pop_growth
-	local integer deviation
-	local integer iterator
-	local integer m
-	local real this_7
-	local real this_8
-	local real this_9
-	local integer this_10
-	local string stackPos_2
-	local integer stackTrace_tempReturn
-	local integer this_11
-	local integer this_12
-	local integer this_13
-	local integer cm_2
-	local string stackPos_3
-	local integer this_14
-	local string stackPos_4
-	local integer temp
-	local integer temp_2
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set City_population_growth_rate[this_4[this_6]] = City_population_growth_rate[this_4[this_6]] + GetRandomReal( - 0.003, 0.005) * City_population_growth_rate[this_4[this_6]]
-	set pop_prev = City_population[this_4[this_6]]
-	set temp = City_population[this_4[this_6]]
-	set this_7 = City_population[this_4[this_6]] * City_population_growth_rate[this_4[this_6]]
-	set City_population[this_4[this_6]] = temp + R2I(this_7)
-	set pop_growth = City_population[this_4[this_6]] - pop_prev
-	set this_8 =  - (0.25 * pop_growth)
-	set temp_2 = R2I(this_8)
-	set this_9 = 0.25 * pop_growth
-	set deviation = GetRandomInt(temp_2, R2I(this_9))
-	set City_population[this_4[this_6]] = City_population[this_4[this_6]] + deviation
-	set City_last_pop_growth[this_4[this_6]] = City_population[this_4[this_6]] - pop_prev
-	set this_10 = City_modifiers[this_4[this_6]]
-	set stackPos_2 = "when calling iterator in City, line 135"
-	set wurst_stack[wurst_stack_depth] = stackPos_2
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = new_LLIterator(this_10, "when calling new_LLIterator in LinkedList, line 165")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set iterator = stackTrace_tempReturn
-	loop
-		set this_11 = iterator
-		exitwhen  not (LLEntry_next[LLIterator_current[this_11]] != LLIterator_dummy[this_11])
-		set this_12 = iterator
-		set LLIterator_current[this_12] = LLEntry_next[LLIterator_current[this_12]]
-		set m = LLEntry_elem[LLIterator_current[this_12]]
-		set this_13 = this_4[this_6]
-		set cm_2 = m
-		set stackPos_3 = "when calling getCityModifierOnFastCount in City, line 136"
-		set wurst_stack[wurst_stack_depth] = stackPos_3
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if City_typeId[this_13] == 0 then
-			if this_13 == 0 then
-				call error("Nullpointer exception when calling City.getCityModifierOnFastCount", "when calling error in City, line 376")
-			else
-				call error("Called City.getCityModifierOnFastCount on invalid object.", "when calling error in City, line 376")
-			endif
-		endif
-		call City_getCityModifierOnFastCount(this_13, cm_2, "when calling getCityModifierOnFastCount in City, line 376")
-		set wurst_stack_depth = wurst_stack_depth - 1
-	endloop
-	set this_14 = iterator
-	set stackPos_4 = "when calling close in City, line 135"
-	set wurst_stack[wurst_stack_depth] = stackPos_4
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if LLIterator_destroyOnClose[this_14] then
-		call dispatch_LLIterator_destroyLLIterator(this_14, "when calling LLIterator in LinkedList, line 450")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
 function DateTime_closure_impl takes integer this_6, integer cb returns nothing
 	local integer i
 	local integer temp
@@ -12565,170 +12567,6 @@ function DateTime_closure_impl takes integer this_6, integer cb returns nothing
 	endif
 	set receiver = null
 	set this_7 = null
-endfunction
-
-function Economy_closure_impl takes integer this_6, integer cbINCOME, string stackPos returns nothing
-	local integer i
-	local integer temp
-	local integer cur_gold
-	local integer cur_lumb
-	local integer this_7
-	local string stackPos_2
-	local boolean PlayerStats_PlayerStats_isInGame_result
-	local integer this_8
-	local integer this_9
-	local string stackPos_3
-	local integer PlayerStats_PlayerStats_getUpkeep_result
-	local integer this_10
-	local integer temp_2
-	local player temp_3
-	local playerstate temp_4
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set i = 0
-	set temp = 24 - 1
-	loop
-		exitwhen i > temp
-		set this_7 = PlayerStats_player_stats[i]
-		set stackPos_2 = "when calling isInGame in Economy, line 58"
-		set wurst_stack[wurst_stack_depth] = stackPos_2
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_7] == 0 then
-			if this_7 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.isInGame", "when calling error in PlayerStats, line 14")
-			else
-				call error("Called PlayerStats.isInGame on invalid object.", "when calling error in PlayerStats, line 14")
-			endif
-		endif
-		set this_8 = this_7
-		set PlayerStats_PlayerStats_isInGame_result = PlayerStats_is_in_game[this_8]
-		set wurst_stack_depth = wurst_stack_depth - 1
-		if PlayerStats_PlayerStats_isInGame_result then
-			set cur_gold = GetPlayerState(Player_players[i], PLAYER_STATE_RESOURCE_GOLD)
-			set cur_lumb = GetPlayerState(Player_players[i], PLAYER_STATE_RESOURCE_LUMBER)
-			set temp_3 = Player_players[i]
-			set temp_4 = PLAYER_STATE_RESOURCE_GOLD
-			set temp_2 = cur_gold + Economy_gold_change[i]
-			set this_9 = PlayerStats_player_stats[i]
-			set stackPos_3 = "when calling getUpkeep in Economy, line 61"
-			set wurst_stack[wurst_stack_depth] = stackPos_3
-			set wurst_stack_depth = wurst_stack_depth + 1
-			if PlayerStats_typeId[this_9] == 0 then
-				if this_9 == 0 then
-					call error("Nullpointer exception when calling PlayerStats.getUpkeep", "when calling error in PlayerStats, line 20")
-				else
-					call error("Called PlayerStats.getUpkeep on invalid object.", "when calling error in PlayerStats, line 20")
-				endif
-			endif
-			set this_10 = this_9
-			set PlayerStats_PlayerStats_getUpkeep_result = PlayerStats_upkeep[this_10]
-			set wurst_stack_depth = wurst_stack_depth - 1
-			call SetPlayerState(temp_3, temp_4, temp_2 + PlayerStats_PlayerStats_getUpkeep_result)
-			call SetPlayerState(Player_players[i], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + Economy_lumb_change[i])
-		endif
-		set i = i + 1
-	endloop
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set temp_3 = null
-	set temp_4 = null
-endfunction
-
-function sign takes real x returns real
-	if x > 0. then
-		return 1.
-	elseif x < 0. then
-		return -1.
-	else
-		return 0.
-	endif
-endfunction
-
-function getStringColoredBasedOnSign takes integer x returns string
-	local string sgn = "|cff15ff00+"
-	local integer this_6 = x
-	local integer this_7
-	local string temp
-	if sign(this_6 * 1.) == -1. then
-		set sgn = "|cffff0000"
-	endif
-	set temp = sgn
-	set this_7 = x
-	return temp + I2S(this_7) + "|r"
-endfunction
-
-function Economy_closure_impl_2 takes integer this_6, integer cbUPKEEP_SHOWING, string stackPos returns nothing
-	local integer i
-	local integer temp
-	local multiboard receiver
-	local integer this_7
-	local string stackPos_2
-	local boolean PlayerStats_PlayerStats_isInGame_result
-	local integer this_8
-	local multiboard this_9
-	local integer x
-	local integer y
-	local string wval
-	local multiboarditem mbi
-	local multiboard this_10
-	local integer row
-	local integer column
-	local integer this_11
-	local string stackPos_3
-	local integer PlayerStats_PlayerStats_getUpkeep_result
-	local integer this_12
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set i = 0
-	set temp = 24 - 1
-	loop
-		exitwhen i > temp
-		set this_7 = PlayerStats_player_stats[i]
-		set stackPos_2 = "when calling isInGame in Economy, line 42"
-		set wurst_stack[wurst_stack_depth] = stackPos_2
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_7] == 0 then
-			if this_7 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.isInGame", "when calling error in PlayerStats, line 14")
-			else
-				call error("Called PlayerStats.isInGame on invalid object.", "when calling error in PlayerStats, line 14")
-			endif
-		endif
-		set this_8 = this_7
-		set PlayerStats_PlayerStats_isInGame_result = PlayerStats_is_in_game[this_8]
-		set wurst_stack_depth = wurst_stack_depth - 1
-		if PlayerStats_PlayerStats_isInGame_result then
-			set receiver = Multiboards_multiboards[i]
-			set this_9 = receiver
-			set x = Multiboards_kMBUpkeep[0]
-			set y = Multiboards_kMBUpkeep[1]
-			set this_11 = PlayerStats_player_stats[i]
-			set stackPos_3 = "when calling getUpkeep in Economy, line 44"
-			set wurst_stack[wurst_stack_depth] = stackPos_3
-			set wurst_stack_depth = wurst_stack_depth + 1
-			if PlayerStats_typeId[this_11] == 0 then
-				if this_11 == 0 then
-					call error("Nullpointer exception when calling PlayerStats.getUpkeep", "when calling error in PlayerStats, line 20")
-				else
-					call error("Called PlayerStats.getUpkeep on invalid object.", "when calling error in PlayerStats, line 20")
-				endif
-			endif
-			set this_12 = this_11
-			set PlayerStats_PlayerStats_getUpkeep_result = PlayerStats_upkeep[this_12]
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set wval = getStringColoredBasedOnSign(PlayerStats_PlayerStats_getUpkeep_result)
-			set this_10 = this_9
-			set row = y
-			set column = x
-			set mbi = MultiboardGetItem(this_10, row, column)
-			call MultiboardSetItemValue(mbi, wval)
-		endif
-		set i = i + 1
-	endloop
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set receiver = null
-	set this_9 = null
-	set mbi = null
-	set this_10 = null
 endfunction
 
 function dispatch_City_City_City_getCityNameColored takes integer this_6, string stackPos returns string
@@ -13576,7 +13414,30 @@ function countIncomeForAll takes string stackPos returns nothing
 	set City_City_getCityUnit_result_2 = null
 endfunction
 
-function Economy_closure_impl_3 takes integer this_6, integer cbINCOME_MULTIBOARD, string stackPos returns nothing
+function sign takes real x returns real
+	if x > 0. then
+		return 1.
+	elseif x < 0. then
+		return -1.
+	else
+		return 0.
+	endif
+endfunction
+
+function getStringColoredBasedOnSign takes integer x returns string
+	local string sgn = "|cff15ff00+"
+	local integer this_6 = x
+	local integer this_7
+	local string temp
+	if sign(this_6 * 1.) == -1. then
+		set sgn = "|cffff0000"
+	endif
+	set temp = sgn
+	set this_7 = x
+	return temp + I2S(this_7) + "|r"
+endfunction
+
+function Economy_closure_impl takes integer this_6, integer cbINCOME_MULTIBOARD, string stackPos returns nothing
 	local integer i
 	local integer temp
 	local multiboard receiver
@@ -13673,6 +13534,147 @@ function Economy_closure_impl_3 takes integer this_6, integer cbINCOME_MULTIBOAR
 	set this_11 = null
 	set mbi_2 = null
 	set this_12 = null
+endfunction
+
+function Economy_closure_impl_2 takes integer this_6, integer cbUPKEEP_SHOWING, string stackPos returns nothing
+	local integer i
+	local integer temp
+	local multiboard receiver
+	local integer this_7
+	local string stackPos_2
+	local boolean PlayerStats_PlayerStats_isInGame_result
+	local integer this_8
+	local multiboard this_9
+	local integer x
+	local integer y
+	local string wval
+	local multiboarditem mbi
+	local multiboard this_10
+	local integer row
+	local integer column
+	local integer this_11
+	local string stackPos_3
+	local integer PlayerStats_PlayerStats_getUpkeep_result
+	local integer this_12
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set i = 0
+	set temp = 24 - 1
+	loop
+		exitwhen i > temp
+		set this_7 = PlayerStats_player_stats[i]
+		set stackPos_2 = "when calling isInGame in Economy, line 42"
+		set wurst_stack[wurst_stack_depth] = stackPos_2
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_7] == 0 then
+			if this_7 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.isInGame", "when calling error in PlayerStats, line 14")
+			else
+				call error("Called PlayerStats.isInGame on invalid object.", "when calling error in PlayerStats, line 14")
+			endif
+		endif
+		set this_8 = this_7
+		set PlayerStats_PlayerStats_isInGame_result = PlayerStats_is_in_game[this_8]
+		set wurst_stack_depth = wurst_stack_depth - 1
+		if PlayerStats_PlayerStats_isInGame_result then
+			set receiver = Multiboards_multiboards[i]
+			set this_9 = receiver
+			set x = Multiboards_kMBUpkeep[0]
+			set y = Multiboards_kMBUpkeep[1]
+			set this_11 = PlayerStats_player_stats[i]
+			set stackPos_3 = "when calling getUpkeep in Economy, line 44"
+			set wurst_stack[wurst_stack_depth] = stackPos_3
+			set wurst_stack_depth = wurst_stack_depth + 1
+			if PlayerStats_typeId[this_11] == 0 then
+				if this_11 == 0 then
+					call error("Nullpointer exception when calling PlayerStats.getUpkeep", "when calling error in PlayerStats, line 20")
+				else
+					call error("Called PlayerStats.getUpkeep on invalid object.", "when calling error in PlayerStats, line 20")
+				endif
+			endif
+			set this_12 = this_11
+			set PlayerStats_PlayerStats_getUpkeep_result = PlayerStats_upkeep[this_12]
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set wval = getStringColoredBasedOnSign(PlayerStats_PlayerStats_getUpkeep_result)
+			set this_10 = this_9
+			set row = y
+			set column = x
+			set mbi = MultiboardGetItem(this_10, row, column)
+			call MultiboardSetItemValue(mbi, wval)
+		endif
+		set i = i + 1
+	endloop
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set receiver = null
+	set this_9 = null
+	set mbi = null
+	set this_10 = null
+endfunction
+
+function Economy_closure_impl_3 takes integer this_6, integer cbINCOME, string stackPos returns nothing
+	local integer i
+	local integer temp
+	local integer cur_gold
+	local integer cur_lumb
+	local integer this_7
+	local string stackPos_2
+	local boolean PlayerStats_PlayerStats_isInGame_result
+	local integer this_8
+	local integer this_9
+	local string stackPos_3
+	local integer PlayerStats_PlayerStats_getUpkeep_result
+	local integer this_10
+	local integer temp_2
+	local player temp_3
+	local playerstate temp_4
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set i = 0
+	set temp = 24 - 1
+	loop
+		exitwhen i > temp
+		set this_7 = PlayerStats_player_stats[i]
+		set stackPos_2 = "when calling isInGame in Economy, line 58"
+		set wurst_stack[wurst_stack_depth] = stackPos_2
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_7] == 0 then
+			if this_7 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.isInGame", "when calling error in PlayerStats, line 14")
+			else
+				call error("Called PlayerStats.isInGame on invalid object.", "when calling error in PlayerStats, line 14")
+			endif
+		endif
+		set this_8 = this_7
+		set PlayerStats_PlayerStats_isInGame_result = PlayerStats_is_in_game[this_8]
+		set wurst_stack_depth = wurst_stack_depth - 1
+		if PlayerStats_PlayerStats_isInGame_result then
+			set cur_gold = GetPlayerState(Player_players[i], PLAYER_STATE_RESOURCE_GOLD)
+			set cur_lumb = GetPlayerState(Player_players[i], PLAYER_STATE_RESOURCE_LUMBER)
+			set temp_3 = Player_players[i]
+			set temp_4 = PLAYER_STATE_RESOURCE_GOLD
+			set temp_2 = cur_gold + Economy_gold_change[i]
+			set this_9 = PlayerStats_player_stats[i]
+			set stackPos_3 = "when calling getUpkeep in Economy, line 61"
+			set wurst_stack[wurst_stack_depth] = stackPos_3
+			set wurst_stack_depth = wurst_stack_depth + 1
+			if PlayerStats_typeId[this_9] == 0 then
+				if this_9 == 0 then
+					call error("Nullpointer exception when calling PlayerStats.getUpkeep", "when calling error in PlayerStats, line 20")
+				else
+					call error("Called PlayerStats.getUpkeep on invalid object.", "when calling error in PlayerStats, line 20")
+				endif
+			endif
+			set this_10 = this_9
+			set PlayerStats_PlayerStats_getUpkeep_result = PlayerStats_upkeep[this_10]
+			set wurst_stack_depth = wurst_stack_depth - 1
+			call SetPlayerState(temp_3, temp_4, temp_2 + PlayerStats_PlayerStats_getUpkeep_result)
+			call SetPlayerState(Player_players[i], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + Economy_lumb_change[i])
+		endif
+		set i = i + 1
+	endloop
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set temp_3 = null
+	set temp_4 = null
 endfunction
 
 function City_getPopulationStr takes integer this_6 returns string
@@ -14311,9 +14313,9 @@ function dispatch_CallbackPeriodic_ClosureTimers_CallbackPeriodic_call takes int
 	if CallbackPeriodic_typeId[this_6] <= 634 then
 		if CallbackPeriodic_typeId[this_6] <= 632 then
 			if CallbackPeriodic_typeId[this_6] <= 631 then
-				call City_closure_impl_2(this_6, cb, "when calling City_closure_impl in ClosureTimers, line 86")
-			else
 				call City_closure_impl(this_6, cb, "when calling City_closure_impl in ClosureTimers, line 86")
+			else
+				call City_closure_impl_2(this_6, cb, "when calling City_closure_impl in ClosureTimers, line 86")
 			endif
 		elseif CallbackPeriodic_typeId[this_6] <= 633 then
 			set msg = "Enjoying the map? Join the |cffe100ffofficial CoE discord channel|r! Link: |cffffff00discord.gg/V6kmxsy|r"
@@ -14331,10 +14333,10 @@ function dispatch_CallbackPeriodic_ClosureTimers_CallbackPeriodic_call takes int
 		if CallbackPeriodic_typeId[this_6] <= 635 then
 			call Economy_closure_impl_2(this_6, cb, "when calling Economy_closure_impl in ClosureTimers, line 86")
 		else
-			call Economy_closure_impl_3(this_6, cb, "when calling Economy_closure_impl in ClosureTimers, line 86")
+			call Economy_closure_impl(this_6, cb, "when calling Economy_closure_impl in ClosureTimers, line 86")
 		endif
 	elseif CallbackPeriodic_typeId[this_6] <= 637 then
-		call Economy_closure_impl(this_6, cb, "when calling Economy_closure_impl in ClosureTimers, line 86")
+		call Economy_closure_impl_3(this_6, cb, "when calling Economy_closure_impl in ClosureTimers, line 86")
 	else
 		call MultiboardCityUpdate_closure_impl(this_6, cb, "when calling MultiboardCityUpdate_closure_impl in ClosureTimers, line 86")
 	endif
@@ -15125,54 +15127,7 @@ function OnUnitEnterLeave_closure_impl_4 takes integer this_6 returns nothing
 	set this_11 = null
 endfunction
 
-function getPublicOrderAddByUnit takes integer id returns real
-	local integer temp = id
-	if temp == 1747988785 then
-		return 10.0
-	elseif temp == 1747989075 then
-		return 10.0
-	elseif temp == 1747990102 then
-		return 10.0
-	elseif temp == 1747989839 then
-		return 10.0
-	elseif temp == 1747988568 then
-		return 5.0
-	elseif temp == 1747990341 then
-		return 5.0
-	elseif temp == 1747988789 then
-		return 15.0
-	elseif temp == 1747990103 then
-		return 15.0
-	elseif temp == 1747990064 then
-		return 15.0
-	elseif temp == 1747989846 then
-		return 15.0
-	else
-		return 0.0
-	endif
-endfunction
-
-function City_closure_impl_3 takes integer this_6, unit u_5 returns nothing
-	local unit this_7
-	local unit this_8
-	local boolean andLeft
-	local real temp
-	if IsUnitType(u_5, UNIT_TYPE_STRUCTURE) then
-		set this_7 = u_5
-		set andLeft = GetOwningPlayer(this_7) == Player_players[City_player_id[this_2[this_6]]]
-	else
-		set andLeft = false
-	endif
-	if andLeft then
-		set temp = City_public_order_last[this_2[this_6]]
-		set this_8 = u_5
-		set City_public_order_last[this_2[this_6]] = temp + getPublicOrderAddByUnit(GetUnitTypeId(this_8))
-	endif
-	set this_7 = null
-	set this_8 = null
-endfunction
-
-function City_closure_impl_4 takes integer this_6, unit u_5, string stackPos returns nothing
+function City_closure_impl_3 takes integer this_6, unit u_5, string stackPos returns nothing
 	local integer this_7
 	local integer elem
 	local string stackPos_2
@@ -15209,6 +15164,53 @@ function City_closure_impl_4 takes integer this_6, unit u_5, string stackPos ret
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set this_8 = null
 	set this_9 = null
+endfunction
+
+function getPublicOrderAddByUnit takes integer id returns real
+	local integer temp = id
+	if temp == 1747988785 then
+		return 10.0
+	elseif temp == 1747989075 then
+		return 10.0
+	elseif temp == 1747990102 then
+		return 10.0
+	elseif temp == 1747989839 then
+		return 10.0
+	elseif temp == 1747988568 then
+		return 5.0
+	elseif temp == 1747990341 then
+		return 5.0
+	elseif temp == 1747988789 then
+		return 15.0
+	elseif temp == 1747990103 then
+		return 15.0
+	elseif temp == 1747990064 then
+		return 15.0
+	elseif temp == 1747989846 then
+		return 15.0
+	else
+		return 0.0
+	endif
+endfunction
+
+function City_closure_impl_4 takes integer this_6, unit u_5 returns nothing
+	local unit this_7
+	local unit this_8
+	local boolean andLeft
+	local real temp
+	if IsUnitType(u_5, UNIT_TYPE_STRUCTURE) then
+		set this_7 = u_5
+		set andLeft = GetOwningPlayer(this_7) == Player_players[City_player_id[this_2[this_6]]]
+	else
+		set andLeft = false
+	endif
+	if andLeft then
+		set temp = City_public_order_last[this_2[this_6]]
+		set this_8 = u_5
+		set City_public_order_last[this_2[this_6]] = temp + getPublicOrderAddByUnit(GetUnitTypeId(this_8))
+	endif
+	set this_7 = null
+	set this_8 = null
 endfunction
 
 function Economy_closure_impl_4 takes integer this_6, unit u_5, string stackPos returns nothing
@@ -15335,39 +15337,42 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 	local real timeToWait
 	local integer cb
 	local string stackPos_3
+	local integer this_12
+	local real time
+	local string stackPos_4
 	local string msg
 	local player pl_2
-	local string stackPos_4
+	local string stackPos_5
 	local string msg_2
 	local player pl_3
-	local string stackPos_5
+	local string stackPos_6
 	local string msg_3
 	local player pl_4
-	local string stackPos_6
+	local string stackPos_7
 	local string msg_4
 	local player pl_5
-	local string stackPos_7
+	local string stackPos_8
 	local string msg_5
 	local player pl_6
-	local string stackPos_8
+	local string stackPos_9
 	local string msg_6
 	local player pl_7
-	local string stackPos_9
+	local string stackPos_10
 	local string msg_7
 	local player pl_8
-	local string stackPos_10
+	local string stackPos_11
 	local string msg_8
 	local player pl_9
-	local string stackPos_11
+	local string stackPos_12
 	local string msg_9
 	local player pl_10
-	local string stackPos_12
+	local string stackPos_13
 	local string msg_10
 	local player pl_11
-	local string stackPos_13
+	local string stackPos_14
 	local string msg_11
 	local player pl_12
-	local string stackPos_14
+	local string stackPos_15
 	local boolean andLeft
 	local boolean andLeft_2
 	local boolean andLeft_3
@@ -15425,14 +15430,27 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		set stackPos_3 = "when calling doAfter in RangeChecks, line 20"
 		set wurst_stack[wurst_stack_depth] = stackPos_3
 		set wurst_stack_depth = wurst_stack_depth + 1
-		call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb, timeToWait, "when calling start in ClosureTimers, line 15")
+		set this_12 = cb
+		set time = timeToWait
+		set stackPos_4 = "when calling start in ClosureTimers, line 15"
+		set wurst_stack[wurst_stack_depth] = stackPos_4
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if CallbackSingle_typeId[this_12] == 0 then
+			if this_12 == 0 then
+				call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+			else
+				call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+			endif
+		endif
+		call CallbackSingle_start(this_12, time, "when calling start in ClosureTimers, line 67")
+		set wurst_stack_depth = wurst_stack_depth - 1
 		set wurst_stack_depth = wurst_stack_depth - 1
 		set temp = un_id[this_6]
 		if temp == 1747988557 then
 			set msg = "You cannot build settlements too close to each other."
 			set pl_2 = pl[this_6]
-			set stackPos_4 = "when calling attentionToPlayer in RangeChecks, line 24"
-			set wurst_stack[wurst_stack_depth] = stackPos_4
+			set stackPos_5 = "when calling attentionToPlayer in RangeChecks, line 24"
+			set wurst_stack[wurst_stack_depth] = stackPos_5
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_2, 0., 0., 10.0, getAttentionStringForPlayer(pl_2, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_2, 0., 0., 10.0, msg)
@@ -15440,8 +15458,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747989075 then
 			set msg_2 = "You cannot build churches too close to each other."
 			set pl_3 = pl[this_6]
-			set stackPos_5 = "when calling attentionToPlayer in RangeChecks, line 26"
-			set wurst_stack[wurst_stack_depth] = stackPos_5
+			set stackPos_6 = "when calling attentionToPlayer in RangeChecks, line 26"
+			set wurst_stack[wurst_stack_depth] = stackPos_6
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_3, 0., 0., 10.0, getAttentionStringForPlayer(pl_3, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_3, 0., 0., 10.0, msg_2)
@@ -15449,8 +15467,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747990102 then
 			set msg_3 = "You cannot build churches too close to each other."
 			set pl_4 = pl[this_6]
-			set stackPos_6 = "when calling attentionToPlayer in RangeChecks, line 28"
-			set wurst_stack[wurst_stack_depth] = stackPos_6
+			set stackPos_7 = "when calling attentionToPlayer in RangeChecks, line 28"
+			set wurst_stack[wurst_stack_depth] = stackPos_7
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_4, 0., 0., 10.0, getAttentionStringForPlayer(pl_4, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_4, 0., 0., 10.0, msg_3)
@@ -15458,8 +15476,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747988785 then
 			set msg_4 = "You cannot build churches too close to each other."
 			set pl_5 = pl[this_6]
-			set stackPos_7 = "when calling attentionToPlayer in RangeChecks, line 30"
-			set wurst_stack[wurst_stack_depth] = stackPos_7
+			set stackPos_8 = "when calling attentionToPlayer in RangeChecks, line 30"
+			set wurst_stack[wurst_stack_depth] = stackPos_8
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_5, 0., 0., 10.0, getAttentionStringForPlayer(pl_5, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_5, 0., 0., 10.0, msg_4)
@@ -15467,8 +15485,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747989839 then
 			set msg_5 = "You cannot build mosques too close to each other."
 			set pl_6 = pl[this_6]
-			set stackPos_8 = "when calling attentionToPlayer in RangeChecks, line 32"
-			set wurst_stack[wurst_stack_depth] = stackPos_8
+			set stackPos_9 = "when calling attentionToPlayer in RangeChecks, line 32"
+			set wurst_stack[wurst_stack_depth] = stackPos_9
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_6, 0., 0., 10.0, getAttentionStringForPlayer(pl_6, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_6, 0., 0., 10.0, msg_5)
@@ -15476,8 +15494,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747989059 then
 			set msg_6 = "You cannot build castles too close to each other."
 			set pl_7 = pl[this_6]
-			set stackPos_9 = "when calling attentionToPlayer in RangeChecks, line 34"
-			set wurst_stack[wurst_stack_depth] = stackPos_9
+			set stackPos_10 = "when calling attentionToPlayer in RangeChecks, line 34"
+			set wurst_stack[wurst_stack_depth] = stackPos_10
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_7, 0., 0., 10.0, getAttentionStringForPlayer(pl_7, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_7, 0., 0., 10.0, msg_6)
@@ -15485,8 +15503,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747989331 then
 			set msg_7 = "You cannot build castles too close to each other."
 			set pl_8 = pl[this_6]
-			set stackPos_10 = "when calling attentionToPlayer in RangeChecks, line 36"
-			set wurst_stack[wurst_stack_depth] = stackPos_10
+			set stackPos_11 = "when calling attentionToPlayer in RangeChecks, line 36"
+			set wurst_stack[wurst_stack_depth] = stackPos_11
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_8, 0., 0., 10.0, getAttentionStringForPlayer(pl_8, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_8, 0., 0., 10.0, msg_7)
@@ -15494,8 +15512,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747990351 then
 			set msg_8 = "You cannot build castles too close to each other."
 			set pl_9 = pl[this_6]
-			set stackPos_11 = "when calling attentionToPlayer in RangeChecks, line 38"
-			set wurst_stack[wurst_stack_depth] = stackPos_11
+			set stackPos_12 = "when calling attentionToPlayer in RangeChecks, line 38"
+			set wurst_stack[wurst_stack_depth] = stackPos_12
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_9, 0., 0., 10.0, getAttentionStringForPlayer(pl_9, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_9, 0., 0., 10.0, msg_8)
@@ -15503,8 +15521,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747990353 then
 			set msg_9 = "You cannot build castles too close to each other."
 			set pl_10 = pl[this_6]
-			set stackPos_12 = "when calling attentionToPlayer in RangeChecks, line 40"
-			set wurst_stack[wurst_stack_depth] = stackPos_12
+			set stackPos_13 = "when calling attentionToPlayer in RangeChecks, line 40"
+			set wurst_stack[wurst_stack_depth] = stackPos_13
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_10, 0., 0., 10.0, getAttentionStringForPlayer(pl_10, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_10, 0., 0., 10.0, msg_9)
@@ -15512,8 +15530,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747988568 then
 			set msg_10 = "You cannot build inns too close to each other."
 			set pl_11 = pl[this_6]
-			set stackPos_13 = "when calling attentionToPlayer in RangeChecks, line 42"
-			set wurst_stack[wurst_stack_depth] = stackPos_13
+			set stackPos_14 = "when calling attentionToPlayer in RangeChecks, line 42"
+			set wurst_stack[wurst_stack_depth] = stackPos_14
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_11, 0., 0., 10.0, getAttentionStringForPlayer(pl_11, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_11, 0., 0., 10.0, msg_10)
@@ -15521,8 +15539,8 @@ function RangeChecks_closure_impl takes integer this_6, unit u_5, string stackPo
 		elseif temp == 1747990341 then
 			set msg_11 = "You cannot build inns too close to each other."
 			set pl_12 = pl[this_6]
-			set stackPos_14 = "when calling attentionToPlayer in RangeChecks, line 44"
-			set wurst_stack[wurst_stack_depth] = stackPos_14
+			set stackPos_15 = "when calling attentionToPlayer in RangeChecks, line 44"
+			set wurst_stack[wurst_stack_depth] = stackPos_15
 			set wurst_stack_depth = wurst_stack_depth + 1
 			call DisplayTimedTextToPlayer(pl_12, 0., 0., 10.0, getAttentionStringForPlayer(pl_12, "when calling getAttentionStringForPlayer in Messages, line 88"))
 			call DisplayTimedTextToPlayer(pl_12, 0., 0., 10.0, msg_11)
@@ -15572,9 +15590,9 @@ function dispatch_ForGroupCallback_ClosureForGroups_ForGroupCallback_callback ta
 	if ForGroupCallback_typeId[this_6] <= 682 then
 		if ForGroupCallback_typeId[this_6] <= 680 then
 			if ForGroupCallback_typeId[this_6] <= 679 then
-				call City_closure_impl_4(this_6, u_5, "when calling City_closure_impl in ClosureForGroups, line 4")
+				call City_closure_impl_3(this_6, u_5, "when calling City_closure_impl in ClosureForGroups, line 4")
 			else
-				call City_closure_impl_3(this_6, u_5)
+				call City_closure_impl_4(this_6, u_5)
 			endif
 		elseif ForGroupCallback_typeId[this_6] <= 681 then
 			call Economy_closure_impl_4(this_6, u_5, "when calling Economy_closure_impl in ClosureForGroups, line 4")
@@ -18025,6 +18043,9 @@ function LimitEncampments_closure_impl_2 takes integer this_6, string stackPos r
 	local real timeToWait
 	local integer cb
 	local string stackPos_4
+	local integer this_16
+	local real time
+	local string stackPos_5
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set u_5 = GetConstructingStructure()
@@ -18073,7 +18094,20 @@ function LimitEncampments_closure_impl_2 takes integer this_6, string stackPos r
 			set stackPos_4 = "when calling doAfter in LimitEncampments, line 19"
 			set wurst_stack[wurst_stack_depth] = stackPos_4
 			set wurst_stack_depth = wurst_stack_depth + 1
-			call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb, timeToWait, "when calling start in ClosureTimers, line 15")
+			set this_16 = cb
+			set time = timeToWait
+			set stackPos_5 = "when calling start in ClosureTimers, line 15"
+			set wurst_stack[wurst_stack_depth] = stackPos_5
+			set wurst_stack_depth = wurst_stack_depth + 1
+			if CallbackSingle_typeId[this_16] == 0 then
+				if this_16 == 0 then
+					call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+				else
+					call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+				endif
+			endif
+			call CallbackSingle_start(this_16, time, "when calling start in ClosureTimers, line 67")
+			set wurst_stack_depth = wurst_stack_depth - 1
 			set wurst_stack_depth = wurst_stack_depth - 1
 		endif
 	endif
@@ -18109,6 +18143,9 @@ function LimitMercenaryCamps_closure_impl takes integer this_6, string stackPos 
 	local real timeToWait
 	local integer cb
 	local string stackPos_4
+	local integer this_16
+	local real time
+	local string stackPos_5
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set u_5 = GetConstructingStructure()
@@ -18157,7 +18194,20 @@ function LimitMercenaryCamps_closure_impl takes integer this_6, string stackPos 
 			set stackPos_4 = "when calling doAfter in LimitMercenaryCamps, line 19"
 			set wurst_stack[wurst_stack_depth] = stackPos_4
 			set wurst_stack_depth = wurst_stack_depth + 1
-			call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb, timeToWait, "when calling start in ClosureTimers, line 15")
+			set this_16 = cb
+			set time = timeToWait
+			set stackPos_5 = "when calling start in ClosureTimers, line 15"
+			set wurst_stack[wurst_stack_depth] = stackPos_5
+			set wurst_stack_depth = wurst_stack_depth + 1
+			if CallbackSingle_typeId[this_16] == 0 then
+				if this_16 == 0 then
+					call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+				else
+					call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+				endif
+			endif
+			call CallbackSingle_start(this_16, time, "when calling start in ClosureTimers, line 67")
+			set wurst_stack_depth = wurst_stack_depth - 1
 			set wurst_stack_depth = wurst_stack_depth - 1
 		endif
 	endif
@@ -19007,11 +19057,14 @@ function MassControl_closure_impl_3 takes integer this_6, string stackPos return
 	local real timeToWait
 	local integer cb
 	local string stackPos_6
-	local unit this_19
-	local integer this_20
+	local integer this_19
+	local real time
 	local string stackPos_7
+	local unit this_20
+	local integer this_21
+	local string stackPos_8
 	local unit object_4
-	local handle this_21
+	local handle this_22
 	local integer temp
 	local integer temp_2
 	local integer temp_3
@@ -19113,23 +19166,36 @@ function MassControl_closure_impl_3 takes integer this_6, string stackPos return
 				set stackPos_6 = "when calling doAfter in MassControl, line 40"
 				set wurst_stack[wurst_stack_depth] = stackPos_6
 				set wurst_stack_depth = wurst_stack_depth + 1
-				call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb, timeToWait, "when calling start in ClosureTimers, line 15")
+				set this_19 = cb
+				set time = timeToWait
+				set stackPos_7 = "when calling start in ClosureTimers, line 15"
+				set wurst_stack[wurst_stack_depth] = stackPos_7
+				set wurst_stack_depth = wurst_stack_depth + 1
+				if CallbackSingle_typeId[this_19] == 0 then
+					if this_19 == 0 then
+						call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+					else
+						call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+					endif
+				endif
+				call CallbackSingle_start(this_19, time, "when calling start in ClosureTimers, line 67")
 				set wurst_stack_depth = wurst_stack_depth - 1
-				set this_19 = u_5
-				call dbg(" issued = " + GetUnitName(this_19))
+				set wurst_stack_depth = wurst_stack_depth - 1
+				set this_20 = u_5
+				call dbg(" issued = " + GetUnitName(this_20))
 			endloop
-			set this_20 = iterator
-			set stackPos_7 = "when calling close in MassControl, line 39"
-			set wurst_stack[wurst_stack_depth] = stackPos_7
+			set this_21 = iterator
+			set stackPos_8 = "when calling close in MassControl, line 39"
+			set wurst_stack[wurst_stack_depth] = stackPos_8
 			set wurst_stack_depth = wurst_stack_depth + 1
-			if LLIterator_destroyOnClose[this_20] then
-				call dispatch_LLIterator_destroyLLIterator(this_20, "when calling LLIterator in LinkedList, line 450")
+			if LLIterator_destroyOnClose[this_21] then
+				call dispatch_LLIterator_destroyLLIterator(this_21, "when calling LLIterator in LinkedList, line 450")
 			endif
 			set wurst_stack_depth = wurst_stack_depth - 1
 			set temp_4 = MassControl_units_of_general
 			set object_4 = GetOrderedUnit()
-			set this_21 = object_4
-			call dispatch_HashMap_HashMap_HashMap_remove(temp_4, GetHandleId(this_21), "when calling remove in MassControl, line 44")
+			set this_22 = object_4
+			call dispatch_HashMap_HashMap_HashMap_remove(temp_4, GetHandleId(this_22), "when calling remove in MassControl, line 44")
 		endif
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -19141,9 +19207,9 @@ function MassControl_closure_impl_3 takes integer this_6, string stackPos return
 	set this_13 = null
 	set object_3 = null
 	set this_14 = null
-	set this_19 = null
+	set this_20 = null
 	set object_4 = null
-	set this_21 = null
+	set this_22 = null
 endfunction
 
 function rectFromIndex takes integer index, string stackPos returns rect
@@ -19879,6 +19945,16 @@ endfunction
 function bridge_ClosureEvents_closure_impl_2 takes nothing returns nothing
 	local string stackPos
 	set wurst_stack_depth = 0
+	set stackPos = "ClosureEvents, line 288"
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 288")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_ClosureEvents_closure_impl_3 takes nothing returns nothing
+	local string stackPos
+	set wurst_stack_depth = 0
 	set stackPos = "ClosureEvents, line 287"
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -20129,23 +20205,13 @@ function unregisterEventsForUnit takes unit u_5, string stackPos returns nothing
 	set this_12 = null
 endfunction
 
-function bridge_ClosureEvents_closure_impl_3 takes nothing returns nothing
+function bridge_ClosureEvents_closure_impl_4 takes nothing returns nothing
 	local string stackPos
 	set wurst_stack_depth = 0
 	set stackPos = "ClosureEvents, line 283"
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call unregisterEventsForUnit(UnitIndexer_deindexedUnit, "when calling unregisterEventsForUnit in ClosureEvents, line 283")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_ClosureEvents_closure_impl_4 takes nothing returns nothing
-	local string stackPos
-	set wurst_stack_depth = 0
-	set stackPos = "ClosureEvents, line 288"
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 288")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -20269,6 +20335,39 @@ function bridge_RegisterEvents_closure_impl takes nothing returns boolean
 	return RegisterEvents_closure_impl("RegisterEvents, line 58")
 endfunction
 
+function destroyUnitIndex takes integer this_6, string stackPos returns nothing
+	local integer this_7
+	local trigger this_8
+	local unit this_9
+	local integer data
+	local integer obj
+	local string stackPos_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this_7 = this_6
+	set UnitIndexer_deindexedUnit = UnitIndex__unit[this_7]
+	set this_8 = UnitIndexer_onDeindexTrigger
+	call TriggerEvaluate(this_8)
+	set this_9 = UnitIndex__unit[this_7]
+	set data = 0
+	call SetUnitUserData(this_9, data)
+	set obj = this_6
+	set stackPos_2 = "when calling UnitIndex in UnitIndexer, line 172"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if UnitIndex_typeId[obj] == 0 then
+		call error("Double free: object of type UnitIndex", "when calling error in UnitIndexer, line 157")
+	else
+		set UnitIndex_nextFree[UnitIndex_firstFree] = obj
+		set UnitIndex_firstFree = UnitIndex_firstFree + 1
+		set UnitIndex_typeId[obj] = 0
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set this_8 = null
+	set this_9 = null
+endfunction
+
 function new_UnitIndex takes unit whichUnit, string stackPos returns integer
 	local integer this_6
 	local string stackPos_2
@@ -20313,68 +20412,6 @@ function new_UnitIndex takes unit whichUnit, string stackPos returns integer
 	set this_9 = null
 	set this_10 = null
 	return this_6
-endfunction
-
-function UnitIndexer_closure_impl takes string stackPos returns nothing
-	local unit this_6
-	local string stackPos_2
-	local integer instance
-	local unit this_7
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if true then
-		set this_6 = OnUnitEnterLeave_tempUnits[OnUnitEnterLeave_tempUnitsCount - 1]
-		set stackPos_2 = "when calling toUnitIndex in UnitIndexer, line 179"
-		set wurst_stack[wurst_stack_depth] = stackPos_2
-		set wurst_stack_depth = wurst_stack_depth + 1
-		set this_7 = this_6
-		set instance = GetUnitUserData(this_7)
-		if instance == 0 then
-			set instance = new_UnitIndex(this_6, "when calling new_UnitIndex in UnitIndexer, line 125")
-		endif
-		set wurst_stack_depth = wurst_stack_depth - 1
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set this_6 = null
-	set this_7 = null
-endfunction
-
-function bridge_UnitIndexer_closure_impl takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl("UnitIndexer, line 179")
-endfunction
-
-function destroyUnitIndex takes integer this_6, string stackPos returns nothing
-	local integer this_7
-	local trigger this_8
-	local unit this_9
-	local integer data
-	local integer obj
-	local string stackPos_2
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set this_7 = this_6
-	set UnitIndexer_deindexedUnit = UnitIndex__unit[this_7]
-	set this_8 = UnitIndexer_onDeindexTrigger
-	call TriggerEvaluate(this_8)
-	set this_9 = UnitIndex__unit[this_7]
-	set data = 0
-	call SetUnitUserData(this_9, data)
-	set obj = this_6
-	set stackPos_2 = "when calling UnitIndex in UnitIndexer, line 172"
-	set wurst_stack[wurst_stack_depth] = stackPos_2
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if UnitIndex_typeId[obj] == 0 then
-		call error("Double free: object of type UnitIndex", "when calling error in UnitIndexer, line 157")
-	else
-		set UnitIndex_nextFree[UnitIndex_firstFree] = obj
-		set UnitIndex_firstFree = UnitIndex_firstFree + 1
-		set UnitIndex_typeId[obj] = 0
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set this_8 = null
-	set this_9 = null
 endfunction
 
 function unit_deindex takes unit this_6, string stackPos returns boolean
@@ -20426,7 +20463,7 @@ function unit_deindex takes unit this_6, string stackPos returns boolean
 	endif
 endfunction
 
-function bridge_UnitIndexer_closure_impl_2 takes nothing returns nothing
+function bridge_UnitIndexer_closure_impl takes nothing returns nothing
 	local string stackPos
 	set wurst_stack_depth = 0
 	set stackPos = "UnitIndexer, line 180"
@@ -20438,67 +20475,36 @@ function bridge_UnitIndexer_closure_impl_2 takes nothing returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function Upkeep_closure_impl takes string stackPos returns nothing
-	local unit u_5
-	local integer player_id
-	local player this_6
-	local unit this_7
-	local player this_8
-	local player this_9
-	local player this_10
-	local integer this_11
-	local integer byHowMuch
+function UnitIndexer_closure_impl takes string stackPos returns nothing
+	local unit this_6
 	local string stackPos_2
-	local integer this_12
-	local integer byHowMuch_2
-	local boolean andLeft
+	local integer instance
+	local unit this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set u_5 = GetDyingUnit()
-	set this_7 = u_5
-	set this_6 = GetOwningPlayer(this_7)
-	set player_id = GetPlayerId(this_6)
-	set this_8 = Player_players[player_id]
-	set this_9 = this_8
-	if GetPlayerSlotState(this_9) == PLAYER_SLOT_STATE_PLAYING then
-		set this_10 = this_8
-		set andLeft = GetPlayerController(this_10) == MAP_CONTROL_USER
-	else
-		set andLeft = false
-	endif
-	if andLeft and ( not IsUnitType(u_5, UNIT_TYPE_STRUCTURE)) then
-		set this_11 = PlayerStats_player_stats[player_id]
-		set byHowMuch = GetUnitLevel(u_5)
-		set stackPos_2 = "when calling changeUpkeep in Upkeep, line 21"
+	if true then
+		set this_6 = OnUnitEnterLeave_tempUnits[OnUnitEnterLeave_tempUnitsCount - 1]
+		set stackPos_2 = "when calling toUnitIndex in UnitIndexer, line 179"
 		set wurst_stack[wurst_stack_depth] = stackPos_2
 		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_11] == 0 then
-			if this_11 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.changeUpkeep", "when calling error in PlayerStats, line 23")
-			else
-				call error("Called PlayerStats.changeUpkeep on invalid object.", "when calling error in PlayerStats, line 23")
-			endif
+		set this_7 = this_6
+		set instance = GetUnitUserData(this_7)
+		if instance == 0 then
+			set instance = new_UnitIndex(this_6, "when calling new_UnitIndex in UnitIndexer, line 125")
 		endif
-		set this_12 = this_11
-		set byHowMuch_2 = byHowMuch
-		set PlayerStats_upkeep[this_12] = PlayerStats_upkeep[this_12] + byHowMuch_2
 		set wurst_stack_depth = wurst_stack_depth - 1
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
-	set u_5 = null
 	set this_6 = null
 	set this_7 = null
-	set this_8 = null
-	set this_9 = null
-	set this_10 = null
 endfunction
 
-function bridge_Upkeep_closure_impl takes nothing returns nothing
+function bridge_UnitIndexer_closure_impl_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Upkeep_closure_impl("Upkeep, line 17")
+	call UnitIndexer_closure_impl("UnitIndexer, line 179")
 endfunction
 
-function Upkeep_closure_impl_2 takes string stackPos returns nothing
+function Upkeep_closure_impl takes string stackPos returns nothing
 	local unit u_5
 	local integer player_id
 	local player this_6
@@ -20553,9 +20559,430 @@ function Upkeep_closure_impl_2 takes string stackPos returns nothing
 	set this_10 = null
 endfunction
 
+function bridge_Upkeep_closure_impl takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call Upkeep_closure_impl("Upkeep, line 8")
+endfunction
+
+function Upkeep_closure_impl_2 takes string stackPos returns nothing
+	local unit u_5
+	local integer player_id
+	local player this_6
+	local unit this_7
+	local player this_8
+	local player this_9
+	local player this_10
+	local integer this_11
+	local integer byHowMuch
+	local string stackPos_2
+	local integer this_12
+	local integer byHowMuch_2
+	local boolean andLeft
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set u_5 = GetDyingUnit()
+	set this_7 = u_5
+	set this_6 = GetOwningPlayer(this_7)
+	set player_id = GetPlayerId(this_6)
+	set this_8 = Player_players[player_id]
+	set this_9 = this_8
+	if GetPlayerSlotState(this_9) == PLAYER_SLOT_STATE_PLAYING then
+		set this_10 = this_8
+		set andLeft = GetPlayerController(this_10) == MAP_CONTROL_USER
+	else
+		set andLeft = false
+	endif
+	if andLeft and ( not IsUnitType(u_5, UNIT_TYPE_STRUCTURE)) then
+		set this_11 = PlayerStats_player_stats[player_id]
+		set byHowMuch = GetUnitLevel(u_5)
+		set stackPos_2 = "when calling changeUpkeep in Upkeep, line 21"
+		set wurst_stack[wurst_stack_depth] = stackPos_2
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_11] == 0 then
+			if this_11 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.changeUpkeep", "when calling error in PlayerStats, line 23")
+			else
+				call error("Called PlayerStats.changeUpkeep on invalid object.", "when calling error in PlayerStats, line 23")
+			endif
+		endif
+		set this_12 = this_11
+		set byHowMuch_2 = byHowMuch
+		set PlayerStats_upkeep[this_12] = PlayerStats_upkeep[this_12] + byHowMuch_2
+		set wurst_stack_depth = wurst_stack_depth - 1
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set u_5 = null
+	set this_6 = null
+	set this_7 = null
+	set this_8 = null
+	set this_9 = null
+	set this_10 = null
+endfunction
+
 function bridge_Upkeep_closure_impl_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Upkeep_closure_impl_2("Upkeep, line 8")
+	call Upkeep_closure_impl_2("Upkeep, line 17")
+endfunction
+
+function dispatch_City_City_City_changeCityName takes integer this_6, string new_name, string stackPos returns nothing
+	local integer this_7
+	local string new_name_2
+	local string stackPos_2
+	local string this_8
+	local integer start
+	local integer stop
+	local integer this_9
+	local string stackPos_3
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if City_typeId[this_6] == 0 then
+		if this_6 == 0 then
+			call error("Nullpointer exception when calling City.changeCityName", "when calling error in City, line 157")
+		else
+			call error("Called City.changeCityName on invalid object.", "when calling error in City, line 157")
+		endif
+	endif
+	set this_7 = this_6
+	set new_name_2 = new_name
+	set stackPos_2 = "when calling changeCityName in City, line 157"
+	set wurst_stack[wurst_stack_depth] = stackPos_2
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this_8 = new_name_2
+	set start = 0
+	set stop = 24
+	set City_city_name[this_7] = SubString(this_8, start, stop)
+	set this_9 = this_7
+	set stackPos_3 = "when calling refreshMultiboardIfPossible in City, line 160"
+	set wurst_stack[wurst_stack_depth] = stackPos_3
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if City_typeId[this_9] == 0 then
+		if this_9 == 0 then
+			call error("Nullpointer exception when calling City.refreshMultiboardIfPossible", "when calling error in City, line 224")
+		else
+			call error("Called City.refreshMultiboardIfPossible on invalid object.", "when calling error in City, line 224")
+		endif
+	endif
+	call City_refreshMultiboardIfPossible(this_9, "when calling refreshMultiboardIfPossible in City, line 224")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function enableDebugForPlayer takes player pl_2 returns nothing
+	local boolean enabled
+	local player whichPlayer
+	local fogstate whichFogState
+	local location center
+	local real radius
+	local rect whichRect
+	call SetPlayerState(pl_2, PLAYER_STATE_RESOURCE_GOLD, 99999999)
+	call SetPlayerState(pl_2, PLAYER_STATE_RESOURCE_LUMBER, 99999999)
+	set enabled = true
+	set whichPlayer = pl_2
+	set whichFogState = FOG_OF_WAR_VISIBLE
+	set whichRect = bj_mapInitialPlayableArea
+	set center = Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
+	set radius = 999999.00
+	set bj_lastCreatedFogModifier = CreateFogModifierRadiusLoc(whichPlayer, whichFogState, center, radius, true, false)
+	if enabled then
+		call FogModifierStart(bj_lastCreatedFogModifier)
+	endif
+	set whichPlayer = null
+	set whichFogState = null
+	set center = null
+	set whichRect = null
+endfunction
+
+function action takes string stackPos returns nothing
+	local string input
+	local string array args
+	local string arg
+	local player pl_2
+	local integer j
+	local integer i
+	local integer temp
+	local string char
+	local integer city_id
+	local integer city_id_2
+	local string temp_2
+	local string this_6
+	local string this_7
+	local integer start
+	local integer stop
+	local string this_8
+	local player whichPlayer
+	local camerafield whichField
+	local real value
+	local real duration
+	local player whichPlayer_2
+	local camerafield whichField_2
+	local real value_2
+	local real duration_2
+	local integer this_9
+	local string stackPos_2
+	local integer PlayerStats_PlayerStats_getSelectedCityId_result
+	local integer this_10
+	local player this_11
+	local unit this_12
+	local integer this_13
+	local string stackPos_3
+	local unit City_City_getCityUnit_result
+	local integer this_14
+	local string msg
+	local player pl_3
+	local string stackPos_4
+	local integer this_15
+	local string stackPos_5
+	local integer PlayerStats_PlayerStats_getSelectedCityId_result_2
+	local integer this_16
+	local player this_17
+	local integer this_18
+	local integer cm_2
+	local string stackPos_6
+	local integer this_19
+	local integer cm_3
+	local string stackPos_7
+	local integer this_20
+	local integer cm_4
+	local string stackPos_8
+	local integer this_21
+	local integer cm_5
+	local string stackPos_9
+	local integer this_22
+	local integer cm_6
+	local string stackPos_10
+	local integer temp_3
+	local boolean andLeft
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set input = GetEventPlayerChatString()
+	set arg = ""
+	set pl_2 = GetTriggerPlayer()
+	if Main_dbg_msg then
+		call dbg("A command has been typed = " + input + "; By: " + player_getNameColored(pl_2))
+	endif
+	set j = 0
+	set i = 1
+	set this_6 = input
+	set temp = StringLength(this_6)
+	loop
+		exitwhen i > temp
+		set this_7 = input
+		set start = i
+		set stop = i + 1
+		set char = SubString(this_7, start, stop)
+		if j > 0 then
+			set temp_3 = i
+			set this_8 = args[0]
+			set andLeft = temp_3 > StringLength(this_8) + 1
+		else
+			set andLeft = false
+		endif
+		if andLeft then
+			set arg = arg + char
+		endif
+		if char != " " then
+			set args[j] = args[j] + char
+		else
+			set j = j + 1
+		endif
+		set i = i + 1
+	endloop
+	if args[0] == "far" then
+		set whichPlayer = GetTriggerPlayer()
+		set whichField = CAMERA_FIELD_TARGET_DISTANCE
+		set value = 3000.0
+		set duration = 0.
+		if GetLocalPlayer() == whichPlayer then
+			call SetCameraField(whichField, value, duration)
+		endif
+	elseif args[0] == "med" then
+		set whichPlayer_2 = GetTriggerPlayer()
+		set whichField_2 = CAMERA_FIELD_TARGET_DISTANCE
+		set value_2 = 2300.0
+		set duration_2 = 0.
+		if GetLocalPlayer() == whichPlayer_2 then
+			call SetCameraField(whichField_2, value_2, duration_2)
+		endif
+	elseif args[0] == "name" then
+		call SetPlayerName(GetTriggerPlayer(), arg)
+	elseif args[0] == "rename" then
+		set this_11 = pl_2
+		set this_9 = PlayerStats_player_stats[GetPlayerId(this_11)]
+		set stackPos_2 = "when calling getSelectedCityId in Commands, line 47"
+		set wurst_stack[wurst_stack_depth] = stackPos_2
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_9] == 0 then
+			if this_9 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.getSelectedCityId", "when calling error in PlayerStats, line 84")
+			else
+				call error("Called PlayerStats.getSelectedCityId on invalid object.", "when calling error in PlayerStats, line 84")
+			endif
+		endif
+		set this_10 = this_9
+		set PlayerStats_PlayerStats_getSelectedCityId_result = PlayerStats_selected_city_id[this_10]
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set city_id = PlayerStats_PlayerStats_getSelectedCityId_result
+		if city_id >= 0 and city_id < City_cityCount then
+			set this_13 = City_cities[city_id]
+			set stackPos_3 = "when calling getCityUnit in Commands, line 49"
+			set wurst_stack[wurst_stack_depth] = stackPos_3
+			set wurst_stack_depth = wurst_stack_depth + 1
+			if City_typeId[this_13] == 0 then
+				if this_13 == 0 then
+					call error("Nullpointer exception when calling City.getCityUnit", "when calling error in City, line 174")
+				else
+					call error("Called City.getCityUnit on invalid object.", "when calling error in City, line 174")
+				endif
+			endif
+			set this_14 = this_13
+			set City_City_getCityUnit_result = City_city_unit[this_14]
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set this_12 = City_City_getCityUnit_result
+			if GetOwningPlayer(this_12) != pl_2 then
+				set msg = "The city you wanted to rename so eagerly doesn't belong to you!"
+				set pl_3 = pl_2
+				set stackPos_4 = "when calling noteToPlayer in Commands, line 50"
+				set wurst_stack[wurst_stack_depth] = stackPos_4
+				set wurst_stack_depth = wurst_stack_depth + 1
+				call DisplayTimedTextToPlayer(pl_3, 0., 0., 10.0, getNoteStringForPlayer(pl_3, "when calling getNoteStringForPlayer in Messages, line 82"))
+				call DisplayTimedTextToPlayer(pl_3, 0., 0., 10.0, msg)
+				set wurst_stack_depth = wurst_stack_depth - 1
+			else
+				call dispatch_City_City_City_changeCityName(City_cities[city_id], arg, "when calling changeCityName in Commands, line 52")
+			endif
+		endif
+	elseif args[0] == "add_mod" then
+		set this_17 = pl_2
+		set this_15 = PlayerStats_player_stats[GetPlayerId(this_17)]
+		set stackPos_5 = "when calling getSelectedCityId in Commands, line 54"
+		set wurst_stack[wurst_stack_depth] = stackPos_5
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if PlayerStats_typeId[this_15] == 0 then
+			if this_15 == 0 then
+				call error("Nullpointer exception when calling PlayerStats.getSelectedCityId", "when calling error in PlayerStats, line 84")
+			else
+				call error("Called PlayerStats.getSelectedCityId on invalid object.", "when calling error in PlayerStats, line 84")
+			endif
+		endif
+		set this_16 = this_15
+		set PlayerStats_PlayerStats_getSelectedCityId_result_2 = PlayerStats_selected_city_id[this_16]
+		set wurst_stack_depth = wurst_stack_depth - 1
+		set city_id_2 = PlayerStats_PlayerStats_getSelectedCityId_result_2
+		if  not Main_dbg_mode then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set pl_2 = null
+			set whichPlayer = null
+			set whichField = null
+			set whichPlayer_2 = null
+			set whichField_2 = null
+			set this_11 = null
+			set this_12 = null
+			set City_City_getCityUnit_result = null
+			set pl_3 = null
+			set this_17 = null
+			return
+		endif
+		if city_id_2 >= 0 and city_id_2 < City_cityCount then
+			set temp_2 = args[1]
+			if temp_2 == "trade" then
+				set this_18 = City_cities[city_id_2]
+				set cm_2 = 5
+				set stackPos_6 = "when calling addModifier in Commands, line 60"
+				set wurst_stack[wurst_stack_depth] = stackPos_6
+				set wurst_stack_depth = wurst_stack_depth + 1
+				if City_typeId[this_18] == 0 then
+					if this_18 == 0 then
+						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
+					else
+						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
+					endif
+				endif
+				call City_addModifier(this_18, cm_2, "when calling addModifier in City, line 338")
+				set wurst_stack_depth = wurst_stack_depth - 1
+			elseif temp_2 == "fire" then
+				set this_19 = City_cities[city_id_2]
+				set cm_3 = 4
+				set stackPos_7 = "when calling addModifier in Commands, line 62"
+				set wurst_stack[wurst_stack_depth] = stackPos_7
+				set wurst_stack_depth = wurst_stack_depth + 1
+				if City_typeId[this_19] == 0 then
+					if this_19 == 0 then
+						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
+					else
+						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
+					endif
+				endif
+				call City_addModifier(this_19, cm_3, "when calling addModifier in City, line 338")
+				set wurst_stack_depth = wurst_stack_depth - 1
+			elseif temp_2 == "plague" then
+				set this_20 = City_cities[city_id_2]
+				set cm_4 = 3
+				set stackPos_8 = "when calling addModifier in Commands, line 64"
+				set wurst_stack[wurst_stack_depth] = stackPos_8
+				set wurst_stack_depth = wurst_stack_depth + 1
+				if City_typeId[this_20] == 0 then
+					if this_20 == 0 then
+						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
+					else
+						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
+					endif
+				endif
+				call City_addModifier(this_20, cm_4, "when calling addModifier in City, line 338")
+				set wurst_stack_depth = wurst_stack_depth - 1
+			elseif temp_2 == "boom" then
+				set this_21 = City_cities[city_id_2]
+				set cm_5 = 2
+				set stackPos_9 = "when calling addModifier in Commands, line 66"
+				set wurst_stack[wurst_stack_depth] = stackPos_9
+				set wurst_stack_depth = wurst_stack_depth + 1
+				if City_typeId[this_21] == 0 then
+					if this_21 == 0 then
+						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
+					else
+						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
+					endif
+				endif
+				call City_addModifier(this_21, cm_5, "when calling addModifier in City, line 338")
+				set wurst_stack_depth = wurst_stack_depth - 1
+			elseif temp_2 == "prospering" then
+				set this_22 = City_cities[city_id_2]
+				set cm_6 = 7
+				set stackPos_10 = "when calling addModifier in Commands, line 68"
+				set wurst_stack[wurst_stack_depth] = stackPos_10
+				set wurst_stack_depth = wurst_stack_depth + 1
+				if City_typeId[this_22] == 0 then
+					if this_22 == 0 then
+						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
+					else
+						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
+					endif
+				endif
+				call City_addModifier(this_22, cm_6, "when calling addModifier in City, line 338")
+				set wurst_stack_depth = wurst_stack_depth - 1
+			endif
+		endif
+	elseif args[0] == "непереводимоесочетаниебукв" then
+		set Main_dbg_mode =  not Main_dbg_mode
+		set Main_dbg_msg =  not Main_dbg_msg
+		call enableDebugForPlayer(Player_players[0])
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set pl_2 = null
+	set whichPlayer = null
+	set whichField = null
+	set whichPlayer_2 = null
+	set whichField_2 = null
+	set this_11 = null
+	set this_12 = null
+	set City_City_getCityUnit_result = null
+	set pl_3 = null
+	set this_17 = null
+endfunction
+
+function bridge_action takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call action("Commands, line 79")
 endfunction
 
 function PlayerStats_alliance_states_get takes integer index1, integer index2, string stackPos returns integer
@@ -20844,7 +21271,7 @@ function getWarningStringForPlayer takes player pl_2, string stackPos returns st
 	return "|cffff0000" + s + "|r"
 endfunction
 
-function action takes string stackPos returns nothing
+function action_2 takes string stackPos returns nothing
 	local player source
 	local player target
 	local string source_s
@@ -21866,370 +22293,9 @@ function action takes string stackPos returns nothing
 	set pl_16 = null
 endfunction
 
-function bridge_action takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call action("Diplomacy, line 110")
-endfunction
-
-function dispatch_City_City_City_changeCityName takes integer this_6, string new_name, string stackPos returns nothing
-	local integer this_7
-	local string new_name_2
-	local string stackPos_2
-	local string this_8
-	local integer start
-	local integer stop
-	local integer this_9
-	local string stackPos_3
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if City_typeId[this_6] == 0 then
-		if this_6 == 0 then
-			call error("Nullpointer exception when calling City.changeCityName", "when calling error in City, line 157")
-		else
-			call error("Called City.changeCityName on invalid object.", "when calling error in City, line 157")
-		endif
-	endif
-	set this_7 = this_6
-	set new_name_2 = new_name
-	set stackPos_2 = "when calling changeCityName in City, line 157"
-	set wurst_stack[wurst_stack_depth] = stackPos_2
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set this_8 = new_name_2
-	set start = 0
-	set stop = 24
-	set City_city_name[this_7] = SubString(this_8, start, stop)
-	set this_9 = this_7
-	set stackPos_3 = "when calling refreshMultiboardIfPossible in City, line 160"
-	set wurst_stack[wurst_stack_depth] = stackPos_3
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if City_typeId[this_9] == 0 then
-		if this_9 == 0 then
-			call error("Nullpointer exception when calling City.refreshMultiboardIfPossible", "when calling error in City, line 224")
-		else
-			call error("Called City.refreshMultiboardIfPossible on invalid object.", "when calling error in City, line 224")
-		endif
-	endif
-	call City_refreshMultiboardIfPossible(this_9, "when calling refreshMultiboardIfPossible in City, line 224")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function enableDebugForPlayer takes player pl_2 returns nothing
-	local boolean enabled
-	local player whichPlayer
-	local fogstate whichFogState
-	local location center
-	local real radius
-	local rect whichRect
-	call SetPlayerState(pl_2, PLAYER_STATE_RESOURCE_GOLD, 99999999)
-	call SetPlayerState(pl_2, PLAYER_STATE_RESOURCE_LUMBER, 99999999)
-	set enabled = true
-	set whichPlayer = pl_2
-	set whichFogState = FOG_OF_WAR_VISIBLE
-	set whichRect = bj_mapInitialPlayableArea
-	set center = Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
-	set radius = 999999.00
-	set bj_lastCreatedFogModifier = CreateFogModifierRadiusLoc(whichPlayer, whichFogState, center, radius, true, false)
-	if enabled then
-		call FogModifierStart(bj_lastCreatedFogModifier)
-	endif
-	set whichPlayer = null
-	set whichFogState = null
-	set center = null
-	set whichRect = null
-endfunction
-
-function action_2 takes string stackPos returns nothing
-	local string input
-	local string array args
-	local string arg
-	local player pl_2
-	local integer j
-	local integer i
-	local integer temp
-	local string char
-	local integer city_id
-	local integer city_id_2
-	local string temp_2
-	local string this_6
-	local string this_7
-	local integer start
-	local integer stop
-	local string this_8
-	local player whichPlayer
-	local camerafield whichField
-	local real value
-	local real duration
-	local player whichPlayer_2
-	local camerafield whichField_2
-	local real value_2
-	local real duration_2
-	local integer this_9
-	local string stackPos_2
-	local integer PlayerStats_PlayerStats_getSelectedCityId_result
-	local integer this_10
-	local player this_11
-	local unit this_12
-	local integer this_13
-	local string stackPos_3
-	local unit City_City_getCityUnit_result
-	local integer this_14
-	local string msg
-	local player pl_3
-	local string stackPos_4
-	local integer this_15
-	local string stackPos_5
-	local integer PlayerStats_PlayerStats_getSelectedCityId_result_2
-	local integer this_16
-	local player this_17
-	local integer this_18
-	local integer cm_2
-	local string stackPos_6
-	local integer this_19
-	local integer cm_3
-	local string stackPos_7
-	local integer this_20
-	local integer cm_4
-	local string stackPos_8
-	local integer this_21
-	local integer cm_5
-	local string stackPos_9
-	local integer this_22
-	local integer cm_6
-	local string stackPos_10
-	local integer temp_3
-	local boolean andLeft
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set input = GetEventPlayerChatString()
-	set arg = ""
-	set pl_2 = GetTriggerPlayer()
-	if Main_dbg_msg then
-		call dbg("A command has been typed = " + input + "; By: " + player_getNameColored(pl_2))
-	endif
-	set j = 0
-	set i = 1
-	set this_6 = input
-	set temp = StringLength(this_6)
-	loop
-		exitwhen i > temp
-		set this_7 = input
-		set start = i
-		set stop = i + 1
-		set char = SubString(this_7, start, stop)
-		if j > 0 then
-			set temp_3 = i
-			set this_8 = args[0]
-			set andLeft = temp_3 > StringLength(this_8) + 1
-		else
-			set andLeft = false
-		endif
-		if andLeft then
-			set arg = arg + char
-		endif
-		if char != " " then
-			set args[j] = args[j] + char
-		else
-			set j = j + 1
-		endif
-		set i = i + 1
-	endloop
-	if args[0] == "far" then
-		set whichPlayer = GetTriggerPlayer()
-		set whichField = CAMERA_FIELD_TARGET_DISTANCE
-		set value = 3000.0
-		set duration = 0.
-		if GetLocalPlayer() == whichPlayer then
-			call SetCameraField(whichField, value, duration)
-		endif
-	elseif args[0] == "med" then
-		set whichPlayer_2 = GetTriggerPlayer()
-		set whichField_2 = CAMERA_FIELD_TARGET_DISTANCE
-		set value_2 = 2300.0
-		set duration_2 = 0.
-		if GetLocalPlayer() == whichPlayer_2 then
-			call SetCameraField(whichField_2, value_2, duration_2)
-		endif
-	elseif args[0] == "name" then
-		call SetPlayerName(GetTriggerPlayer(), arg)
-	elseif args[0] == "rename" then
-		set this_11 = pl_2
-		set this_9 = PlayerStats_player_stats[GetPlayerId(this_11)]
-		set stackPos_2 = "when calling getSelectedCityId in Commands, line 47"
-		set wurst_stack[wurst_stack_depth] = stackPos_2
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_9] == 0 then
-			if this_9 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.getSelectedCityId", "when calling error in PlayerStats, line 84")
-			else
-				call error("Called PlayerStats.getSelectedCityId on invalid object.", "when calling error in PlayerStats, line 84")
-			endif
-		endif
-		set this_10 = this_9
-		set PlayerStats_PlayerStats_getSelectedCityId_result = PlayerStats_selected_city_id[this_10]
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set city_id = PlayerStats_PlayerStats_getSelectedCityId_result
-		if city_id >= 0 and city_id < City_cityCount then
-			set this_13 = City_cities[city_id]
-			set stackPos_3 = "when calling getCityUnit in Commands, line 49"
-			set wurst_stack[wurst_stack_depth] = stackPos_3
-			set wurst_stack_depth = wurst_stack_depth + 1
-			if City_typeId[this_13] == 0 then
-				if this_13 == 0 then
-					call error("Nullpointer exception when calling City.getCityUnit", "when calling error in City, line 174")
-				else
-					call error("Called City.getCityUnit on invalid object.", "when calling error in City, line 174")
-				endif
-			endif
-			set this_14 = this_13
-			set City_City_getCityUnit_result = City_city_unit[this_14]
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set this_12 = City_City_getCityUnit_result
-			if GetOwningPlayer(this_12) != pl_2 then
-				set msg = "The city you wanted to rename so eagerly doesn't belong to you!"
-				set pl_3 = pl_2
-				set stackPos_4 = "when calling noteToPlayer in Commands, line 50"
-				set wurst_stack[wurst_stack_depth] = stackPos_4
-				set wurst_stack_depth = wurst_stack_depth + 1
-				call DisplayTimedTextToPlayer(pl_3, 0., 0., 10.0, getNoteStringForPlayer(pl_3, "when calling getNoteStringForPlayer in Messages, line 82"))
-				call DisplayTimedTextToPlayer(pl_3, 0., 0., 10.0, msg)
-				set wurst_stack_depth = wurst_stack_depth - 1
-			else
-				call dispatch_City_City_City_changeCityName(City_cities[city_id], arg, "when calling changeCityName in Commands, line 52")
-			endif
-		endif
-	elseif args[0] == "add_mod" then
-		set this_17 = pl_2
-		set this_15 = PlayerStats_player_stats[GetPlayerId(this_17)]
-		set stackPos_5 = "when calling getSelectedCityId in Commands, line 54"
-		set wurst_stack[wurst_stack_depth] = stackPos_5
-		set wurst_stack_depth = wurst_stack_depth + 1
-		if PlayerStats_typeId[this_15] == 0 then
-			if this_15 == 0 then
-				call error("Nullpointer exception when calling PlayerStats.getSelectedCityId", "when calling error in PlayerStats, line 84")
-			else
-				call error("Called PlayerStats.getSelectedCityId on invalid object.", "when calling error in PlayerStats, line 84")
-			endif
-		endif
-		set this_16 = this_15
-		set PlayerStats_PlayerStats_getSelectedCityId_result_2 = PlayerStats_selected_city_id[this_16]
-		set wurst_stack_depth = wurst_stack_depth - 1
-		set city_id_2 = PlayerStats_PlayerStats_getSelectedCityId_result_2
-		if  not Main_dbg_mode then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set pl_2 = null
-			set whichPlayer = null
-			set whichField = null
-			set whichPlayer_2 = null
-			set whichField_2 = null
-			set this_11 = null
-			set this_12 = null
-			set City_City_getCityUnit_result = null
-			set pl_3 = null
-			set this_17 = null
-			return
-		endif
-		if city_id_2 >= 0 and city_id_2 < City_cityCount then
-			set temp_2 = args[1]
-			if temp_2 == "trade" then
-				set this_18 = City_cities[city_id_2]
-				set cm_2 = 5
-				set stackPos_6 = "when calling addModifier in Commands, line 60"
-				set wurst_stack[wurst_stack_depth] = stackPos_6
-				set wurst_stack_depth = wurst_stack_depth + 1
-				if City_typeId[this_18] == 0 then
-					if this_18 == 0 then
-						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
-					else
-						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
-					endif
-				endif
-				call City_addModifier(this_18, cm_2, "when calling addModifier in City, line 338")
-				set wurst_stack_depth = wurst_stack_depth - 1
-			elseif temp_2 == "fire" then
-				set this_19 = City_cities[city_id_2]
-				set cm_3 = 4
-				set stackPos_7 = "when calling addModifier in Commands, line 62"
-				set wurst_stack[wurst_stack_depth] = stackPos_7
-				set wurst_stack_depth = wurst_stack_depth + 1
-				if City_typeId[this_19] == 0 then
-					if this_19 == 0 then
-						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
-					else
-						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
-					endif
-				endif
-				call City_addModifier(this_19, cm_3, "when calling addModifier in City, line 338")
-				set wurst_stack_depth = wurst_stack_depth - 1
-			elseif temp_2 == "plague" then
-				set this_20 = City_cities[city_id_2]
-				set cm_4 = 3
-				set stackPos_8 = "when calling addModifier in Commands, line 64"
-				set wurst_stack[wurst_stack_depth] = stackPos_8
-				set wurst_stack_depth = wurst_stack_depth + 1
-				if City_typeId[this_20] == 0 then
-					if this_20 == 0 then
-						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
-					else
-						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
-					endif
-				endif
-				call City_addModifier(this_20, cm_4, "when calling addModifier in City, line 338")
-				set wurst_stack_depth = wurst_stack_depth - 1
-			elseif temp_2 == "boom" then
-				set this_21 = City_cities[city_id_2]
-				set cm_5 = 2
-				set stackPos_9 = "when calling addModifier in Commands, line 66"
-				set wurst_stack[wurst_stack_depth] = stackPos_9
-				set wurst_stack_depth = wurst_stack_depth + 1
-				if City_typeId[this_21] == 0 then
-					if this_21 == 0 then
-						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
-					else
-						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
-					endif
-				endif
-				call City_addModifier(this_21, cm_5, "when calling addModifier in City, line 338")
-				set wurst_stack_depth = wurst_stack_depth - 1
-			elseif temp_2 == "prospering" then
-				set this_22 = City_cities[city_id_2]
-				set cm_6 = 7
-				set stackPos_10 = "when calling addModifier in Commands, line 68"
-				set wurst_stack[wurst_stack_depth] = stackPos_10
-				set wurst_stack_depth = wurst_stack_depth + 1
-				if City_typeId[this_22] == 0 then
-					if this_22 == 0 then
-						call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 338")
-					else
-						call error("Called City.addModifier on invalid object.", "when calling error in City, line 338")
-					endif
-				endif
-				call City_addModifier(this_22, cm_6, "when calling addModifier in City, line 338")
-				set wurst_stack_depth = wurst_stack_depth - 1
-			endif
-		endif
-	elseif args[0] == "непереводимоесочетаниебукв" then
-		set Main_dbg_mode =  not Main_dbg_mode
-		set Main_dbg_msg =  not Main_dbg_msg
-		call enableDebugForPlayer(Player_players[0])
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set pl_2 = null
-	set whichPlayer = null
-	set whichField = null
-	set whichPlayer_2 = null
-	set whichField_2 = null
-	set this_11 = null
-	set this_12 = null
-	set City_City_getCityUnit_result = null
-	set pl_3 = null
-	set this_17 = null
-endfunction
-
 function bridge_action_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call action_2("Commands, line 79")
+	call action_2("Diplomacy, line 110")
 endfunction
 
 function bridge_init_Abilities takes nothing returns boolean
@@ -23839,6 +23905,9 @@ function init_ClosureEvents takes string stackPos returns boolean
 	local real timeToWait
 	local integer cb_2
 	local string stackPos_4
+	local integer this_7
+	local real time
+	local string stackPos_5
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set ClosureEvents_EVENT_PLAYER_CHAT_FILTER = ConvertPlayerEvent(96)
@@ -23875,7 +23944,20 @@ function init_ClosureEvents takes string stackPos returns boolean
 	set stackPos_4 = "when calling doAfter in ClosureTimers, line 22"
 	set wurst_stack[wurst_stack_depth] = stackPos_4
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb_2, timeToWait, "when calling start in ClosureTimers, line 15")
+	set this_7 = cb_2
+	set time = timeToWait
+	set stackPos_5 = "when calling start in ClosureTimers, line 15"
+	set wurst_stack[wurst_stack_depth] = stackPos_5
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if CallbackSingle_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+		else
+			call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+		endif
+	endif
+	call CallbackSingle_start(this_7, time, "when calling start in ClosureTimers, line 67")
+	set wurst_stack_depth = wurst_stack_depth - 1
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -25871,14 +25953,17 @@ function init_MultiboardCityUpdate takes string stackPos returns boolean
 	local real timeToWait
 	local integer cb
 	local string stackPos_3
-	local string stackPos_4
 	local integer this_7
 	local real time
-	local integer cb_2
+	local string stackPos_4
 	local string stackPos_5
 	local integer this_8
 	local real time_2
+	local integer cb_2
 	local string stackPos_6
+	local integer this_9
+	local real time_3
+	local string stackPos_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set stackPos_2 = "when calling alloc_Closure in MultiboardCityUpdate, line 18"
@@ -25905,45 +25990,58 @@ function init_MultiboardCityUpdate takes string stackPos returns boolean
 	set stackPos_3 = "when calling doAfter in MultiboardCityUpdate, line 18"
 	set wurst_stack[wurst_stack_depth] = stackPos_3
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb, timeToWait, "when calling start in ClosureTimers, line 15")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set stackPos_4 = "when calling alloc_Closure in MultiboardCityUpdate, line 25"
+	set this_7 = cb
+	set time = timeToWait
+	set stackPos_4 = "when calling start in ClosureTimers, line 15"
 	set wurst_stack[wurst_stack_depth] = stackPos_4
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if CallbackSingle_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+		else
+			call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+		endif
+	endif
+	call CallbackSingle_start(this_7, time, "when calling start in ClosureTimers, line 67")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set stackPos_5 = "when calling alloc_Closure in MultiboardCityUpdate, line 25"
+	set wurst_stack[wurst_stack_depth] = stackPos_5
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if CallbackPeriodic_firstFree == 0 then
 		if CallbackPeriodic_maxIndex < 32768 then
 			set CallbackPeriodic_maxIndex = CallbackPeriodic_maxIndex + 1
-			set this_7 = CallbackPeriodic_maxIndex
-			set CallbackPeriodic_typeId[this_7] = 638
+			set this_8 = CallbackPeriodic_maxIndex
+			set CallbackPeriodic_typeId[this_8] = 638
 		else
 			call error("Out of memory: Could not create Closure.", "when calling error in MultiboardCityUpdate, line 25")
-			set this_7 = 0
+			set this_8 = 0
 		endif
 	else
 		set CallbackPeriodic_firstFree = CallbackPeriodic_firstFree - 1
-		set this_7 = CallbackPeriodic_nextFree[CallbackPeriodic_firstFree]
-		set CallbackPeriodic_typeId[this_7] = 638
+		set this_8 = CallbackPeriodic_nextFree[CallbackPeriodic_firstFree]
+		set CallbackPeriodic_typeId[this_8] = 638
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
-	set clVar_2 = this_7
-	set time = 1.0
+	set clVar_2 = this_8
+	set time_2 = 1.0
 	set cb_2 = clVar_2
-	set stackPos_5 = "when calling doPeriodically in MultiboardCityUpdate, line 25"
-	set wurst_stack[wurst_stack_depth] = stackPos_5
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set this_8 = cb_2
-	set time_2 = time
-	set stackPos_6 = "when calling start in ClosureTimers, line 36"
+	set stackPos_6 = "when calling doPeriodically in MultiboardCityUpdate, line 25"
 	set wurst_stack[wurst_stack_depth] = stackPos_6
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if CallbackPeriodic_typeId[this_8] == 0 then
-		if this_8 == 0 then
+	set this_9 = cb_2
+	set time_3 = time_2
+	set stackPos_7 = "when calling start in ClosureTimers, line 36"
+	set wurst_stack[wurst_stack_depth] = stackPos_7
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if CallbackPeriodic_typeId[this_9] == 0 then
+		if this_9 == 0 then
 			call error("Nullpointer exception when calling CallbackPeriodic.start", "when calling error in ClosureTimers, line 88")
 		else
 			call error("Called CallbackPeriodic.start on invalid object.", "when calling error in ClosureTimers, line 88")
 		endif
 	endif
-	call CallbackPeriodic_start(this_8, time_2, "when calling start in ClosureTimers, line 88")
+	call CallbackPeriodic_start(this_9, time_3, "when calling start in ClosureTimers, line 88")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -27127,6 +27225,9 @@ function init_OnUnitEnterLeave takes string stackPos returns boolean
 	local real timeToWait
 	local integer cb_2
 	local string stackPos_4
+	local integer this_8
+	local real time
+	local string stackPos_5
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set OnUnitEnterLeave_eventTrigger = CreateTrigger()
@@ -27169,7 +27270,20 @@ function init_OnUnitEnterLeave takes string stackPos returns boolean
 	set stackPos_4 = "when calling doAfter in ClosureTimers, line 22"
 	set wurst_stack[wurst_stack_depth] = stackPos_4
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb_2, timeToWait, "when calling start in ClosureTimers, line 15")
+	set this_8 = cb_2
+	set time = timeToWait
+	set stackPos_5 = "when calling start in ClosureTimers, line 15"
+	set wurst_stack[wurst_stack_depth] = stackPos_5
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if CallbackSingle_typeId[this_8] == 0 then
+		if this_8 == 0 then
+			call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+		else
+			call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+		endif
+	endif
+	call CallbackSingle_start(this_8, time, "when calling start in ClosureTimers, line 67")
+	set wurst_stack_depth = wurst_stack_depth - 1
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -27205,6 +27319,9 @@ function init_Preloader takes string stackPos returns boolean
 	local real timeToWait
 	local integer cb_2
 	local string stackPos_4
+	local integer this_9
+	local real time
+	local string stackPos_5
 	local player temp
 	local integer temp_2
 	local real temp_3
@@ -27277,7 +27394,20 @@ function init_Preloader takes string stackPos returns boolean
 		set stackPos_4 = "when calling doAfter in ClosureTimers, line 22"
 		set wurst_stack[wurst_stack_depth] = stackPos_4
 		set wurst_stack_depth = wurst_stack_depth + 1
-		call dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb_2, timeToWait, "when calling start in ClosureTimers, line 15")
+		set this_9 = cb_2
+		set time = timeToWait
+		set stackPos_5 = "when calling start in ClosureTimers, line 15"
+		set wurst_stack[wurst_stack_depth] = stackPos_5
+		set wurst_stack_depth = wurst_stack_depth + 1
+		if CallbackSingle_typeId[this_9] == 0 then
+			if this_9 == 0 then
+				call error("Nullpointer exception when calling CallbackSingle.start", "when calling error in ClosureTimers, line 67")
+			else
+				call error("Called CallbackSingle.start on invalid object.", "when calling error in ClosureTimers, line 67")
+			endif
+		endif
+		call CallbackSingle_start(this_9, time, "when calling start in ClosureTimers, line 67")
+		set wurst_stack_depth = wurst_stack_depth - 1
 		set wurst_stack_depth = wurst_stack_depth - 1
 		set wurst_stack_depth = wurst_stack_depth - 1
 	endif
@@ -28274,7 +28404,29 @@ function bridge_init_Units takes nothing returns boolean
 	return init_Units("Units, line 1")
 endfunction
 
+function string_startsWith takes string this_6, string s returns boolean
+	local string this_7 = this_6
+	local integer len = StringLength(this_7)
+	local string this_8 = s
+	local string this_9
+	local integer start
+	local integer stop
+	local string this_10
+	if StringLength(this_8) > len then
+		return false
+	endif
+	set this_9 = this_6
+	set start = 0
+	set this_10 = s
+	set stop = StringLength(this_10)
+	return SubString(this_9, start, stop) == s
+endfunction
+
 function cond takes nothing returns boolean
+	return string_startsWith(GetEventPlayerChatString(), "-")
+endfunction
+
+function cond_2 takes nothing returns boolean
 	local unit this_6 = GetSpellAbilityUnit()
 	local player temp = GetOwningPlayer(this_6)
 	local unit this_7 = GetSpellTargetUnit()
@@ -28318,28 +28470,6 @@ function cond takes nothing returns boolean
 	set this_11 = null
 	set temp = null
 	return id == 1093677396 or id == 1093677397 or id == 1093677398 or id == 1093677400 or id == 1093677399
-endfunction
-
-function string_startsWith takes string this_6, string s returns boolean
-	local string this_7 = this_6
-	local integer len = StringLength(this_7)
-	local string this_8 = s
-	local string this_9
-	local integer start
-	local integer stop
-	local string this_10
-	if StringLength(this_8) > len then
-		return false
-	endif
-	set this_9 = this_6
-	set start = 0
-	set this_10 = s
-	set stop = StringLength(this_10)
-	return SubString(this_9, start, stop) == s
-endfunction
-
-function cond_2 takes nothing returns boolean
-	return string_startsWith(GetEventPlayerChatString(), "-")
 endfunction
 
 function init_AbilityIds takes nothing returns boolean
@@ -28685,8 +28815,8 @@ function init_Main takes nothing returns boolean
 	local timer this_6
 	local real time
 	local code timerCallBack
-	set Main_dbg_msg = false
-	set Main_dbg_mode = false
+	set Main_dbg_msg = true
+	set Main_dbg_mode = true
 	set Main_global_timer = CreateTimer()
 	set this_6 = Main_global_timer
 	set time = 0.01
@@ -29789,29 +29919,29 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_CityManage_closure_impl = function bridge_CityManage_closure_impl
 	set ref_function_bridge_EventListener_generalEventCallback = function bridge_EventListener_generalEventCallback
 	set ref_function_ClosureEvents_closure_impl = function ClosureEvents_closure_impl
-	set ref_function_bridge_ClosureEvents_closure_impl = function bridge_ClosureEvents_closure_impl_3
+	set ref_function_bridge_ClosureEvents_closure_impl = function bridge_ClosureEvents_closure_impl_4
 	set ref_function_bridge_ClosureEvents_closure_impl_2 = function bridge_ClosureEvents_closure_impl_5
-	set ref_function_bridge_ClosureEvents_closure_impl_3 = function bridge_ClosureEvents_closure_impl_2
-	set ref_function_bridge_ClosureEvents_closure_impl_4 = function bridge_ClosureEvents_closure_impl_4
+	set ref_function_bridge_ClosureEvents_closure_impl_3 = function bridge_ClosureEvents_closure_impl_3
+	set ref_function_bridge_ClosureEvents_closure_impl_4 = function bridge_ClosureEvents_closure_impl_2
 	set ref_function_bridge_ClosureEvents_closure_impl_5 = function bridge_ClosureEvents_closure_impl
 	set ref_function_bridge_ClosureForGroups_closure_impl = function bridge_ClosureForGroups_closure_impl
 	set ref_function_bridge_CallbackPeriodic_staticCallback = function bridge_CallbackPeriodic_staticCallback
 	set ref_function_bridge_CallbackSingle_closure_impl = function bridge_CallbackSingle_closure_impl
-	set ref_function_cond = function cond_2
-	set ref_function_bridge_action = function bridge_action_2
-	set ref_function_cond_2 = function cond
-	set ref_function_bridge_action_2 = function bridge_action
+	set ref_function_cond = function cond
+	set ref_function_bridge_action = function bridge_action
+	set ref_function_cond_2 = function cond_2
+	set ref_function_bridge_action_2 = function bridge_action_2
 	set ref_function_GameTimer_closure_impl = function GameTimer_closure_impl
 	set ref_function_Main_closure_impl = function Main_closure_impl
 	set ref_function_bridge_CinematicTutorial = function bridge_CinematicTutorial
 	set ref_function_Group_closure_impl = function Group_closure_impl
-	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_3
-	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_3
 	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl
-	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl
-	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl_2
-	set ref_function_bridge_Upkeep_closure_impl = function bridge_Upkeep_closure_impl_2
-	set ref_function_bridge_Upkeep_closure_impl_2 = function bridge_Upkeep_closure_impl
+	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl_2
+	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl
+	set ref_function_bridge_Upkeep_closure_impl = function bridge_Upkeep_closure_impl
+	set ref_function_bridge_Upkeep_closure_impl_2 = function bridge_Upkeep_closure_impl_2
 	set ref_function_bridge_RegisterEvents_closure_impl = function bridge_RegisterEvents_closure_impl
 endfunction
 
@@ -29828,7 +29958,7 @@ function main takes nothing returns nothing
 	call SetMapMusic("Music", true, 0)
 	set gg_snd_Warning = CreateSound("Sound\\Interface\\Warning.wav", false, false, false, 10, 10, "")
 	call SetSoundParamsFromLabel(gg_snd_Warning, "Warning")
-	call SetSoundDuration(gg_snd_Warning, 1903)
+	call SetSoundDuration(gg_snd_Warning, 1904)
 	set gg_rct_SHIP_Lower_Nile = Rect(11872.0,  - 24096.0, 13376.0,  - 18304.0)
 	set gg_rct_SHIP_Nile_2 = Rect(14080.0,  - 30720.0, 16256.0,  - 25664.0)
 	set gg_rct_SHIP_Upper_Nile = Rect(12096.0,  - 26240.0, 14944.0,  - 23776.0)
