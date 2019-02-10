@@ -11,7 +11,7 @@ public let kIncomeCountRate = 120.0
 
 // Counted and show to the multiboard:
 // very laggy
-public let kIncomeCountToMultiboardRate = 30.0
+public let kIncomeCountToMultiboardRate = 10.0
 
 
 int array gold_change
@@ -28,14 +28,12 @@ public function countIncomeForAll()
 		if cities[i].getCityUnit().getOwner().isIngame()
 			gold_change[pl_id] += cities[i].countTax()
 
-		// Searching for ores
-	forUnitsAll() u ->
-		let pl_id = u.getOwner().getId()
-		let u_id = u.getTypeId()
-		if players[pl_id].isIngame()
-			for i = 0 to usOres.size() - 1
-				if usOres.get(i) == u_id
-					gold_change[pl_id] += usIncomeOres.get(i)
+	// Searching for ores
+	for u_type_id in usOres
+		forUnitsOfType("custom_" + u_type_id.toString()) u ->
+			let pl_id = u.getOwner().getId()
+			if players[pl_id].isIngame()
+				gold_change[pl_id] += usIncomeOres.get(u_type_id)
 
 init
 	doPeriodically(kIncomeCountToMultiboardRate / 30) cbUPKEEP_SHOWING ->

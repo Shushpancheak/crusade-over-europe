@@ -330,7 +330,6 @@ import ObjEditingNatives
 	let def = createObjectDefinition("w3u", 'h00C', 'hgtw')
 	..setInt("usid", 1000)
 	..setString("utub", "Basic defensive structure, can be upgraded in to|cff00ffff |r|cffff8040Improved Guard Tower|r.")
-	..setString("ureq", "h008")
 	..setInt("ulum", 125)
 	..setString("utip", "Upgrade to Guard Tower (|cffffff00Z|r)")
 	..setString("uhot", "Z")
@@ -351,6 +350,7 @@ import ObjEditingNatives
 	..setInt("ulur", 125)
 	..setInt("ua1b", 24)
 	..setString("udty", "fort")
+	..setString("ureq", "h008")
 
 
 @compiletime function create_w3u_h00D()
@@ -10890,7 +10890,7 @@ import ObjEditingNatives
 	let def = createObjectDefinition("w3u", 'h080', 'hgtw')
 	..setInt("usid", 1000)
 	..setString("utub", "Basic defensive structure, can be upgraded in to|cff00ffff |r|cffff8040Improved Guard Tower|r.")
-	..setString("ureq", "h008")
+	..setString("ureq", "h07G")
 	..setInt("ulum", 80)
 	..setString("utip", "Upgrade to Guard Tower (|cffffff00Z|r)")
 	..setString("uhot", "Z")
@@ -11066,7 +11066,7 @@ import ObjEditingNatives
 	..setInt("usid", 1450)
 	..setInt("usin", 1100)
 	..setString("utub", "The Improved version of the |cffff8000Scout Tower |rgives it greater vision over the lands as well as better protection.")
-	..setString("ureq", "h008,hkee")
+	..setString("ureq", "h07G,hkee")
 	..setString("uhot", "X")
 	..setString("uupt", "h081")
 	..setString("uabi", "Abds")

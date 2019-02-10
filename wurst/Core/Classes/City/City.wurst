@@ -121,8 +121,8 @@ public class City
 
 		//===========================POP COUNT AND MODIFIERS=======================
 		// Fast count (for modifiers)
-		doPeriodically(kCityPopCountRate + GetRandomReal(kCityPopCountRate / 10, kCityPopCountRate)) cbPOP ->
-			population_growth_rate += GetRandomReal(-0.0003, 0.0005) * population_growth_rate
+		doPeriodically(kCityPopCountRate + GetRandomReal(kCityPopCountRate / 2, kCityPopCountRate)) cbPOP ->
+			population_growth_rate += GetRandomReal(-0.003, 0.005) * population_growth_rate
 			
 			int pop_prev = population
 			population += (population * population_growth_rate).toInt()
@@ -137,7 +137,7 @@ public class City
 		
 		//@TODO make sure it would not cause much lags (that is, accesing to HashMap)
 
-		doPeriodically(kCityLongCount + GetRandomReal(kCityLongCount / 10, kCityLongCount)) cbLONG ->
+		doPeriodically(kCityLongCount + GetRandomReal(kCityLongCount / 2, kCityLongCount)) cbLONG ->
 			if getChance(cityModifiers.get(CityModifier.population_boom).chance)
 				addModifier(CityModifier.population_boom)
 			if getChance(cityModifiers.get(CityModifier.more_trade_estabilished).chance)

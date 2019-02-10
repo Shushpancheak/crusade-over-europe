@@ -12,14 +12,8 @@ init
 			player_stats[player_id].changeUpkeep(-GetUnitLevel(u))
 	end)
 
-	let t_leave = CreateTrigger()
-	TriggerRegisterLeaveRectSimple(t_leave, GetPlayableMapRect())
-	t_leave.addAction(() -> begin
+	EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
 		let u = GetLeavingUnit()
 		let player_id = u.getOwner().getId()
 		if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
 			player_stats[player_id].changeUpkeep(GetUnitLevel(u))
-	end)
-
-
-	
