@@ -47,12 +47,12 @@ init
 
 
 	doPeriodically(kIncomeCountToMultiboardRate) cbINCOME_MULTIBOARD ->
-		countIncomeForAll()
 		for i = 0 to PLAYER_SLOTS - 1
 			if player_stats[i].isInGame()
 				multiboards[i]
 					..setItem(kMBIncome[0], kMBIncome[1], getStringColoredBasedOnSign(gold_change[i]))
 					..setItem(kMBUpkeep[0], kMBUpkeep[1], getStringColoredBasedOnSign(player_stats[i].getUpkeep()))
+		countIncomeForAll()
 
 	// Income to every player
 	doPeriodically(kIncomeCountRate) cbINCOME ->
