@@ -61,7 +61,7 @@ function SetPlayersAtStart()
 		pl_in_ring = min(pl_left, pl_in_ring)
 
 bool array voted
-let pl_number = CountActivePlayers()
+var pl_number = CountActivePlayers()
 var pl_esc = 0
 bool skip_tutorial = false
 
@@ -70,7 +70,8 @@ function CinematicTutorial()
 		return
 
 	EventListener.add(EVENT_PLAYER_END_CINEMATIC) ->
-		if not voted[GetTriggerPlayer().getId()]
+		if not voted[GetTriggerPlayer().getId()] and not skip_tutorial
+			pl_number = CountActivePlayers()
 			voted[GetTriggerPlayer().getId()] = true
 			pl_esc++
 			textToAll("|cffff0000" + pl_esc.toString() + "|r out of |cffff0000" + ((pl_number + 1) / 2).toInt().toString() + "|r voted to skip the tutorial!", 5.0)
