@@ -13,7 +13,7 @@ init
 	end)
 
 	EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
-		let u = GetLeavingUnit()
+		let u = GetDyingUnit()
 		let player_id = u.getOwner().getId()
-		if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
+		if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE) and u.getTypeId() != uMilitiaCallToArms and u.getTypeId() != uMilitiaArcherCallToArms
 			player_stats[player_id].changeUpkeep(GetUnitLevel(u))
