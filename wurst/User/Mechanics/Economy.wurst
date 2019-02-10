@@ -12,7 +12,7 @@ public let kIncomeCountRate = 120.0
 // Counted and show to the multiboard:
 // very laggy
 public let kIncomeCountToMultiboardRate = 10.0
-
+public let kStepTime = 0.5
 
 int array gold_change
 int array lumb_change
@@ -23,20 +23,20 @@ public function countIncomeForAll()
 		gold_change[i] = 0
 		lumb_change[i] = 0
 
-	let number_of_cities_per_iteration = ((cityCount - 1) / kIncomeCountToMultiboardRate).toInt()
-	for i = 0 to number_of_cities_per_iteration
-		doAfter(i * kIncomeCountToMultiboardRate) ->
-			for j = i * number_of_cities_per_iteration to min(cityCount - 1, (i + 1) * number_of_cities_per_iteration - 1)
+	let number_of_cities_per_step = (cityCount * kStepTime / kIncomeCountToMultiboardRate).toInt() + 1
+	for i = 0 to (kIncomeCountToMultiboardRate / kStepTime).toInt() - 1
+		doAfter(i * kStepTime) ->
+			for j = i * number_of_cities_per_step to min(cityCount - 1, (i + 1) * number_of_cities_per_step - 1)
 				int pl_id = cities[j].getCityUnit().getOwner().getId()
 				if cities[j].getCityUnit().getOwner().isIngame()
 					gold_change[pl_id] += cities[j].countTax()
+		if min(cityCount - 1, (i + 1) * number_of_cities_per_step - 1) == cityCount - 1
+			break
 
 	// Searching for ores
-	for u_type_id in usOres
-		forUnitsOfType("custom_" + u_type_id.toString()) u ->
-			let pl_id = u.getOwner().getId()
-			if players[pl_id].isIngame()
-				gold_change[pl_id] += usIncomeOres.get(u_type_id)
+	forUnitsAll() u ->
+		if usOres.has(u.getTypeId()) and players[u.getOwner().getId()].isIngame()
+			gold_change[u.getOwner().getId()] += usIncomeOres.get(u.getTypeId())
 
 init
 	doPeriodically(kIncomeCountToMultiboardRate / 30) cbUPKEEP_SHOWING ->
