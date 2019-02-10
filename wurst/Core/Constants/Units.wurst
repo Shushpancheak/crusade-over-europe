@@ -1,5 +1,6 @@
 package Units
 import LinkedList
+import HashMap
 // Unit constants and something related to them closely
 // Also contets some regions
 
@@ -112,7 +113,7 @@ public let uGoldMine = 'h039'
 public let uIronMine = 'h03D'
 public let uSilverMine = 'h03C'
 public let usOres =       asList(uCopperMine, uGoldMine, uIronMine, uSilverMine)
-public let usIncomeOres = asList(15         , 50       , 25       , 40         )
+public let usIncomeOres = new HashMap<int, int>()
 
 
 // Which units do players get once they are settled
@@ -229,3 +230,10 @@ public let kRiverRects = asList(
 	gg_rct_SHIP_Thames,
 	gg_rct_SHIP_Upper_Nile
 )
+
+init
+	usOres
+		..set(uCopperMine, 15)
+		..set(uGoldMine, 50)
+		..set(uIronMine, 25)
+		..set(uSilverMine, 40)
