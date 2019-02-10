@@ -70,7 +70,9 @@ function action()
 				else
 					noteToPlayer(source_s + " unallied " + target_s, players[i])
 		
-		case aShareUnits
+		//@TODO fix share!!!!!
+
+		/*case aShareUnits
 			if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_ALLIED_ADVUNITS
 				return
 			player_stats[source_id].setAlliance(target, bj_ALLIANCE_ALLIED_ADVUNITS)
@@ -80,6 +82,10 @@ function action()
 			multiboards[target.getId()] = null
 			multiboards[target.getId()] = createCoEMultiboard()
 			multiboards[target.getId()].display(target, true)
+
+			multiboards[source.getId()] = null
+			multiboards[source.getId()] = createCoEMultiboard()
+			multiboards[source.getId()].display(target, true)
 			//KOSTYL'
 
 

@@ -48,12 +48,12 @@ public let kCityTaxLevelMultipliers = [
 public let kCityTaxLevelPOIncrease = [
 	0.0,
 	20.0,
-	-20.0
+	-30.0
 ]
 public let kCityTaxLevelPODecreasePerThousandPop = [
 	0.05,
 	0.0,
-	0.13
+	0.15
 ]
 
 
@@ -121,7 +121,7 @@ public class City
 
 		//===========================POP COUNT AND MODIFIERS=======================
 		// Fast count (for modifiers)
-		doPeriodically(kCityPopCountRate + GetRandomReal(kCityPopCountRate / 2, kCityPopCountRate)) cbPOP ->
+		doPeriodically(kCityPopCountRate / 2 + GetRandomReal(kCityPopCountRate / 2, kCityPopCountRate)) cbPOP ->
 			population_growth_rate += GetRandomReal(-0.003, 0.005) * population_growth_rate
 			
 			int pop_prev = population
@@ -137,7 +137,7 @@ public class City
 		
 		//@TODO make sure it would not cause much lags (that is, accesing to HashMap)
 
-		doPeriodically(kCityLongCount + GetRandomReal(kCityLongCount / 2, kCityLongCount)) cbLONG ->
+		doPeriodically(kCityLongCount / 2 + GetRandomReal(kCityLongCount / 2, kCityLongCount)) cbLONG ->
 			if getChance(cityModifiers.get(CityModifier.population_boom).chance)
 				addModifier(CityModifier.population_boom)
 			if getChance(cityModifiers.get(CityModifier.more_trade_estabilished).chance)
@@ -218,6 +218,8 @@ public class City
 		let whoCapturesId = whoCaptures.getId()
 		if (whoCapturesId >= 0 and whoCapturesId < 24)
 			whoCapturesForceId = player_stats[whoCapturesId].getForceId()
+		else
+			changeOwner(whoCapturesId)
 
 		if uCastles.has(city_unit.getTypeId())
 			replaceCity(getCastleByFaction(getCastleTier(city_unit.getTypeId()), whoCapturesForceId))
@@ -227,7 +229,7 @@ public class City
 			replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), whoCapturesForceId))
 			UnitAddAbility(city_unit, aTownHallCapitolAura)
 		
-		changeOwner(whoCaptures.getId())
+		changeOwner(whoCapturesId)
 
 	function refreshMultiboardIfPossible()
 		for i = 0 to PLAYER_SLOTS - 1

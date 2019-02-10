@@ -24,8 +24,6 @@ function action()
 	string array args
 	string arg = "" // all args together after args[0]
 	player pl = GetTriggerPlayer()
-	if dbg_msg
-		dbg("A command has been typed = " + input + "; By: " + pl.getNameColored())
 	
 	var j = 0
 	for i = 1 to input.length()
@@ -56,16 +54,24 @@ function action()
 			return
 		if city_id >= 0 and city_id < cityCount
 			switch args[1]
-				case "trade"
+				case "massacred_pop"
+					cities[city_id].addModifier(CityModifier.massacred_pop)
+				case "recently_conquered"
+					cities[city_id].addModifier(CityModifier.recently_conquered)
+				case "recently_revolted"
+					cities[city_id].addModifier(CityModifier.recently_revolted)
+				case "more_trade_estabilished"
 					cities[city_id].addModifier(CityModifier.more_trade_estabilished)
-				case "fire"
+				case "on_fire"
 					cities[city_id].addModifier(CityModifier.on_fire)
-				case "plague"
+				case "plague_outburst"
 					cities[city_id].addModifier(CityModifier.plague_outburst)
-				case "boom"
+				case "population_boom"
 					cities[city_id].addModifier(CityModifier.population_boom)
 				case "prospering"
 					cities[city_id].addModifier(CityModifier.prospering)
+				case "sieged"
+					cities[city_id].addModifier(CityModifier.sieged)
 	else if args[0] == ksDebug
 		dbg_mode = not dbg_mode
 		dbg_msg = not dbg_msg

@@ -2241,7 +2241,7 @@ import ObjEditingNatives
 	..setLvlDataString("aart", 0, 0, "ReplaceableTextures\\CommandButtons\\BTNScrollUber.blp")
 	..setLvlDataString("atp1", 1, 0, "Information Public Order")
 	..setLvlDataString("anam", 0, 0, "Information Public Order")
-	..setLvlDataString("aub1", 1, 0, "|cff51ff00-Stage 1|r:|cffffae00 400|r|n|cffd0ff00-Stage 2|r:|cffffae00 600|r|n|cffffee00-Stage 3|r:|cffffae00 800|r|n|cffffae00-Stage 4|r:|cffffae00 1000|r|n|cffff1e00-Stage 5|r:|cffffae00 1200|r|n|cffff1e00-Stage 6|r:|cffffae00 1400|r|n")
+	..setLvlDataString("aub1", 1, 0, "|cff51ff00-Stage 1|r:|cffffae00 30% - 50%|r|n|cffff9e0d-Stage 2|r:|cffffae00 15% - 30%|r|n|cffff150d-Stage 3|r:|cffffae00 0% - 15%")
 	..setLvlDataString("ansf", 0, 0, "")
 	..setLvlDataString("arac", 0, 0, "other")
 	..setLvlDataInt("achd", 0, 0, 0)
