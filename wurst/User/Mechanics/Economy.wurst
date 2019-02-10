@@ -9,8 +9,9 @@ import ClosureForGroups
 // once per x seconds
 public let kIncomeCountRate = 120.0
 
-// Counted and showd to the multiboard:
-public let kIncomeCountToMultiboardRate = 10.0
+// Counted and show to the multiboard:
+// very laggy
+public let kIncomeCountToMultiboardRate = 30.0
 
 
 int array gold_change
@@ -37,7 +38,7 @@ public function countIncomeForAll()
 					gold_change[pl_id] += usIncomeOres.get(i)
 
 init
-	doPeriodically(kIncomeCountToMultiboardRate / 10) cbUPKEEP_SHOWING ->
+	doPeriodically(kIncomeCountToMultiboardRate / 30) cbUPKEEP_SHOWING ->
 		for i = 0 to PLAYER_SLOTS - 1
 			if player_stats[i].isInGame()
 				multiboards[i]

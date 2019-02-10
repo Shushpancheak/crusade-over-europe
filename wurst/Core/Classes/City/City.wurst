@@ -121,8 +121,8 @@ public class City
 
 		//===========================POP COUNT AND MODIFIERS=======================
 		// Fast count (for modifiers)
-		doPeriodically(kCityPopCountRate) cbPOP ->
-			population_growth_rate += GetRandomReal(-0.003, 0.005) * population_growth_rate
+		doPeriodically(kCityPopCountRate + GetRandomReal(kCityPopCountRate / 10, kCityPopCountRate)) cbPOP ->
+			population_growth_rate += GetRandomReal(-0.0003, 0.0005) * population_growth_rate
 			
 			int pop_prev = population
 			population += (population * population_growth_rate).toInt()
@@ -137,7 +137,7 @@ public class City
 		
 		//@TODO make sure it would not cause much lags (that is, accesing to HashMap)
 
-		doPeriodically(kCityLongCount) cbLONG ->
+		doPeriodically(kCityLongCount + GetRandomReal(kCityLongCount / 10, kCityLongCount)) cbLONG ->
 			if getChance(cityModifiers.get(CityModifier.population_boom).chance)
 				addModifier(CityModifier.population_boom)
 			if getChance(cityModifiers.get(CityModifier.more_trade_estabilished).chance)
@@ -185,7 +185,9 @@ public class City
 	function changeOwner(int pl_id)
 		city_unit.setOwner(players[pl_id], true)
 		player_id = pl_id
-		force_id = player_stats[pl_id].getForceId()
+		// If and only if this is a player!
+		if pl_id >= 0 and pl_id < 24
+			force_id = player_stats[pl_id].getForceId()
 
 		refreshMultiboardIfPossible()
 
@@ -205,21 +207,27 @@ public class City
 		replaceCity(uAutonomousTH)
 
 	function capture(player whoCaptures)
-		changeOwner(whoCaptures.getId())
 		SetUnitLifePercentBJ(city_unit, kCityLifePercentOnceItCaptured)
 		SetUnitManaPercentBJ(city_unit, kCityManaPercentOnceItCapruted)
 
 		addModifier(CityModifier.recently_conquered)
 		if getChance(cityModifiers.get(CityModifier.massacred_pop).chance)
 			addModifier(CityModifier.massacred_pop)
+		
+		var whoCapturesForceId = force_id
+		let whoCapturesId = whoCaptures.getId()
+		if (whoCapturesId >= 0 and whoCapturesId < 24)
+			whoCapturesForceId = player_stats[whoCapturesId].getForceId()
 
 		if uCastles.has(city_unit.getTypeId())
-			replaceCity(getCastleByFaction(getCastleTier(city_unit.getTypeId()), player_stats[whoCaptures.getId()].getForceId()))
+			replaceCity(getCastleByFaction(getCastleTier(city_unit.getTypeId()), whoCapturesForceId))
 			UnitAddAbility(city_unit, aCastleAura)
 
 		if uCapitols.has(city_unit.getTypeId())
-			replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), player_stats[whoCaptures.getId()].getForceId()))
+			replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), whoCapturesForceId))
 			UnitAddAbility(city_unit, aTownHallCapitolAura)
+		
+		changeOwner(whoCaptures.getId())
 
 	function refreshMultiboardIfPossible()
 		for i = 0 to PLAYER_SLOTS - 1
