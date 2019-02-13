@@ -13,7 +13,9 @@ public let kBZ = 3
 public let kForcesSize = 4
 public constant force array forces = [fWE, fEE, fME, fBZ]
 public constant color array forces_colors = [color(62, 194, 255), color(255, 238, 0), color(0, 201, 10), color(219, 0, 201)]
-public string array ksFactionAdjColored = [forces_colors[0].toColorString() + "Western European|r",
-																					 forces_colors[1].toColorString() + "Eastern European|r",
-																					 forces_colors[2].toColorString() + "Middle Eastern|r",
-																					 forces_colors[3].toColorString() + "Byzantine|r"]
+public string array ksFactionAdjColored = [
+  forces_colors[0].toColorString() + "Western European|r",
+  forces_colors[1].toColorString() + "Eastern European|r",
+  forces_colors[2].toColorString() + "Middle Eastern|r",
+  forces_colors[3].toColorString() + "Byzantine|r"
+]

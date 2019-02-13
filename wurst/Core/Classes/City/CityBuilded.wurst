@@ -3,7 +3,7 @@ package CityBuilded
 import Main
 import UnitTools
 
-init 
-	EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_FINISH) ->
-		if GetConstructedStructure().isCity()
-			cities[cityCount] = new City(GetConstructedStructure(), "Castle", player_stats[GetConstructedStructure().getOwner().getId()].getForceId(), 1)
+init
+  EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_FINISH) ->
+    if GetConstructedStructure().isCity()
+      cities[cityCount] = new City(GetConstructedStructure(), "Castle", player_stats[GetConstructedStructure().getOwner().getId()].getForceId(), 1)

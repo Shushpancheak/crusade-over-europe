@@ -84,7 +84,7 @@ public let uUniversityBZ = 'h060'
 
 // AUTO
 public let uAutonomousTH = 'h043'
-// HALLS 
+// HALLS
 public let uTH = 'h031'
 public let uCH = 'h03M'
 
@@ -98,7 +98,7 @@ public let uUniversity = 'h015'
 public let uShipyard = 'h00Y'
 public let uSettlement = 'h00M'
 public let uSettlementAnc1 = 'h06U'
-public let uSettlementAnc2 = 'h042' 
+public let uSettlementAnc2 = 'h042'
 public let uEncampment = 'h01H'
 public let uInn = 'h00X'
 
@@ -118,122 +118,122 @@ public var usIncomeOres = new HashMap<int, int>()
 
 // Which units do players get once they are settled
 // correspondand to force id
-public let kStartingUnits = [ 
-	// WE
-	asList(
-	uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE,
-	uWorkerWE, uWorkerWE, uWorkerWE, uWorkerWE,
-	uGeneralWE,
-	uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE
+public let kStartingUnits = [
+  // WE
+  asList(
+  uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE,
+  uWorkerWE, uWorkerWE, uWorkerWE, uWorkerWE,
+  uGeneralWE,
+  uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE
 ),asList(
-	// EE
-	uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE,
-	uWorkerEE, uWorkerEE, uWorkerEE, uWorkerEE,
-	uGeneralEE,
-	uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE
+  // EE
+  uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE,
+  uWorkerEE, uWorkerEE, uWorkerEE, uWorkerEE,
+  uGeneralEE,
+  uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE
 ),asList(
-	// ME
-	uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME,
-	uWorkerME, uWorkerME, uWorkerME, uWorkerME,
-	uGeneralME,
-	uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME
+  // ME
+  uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME,
+  uWorkerME, uWorkerME, uWorkerME, uWorkerME,
+  uGeneralME,
+  uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME
 ),asList(
-	// BZ
-	uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ,
-	uWorkerBZ, uWorkerBZ, uWorkerBZ, uWorkerBZ,
-	uGeneralBZ,
-	uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ
+  // BZ
+  uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ,
+  uWorkerBZ, uWorkerBZ, uWorkerBZ, uWorkerBZ,
+  uGeneralBZ,
+  uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ
 )]
 
 public let uPlebs = asList(
-	uPeasantBZ,
-	uPeasantEE,
-	uPeasantME,
-	uPeasantWE,
+  uPeasantBZ,
+  uPeasantEE,
+  uPeasantME,
+  uPeasantWE,
 
-	uWorkerBZ,
-	uWorkerEE,
-	uWorkerME,
-	uWorkerWE
+  uWorkerBZ,
+  uWorkerEE,
+  uWorkerME,
+  uWorkerWE
 )
 
 public let uCapitols = asList(
-	uCapitolWE1,
-	uCapitolWE2,
-	uCapitolWE3,
-	uCapitolEE1,
-	uCapitolEE2,
-	uCapitolEE3,
-	uCapitolME1,
-	uCapitolME2,
-	uCapitolME3,
-	uCapitolBZ1,
-	uCapitolBZ2,
-	uCapitolBZ3
+  uCapitolWE1,
+  uCapitolWE2,
+  uCapitolWE3,
+  uCapitolEE1,
+  uCapitolEE2,
+  uCapitolEE3,
+  uCapitolME1,
+  uCapitolME2,
+  uCapitolME3,
+  uCapitolBZ1,
+  uCapitolBZ2,
+  uCapitolBZ3
 )
 
 public let uCastles = asList(
-	uCastleWE1,
-	uCastleWE2,
-	uCastleWE3,
-	uCastleEE1,
-	uCastleEE2,
-	uCastleEE3,
-	uCastleME1,
-	uCastleME2,
-	uCastleME3,
-	uCastleBZ1,
-	uCastleBZ2,
-	uCastleBZ3
+  uCastleWE1,
+  uCastleWE2,
+  uCastleWE3,
+  uCastleEE1,
+  uCastleEE2,
+  uCastleEE3,
+  uCastleME1,
+  uCastleME2,
+  uCastleME3,
+  uCastleBZ1,
+  uCastleBZ2,
+  uCastleBZ3
 )
 
 public let kCityTypes =   asList(
-	uCapitolWE1, uCapitolWE2, uCapitolWE3, 
-	uCapitolEE1, uCapitolEE2, uCapitolEE3,
-	uCapitolME1, uCapitolME2, uCapitolME3,
-	uCapitolBZ1, uCapitolBZ2, uCapitolBZ3,
-	uAutonomousTH, uTH, uCH,
-	uCastleWE1, uCastleWE2, uCastleWE3,
-	uCastleEE1, uCastleEE2, uCastleEE3, 
-	uCastleME1, uCastleME2, uCastleME3,
-	uCastleBZ1, uCastleBZ2, uCastleBZ3, 
-	uDummyCH, uDummyCH2Castle, uDummyTH
+  uCapitolWE1, uCapitolWE2, uCapitolWE3,
+  uCapitolEE1, uCapitolEE2, uCapitolEE3,
+  uCapitolME1, uCapitolME2, uCapitolME3,
+  uCapitolBZ1, uCapitolBZ2, uCapitolBZ3,
+  uAutonomousTH, uTH, uCH,
+  uCastleWE1, uCastleWE2, uCastleWE3,
+  uCastleEE1, uCastleEE2, uCastleEE3,
+  uCastleME1, uCastleME2, uCastleME3,
+  uCastleBZ1, uCastleBZ2, uCastleBZ3,
+  uDummyCH, uDummyCH2Castle, uDummyTH
 )
 
 public let uRebels = [
-	asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading),
-	asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading),
-	asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelRam, uRebelRam)
+  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading),
+  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading),
+  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelRam, uRebelRam)
 ]
 
 public let kRiverRects = asList(
-	gg_rct_SHIP_Ankara_Lake,
-	gg_rct_SHIP_Caspian_Sea_and_Mesapotamia,
-	gg_rct_SHIP_Danube_1,
-	gg_rct_SHIP_Danube_2,
-	gg_rct_SHIP_French_River,
-	gg_rct_SHIP_Italy,
-	gg_rct_SHIP_Lake_Africa,
-	gg_rct_SHIP_Lake_Egypt,
-	gg_rct_SHIP_Lower_Nile,
-	gg_rct_SHIP_Mesapotamia,
-	gg_rct_SHIP_Nile_2,
-	gg_rct_SHIP_Region_Giant,
-	gg_rct_SHIP_River,
-	gg_rct_SHIP_River_GIANT,
-	gg_rct_SHIP_Seine_River,
-	gg_rct_SHIP_Spannish_River,
-	gg_rct_SHIP_Spannish_River_2,
-	gg_rct_SHIP_Spannish_River_3,
-	gg_rct_SHIP_Spannish_River_4,
-	gg_rct_SHIP_Swedish_Lake,
-	gg_rct_SHIP_Thames,
-	gg_rct_SHIP_Upper_Nile
+  gg_rct_SHIP_Ankara_Lake,
+  gg_rct_SHIP_Caspian_Sea_and_Mesapotamia,
+  gg_rct_SHIP_Danube_1,
+  gg_rct_SHIP_Danube_2,
+  gg_rct_SHIP_French_River,
+  gg_rct_SHIP_Italy,
+  gg_rct_SHIP_Lake_Africa,
+  gg_rct_SHIP_Lake_Egypt,
+  gg_rct_SHIP_Lower_Nile,
+  gg_rct_SHIP_Mesapotamia,
+  gg_rct_SHIP_Nile_2,
+  gg_rct_SHIP_Region_Giant,
+  gg_rct_SHIP_River,
+  gg_rct_SHIP_River_GIANT,
+  gg_rct_SHIP_Seine_River,
+  gg_rct_SHIP_Spannish_River,
+  gg_rct_SHIP_Spannish_River_2,
+  gg_rct_SHIP_Spannish_River_3,
+  gg_rct_SHIP_Spannish_River_4,
+  gg_rct_SHIP_Swedish_Lake,
+  gg_rct_SHIP_Thames,
+  gg_rct_SHIP_Upper_Nile
 )
 
 init
-	usIncomeOres
-		..put(uCopperMine, 15)
-		..put(uGoldMine, 50)
-		..put(uIronMine, 25)
-		..put(uSilverMine, 40)
+  usIncomeOres
+    ..put(uCopperMine, 15)
+    ..put(uGoldMine, 50)
+    ..put(uIronMine, 25)
+    ..put(uSilverMine, 40)

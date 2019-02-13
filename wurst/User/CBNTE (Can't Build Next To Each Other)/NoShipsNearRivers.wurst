@@ -4,14 +4,13 @@ import Main
 let kLumberCost = 150
 
 init
-	EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->
-		let u = GetTriggerUnit()
-		if u.getTypeId() == uShipyard
-			let upos = u.getPos()
-			for r in kRiverRects
-				if r.contains(upos)
-					// cancel construction id	
-					doAfter(0.01) ->
-						IssueImmediateOrderById(u, 851976)
-					attentionToPlayer(ksShipyardNearRiver, u.getOwner())
-					
+  EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->
+    let u = GetTriggerUnit()
+    if u.getTypeId() == uShipyard
+      let upos = u.getPos()
+      for r in kRiverRects
+        if r.contains(upos)
+          // cancel construction id
+          doAfter(0.01) ->
+            IssueImmediateOrderById(u, 851976)
+          attentionToPlayer(ksShipyardNearRiver, u.getOwner())

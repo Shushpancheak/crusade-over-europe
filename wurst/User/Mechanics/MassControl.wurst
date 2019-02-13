@@ -6,39 +6,39 @@ import ClosureForGroups
 
 let units_of_general = new HashMap<unit, LinkedList<unit>>()
 let kMassControlRanges = asList(
-	500.0,
-	700.0,
-	1000.0
+  500.0,
+  700.0,
+  1000.0
 )
 
 let uGenerals = asList(
-	uGeneralWE,
-	uGeneralEE,
-	uGeneralME,
-	uGeneralBZ
+  uGeneralWE,
+  uGeneralEE,
+  uGeneralME,
+  uGeneralBZ
 )
 
 init
-	EventListener.add(EVENT_PLAYER_UNIT_SPELL_CAST) ->
-		if GetSpellAbilityId() == aMassCommand
-			var g = new LinkedList<unit>()
-			let caster = GetSpellAbilityUnit()
-			let caster_owner = caster.getOwner()
-			forUnitsInRange(getSpellTargetPos(), kMassControlRanges.get(GetLearnedSkillLevel())) u ->
-				if u.getOwner() == caster_owner and not uPlebs.has(u.getTypeId()) and u != caster and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
-					g.add(u)
-			units_of_general.put(caster, g)
+  EventListener.add(EVENT_PLAYER_UNIT_SPELL_CAST) ->
+    if GetSpellAbilityId() == aMassCommand
+      var g = new LinkedList<unit>()
+      let caster = GetSpellAbilityUnit()
+      let caster_owner = caster.getOwner()
+      forUnitsInRange(getSpellTargetPos(), kMassControlRanges.get(GetLearnedSkillLevel())) u ->
+        if u.getOwner() == caster_owner and not uPlebs.has(u.getTypeId()) and u != caster and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
+          g.add(u)
+      units_of_general.put(caster, g)
 
-	EventListener.add(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER) ->
-		if uGenerals.has(GetOrderedUnit().getTypeId())
-			if units_of_general.has(GetOrderedUnit())
-				dbg(units_of_general.get(GetOrderedUnit()).size().toString())
-				let g = units_of_general.get(GetOrderedUnit())
-				let order = GetIssuedOrderId()
-				let pos = getOrderPos()
-				for u in g
-					doAfter(0.01) ->
-						u.issuePointOrderById(order, pos)
-					dbg(" issued = " + u.getName())
+  EventListener.add(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER) ->
+    if uGenerals.has(GetOrderedUnit().getTypeId())
+      if units_of_general.has(GetOrderedUnit())
+        dbg(units_of_general.get(GetOrderedUnit()).size().toString())
+        let g = units_of_general.get(GetOrderedUnit())
+        let order = GetIssuedOrderId()
+        let pos = getOrderPos()
+        for u in g
+          doAfter(0.01) ->
+            u.issuePointOrderById(order, pos)
+          dbg(" issued = " + u.getName())
 
-				units_of_general.remove(GetOrderedUnit())
+        units_of_general.remove(GetOrderedUnit())

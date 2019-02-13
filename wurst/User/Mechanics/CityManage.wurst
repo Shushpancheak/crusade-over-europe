@@ -3,45 +3,45 @@ import Main
 import UnitTools
 
 init
-	if (dbg_mode) 
-		CreateNUnitsAtLoc(5, uSettlerReadyToSettle, players[dbg_player], Location(-3000.0, 1700.0), 0)
-	//------------------------------CLICK----------------------------------------
-	EventListener.add(EVENT_PLAYER_UNIT_SELECTED) ->
-		if GetTriggerUnit().isCity()
-			player_stats[GetTriggerPlayer().getId()].setSelectedCityId(getCityId(GetTriggerUnit()))
+  if (dbg_mode)
+    CreateNUnitsAtLoc(5, uSettlerReadyToSettle, players[dbg_player], Location(-3000.0, 1700.0), 0)
+  //------------------------------CLICK----------------------------------------
+  EventListener.add(EVENT_PLAYER_UNIT_SELECTED) ->
+    if GetTriggerUnit().isCity()
+      player_stats[GetTriggerPlayer().getId()].setSelectedCityId(getCityId(GetTriggerUnit()))
 
-	//--------------------------------SETTLE-------------------------------------
-	CreateTrigger()
-		..addCondition(Condition(() -> GetSpellAbilityUnit().getTypeId() == uSettlerReadyToSettle and GetSpellTargetUnit().getTypeId() == uTH and GetSpellTargetUnit().getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE))
-		..addAction(() -> begin
-			// Adding player who is settling to the force that city is in
-			let city_id = getCityId(GetSpellTargetUnit())
-			let force_id = cities[city_id].getCityForceId()
-			let player_id = GetSpellAbilityUnit().getOwner().getId()
-			player_stats[player_id].changeForce(force_id)	
+  //--------------------------------SETTLE-------------------------------------
+  CreateTrigger()
+    ..addCondition(Condition(() -> GetSpellAbilityUnit().getTypeId() == uSettlerReadyToSettle and GetSpellTargetUnit().getTypeId() == uTH and GetSpellTargetUnit().getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE))
+    ..addAction(() -> begin
+      // Adding player who is settling to the force that city is in
+      let city_id = getCityId(GetSpellTargetUnit())
+      let force_id = cities[city_id].getCityForceId()
+      let player_id = GetSpellAbilityUnit().getOwner().getId()
+      player_stats[player_id].changeForce(force_id)
 
-			// Spawning starting units
-			for u in kStartingUnits[force_id]
-				CreateNUnitsAtLoc(1, u, players[player_id], GetSpellTargetLoc(), 0)
+      // Spawning starting units
+      for u in kStartingUnits[force_id]
+        CreateNUnitsAtLoc(1, u, players[player_id], GetSpellTargetLoc(), 0)
 
-			cities[city_id].settleCity(player_id)
-			KillUnit(GetSpellAbilityUnit())
-		end)
-		..registerAnyUnitEvent(EVENT_PLAYER_UNIT_SPELL_CAST)
-	
-	//-------------------------------CONQUER-------------------------------------
-	EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
-		unit u = GetAttackedUnitBJ()
-		
-		if u.isCity()
-			if u.getLifePercent() <= kCityLifePercentToCapture and u.getOwner() != GetAttacker().getOwner()
-				if (u.getPos() - GetAttacker().getPos()).length() > 300.0
-					u.setLifePercent(kCityLifePercentToCapture)
-				else
-					let city_id = u.getCityId()
-					cities[city_id].capture(GetAttacker().getOwner())
-					let u_id = u.getTypeId()
-					if uCapitols.has(u_id)
-						attentionToForce(GetAttacker().getOwner().getNameColored() + " has just captured " + GetAttackedUnitBJ().getOwner().getNameColored() + " Capitol!", GetPlayersAll())
-			else if u.getLifePercent() <= kCityLifePercentToCapture 
-				u.setLifePercent(kCityLifePercentToCapture)
+      cities[city_id].settleCity(player_id)
+      KillUnit(GetSpellAbilityUnit())
+    end)
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_SPELL_CAST)
+
+  //-------------------------------CONQUER-------------------------------------
+  EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
+    unit u = GetAttackedUnitBJ()
+
+    if u.isCity()
+      if u.getLifePercent() <= kCityLifePercentToCapture and u.getOwner() != GetAttacker().getOwner()
+        if (u.getPos() - GetAttacker().getPos()).length() > 300.0
+          u.setLifePercent(kCityLifePercentToCapture)
+        else
+          let city_id = u.getCityId()
+          cities[city_id].capture(GetAttacker().getOwner())
+          let u_id = u.getTypeId()
+          if uCapitols.has(u_id)
+            attentionToForce(GetAttacker().getOwner().getNameColored() + " has just captured " + GetAttackedUnitBJ().getOwner().getNameColored() + " Capitol!", GetPlayersAll())
+      else if u.getLifePercent() <= kCityLifePercentToCapture
+        u.setLifePercent(kCityLifePercentToCapture)

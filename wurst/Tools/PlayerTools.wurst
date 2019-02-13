@@ -1,15 +1,15 @@
 package PlayerTools
 
 public function addGold(int pl_id, int g)
-	let cur_gold = GetPlayerState(players[pl_id], PLAYER_STATE_RESOURCE_GOLD)
-	SetPlayerState(players[pl_id], PLAYER_STATE_RESOURCE_GOLD, cur_gold + g)
+  let cur_gold = GetPlayerState(players[pl_id], PLAYER_STATE_RESOURCE_GOLD)
+  SetPlayerState(players[pl_id], PLAYER_STATE_RESOURCE_GOLD, cur_gold + g)
 public function addLumber(int pl_id, int g)
-	let cur_lumb = GetPlayerState(players[pl_id], PLAYER_STATE_RESOURCE_LUMBER)
-	SetPlayerState(players[pl_id], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + g)
+  let cur_lumb = GetPlayerState(players[pl_id], PLAYER_STATE_RESOURCE_LUMBER)
+  SetPlayerState(players[pl_id], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + g)
 
 public function addGold(player pl, int g)
-	let cur_gold = GetPlayerState(pl, PLAYER_STATE_RESOURCE_GOLD)
-	SetPlayerState(pl, PLAYER_STATE_RESOURCE_GOLD, cur_gold + g)
+  let cur_gold = GetPlayerState(pl, PLAYER_STATE_RESOURCE_GOLD)
+  SetPlayerState(pl, PLAYER_STATE_RESOURCE_GOLD, cur_gold + g)
 public function addLumber(player pl, int g)
-	let cur_lumb = GetPlayerState(pl, PLAYER_STATE_RESOURCE_LUMBER)
-	SetPlayerState(pl, PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + g)
+  let cur_lumb = GetPlayerState(pl, PLAYER_STATE_RESOURCE_LUMBER)
+  SetPlayerState(pl, PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + g)

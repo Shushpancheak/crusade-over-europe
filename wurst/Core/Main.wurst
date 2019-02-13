@@ -29,20 +29,19 @@ public let kStartLumber = 250
 
 public let TURN_TIME = 120.0
 
-// - - - - - - - - - - - - - - - GLOBAL TIMER - - - - - - - - - - - - - - - - - 
+// - - - - - - - - - - - - - - - GLOBAL TIMER - - - - - - - - - - - - - - - - -
 timer global_timer = CreateTimer()
 real elapsed_time
 
 public function enableDebugForPlayer(player pl)
-	SetPlayerState(pl, PLAYER_STATE_RESOURCE_GOLD, 99999999)
-	SetPlayerState(pl, PLAYER_STATE_RESOURCE_LUMBER, 99999999)
-	CreateFogModifierRadiusLocBJ(true, pl, FOG_OF_WAR_VISIBLE, GetRectCenter(GetPlayableMapRect()), 999999.00)
+  SetPlayerState(pl, PLAYER_STATE_RESOURCE_GOLD, 99999999)
+  SetPlayerState(pl, PLAYER_STATE_RESOURCE_LUMBER, 99999999)
+  CreateFogModifierRadiusLocBJ(true, pl, FOG_OF_WAR_VISIBLE, GetRectCenter(GetPlayableMapRect()), 999999.00)
 
 public function getElapsedTime() returns real
-	return elapsed_time
+  return elapsed_time
 
 init
 
-	global_timer.startPeriodic(0.01) ->
-		elapsed_time += 0.01
-				
+  global_timer.startPeriodic(0.01) ->
+    elapsed_time += 0.01

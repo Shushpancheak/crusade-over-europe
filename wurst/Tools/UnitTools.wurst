@@ -2,16 +2,16 @@ package UnitTools
 import Main
 
 public function unit.isCity() returns bool
-	return isCity(this)
+  return isCity(this)
 public function unit.getLifePercent() returns real
-	return GetUnitLifePercent(this)
+  return GetUnitLifePercent(this)
 public function unit.getCityId() returns int
-	return getCityId(this)
+  return getCityId(this)
 
 public function unit.setLifePercent(real p)
-	SetUnitLifePercentBJ(this, p)
+  SetUnitLifePercentBJ(this, p)
 public function unit.setManaPercent(real p)
-	SetUnitManaPercentBJ(this, p)
+  SetUnitManaPercentBJ(this, p)
 
 public function unit.isVisibleForPlayer(player pl) returns bool
-	return not IsUnitFogged(this, pl)
+  return not IsUnitFogged(this, pl)

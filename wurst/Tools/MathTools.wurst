@@ -4,25 +4,25 @@ public let e = EULER
 public let INF_REAL = REAL_MAX
 
 public function exp(real x) returns real
-	return Pow(e, x)
+  return Pow(e, x)
 public function sign(real x) returns real
-	if x > 0
-		return 1
-	else if x < 0
-		return -1
-	else
-		return 0
+  if x > 0
+    return 1
+  else if x < 0
+    return -1
+  else
+    return 0
 
 
 /** checks if a random real within range [0; 1] is less than or equal the given number */
 public function getChance(real ch) returns bool
-	return GetRandomReal(0.0, 1.0) <= ch
+  return GetRandomReal(0.0, 1.0) <= ch
 
 /** Gaussian Distribution. Left and right - boundaries, whithin which picks random x */
 public function getRandomValWithNormalDistribution(real lower, real upper, real left, real right, real sigmasqr) returns real
-	let med = (lower + upper) / 2
-	let max_add = (upper - lower) / 2
-	// will be in range (0; 1]
-	let x = GetRandomReal(left, right)
-	let mul = sign(x) * exp(-Pow(x, 2) / 2 * sigmasqr) / (SquareRoot(2 * PI * sigmasqr))
-	return med + mul * max_add
+  let med = (lower + upper) / 2
+  let max_add = (upper - lower) / 2
+  // will be in range (0; 1]
+  let x = GetRandomReal(left, right)
+  let mul = sign(x) * exp(-Pow(x, 2) / 2 * sigmasqr) / (SquareRoot(2 * PI * sigmasqr))
+  return med + mul * max_add

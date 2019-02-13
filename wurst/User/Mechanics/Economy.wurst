@@ -20,49 +20,49 @@ var income_counting_i = 0
 
 
 public function countIncomeForAll()
-	for i = 0 to PLAYER_SLOTS - 1
-		gold_change[i] = 0
-		lumb_change[i] = 0
+  for i = 0 to PLAYER_SLOTS - 1
+    gold_change[i] = 0
+    lumb_change[i] = 0
 
-	let number_of_cities_per_step = (cityCount * kStepTime / kIncomeCountToMultiboardRate).toInt() + 1
-	for i = 0 to (kIncomeCountToMultiboardRate / kStepTime).toInt() - 1
-		doAfter(i * kStepTime) ->
-			for j = i * number_of_cities_per_step to min(cityCount - 1, (i + 1) * number_of_cities_per_step - 1)
-				int pl_id = cities[j].getCityUnit().getOwner().getId()
-				if cities[j].getCityUnit().getOwner().isIngame()
-					gold_change[pl_id] += cities[j].countTax()
-		if min(cityCount - 1, (i + 1) * number_of_cities_per_step - 1) == cityCount - 1
-			break
+  let number_of_cities_per_step = (cityCount * kStepTime / kIncomeCountToMultiboardRate).toInt() + 1
+  for i = 0 to (kIncomeCountToMultiboardRate / kStepTime).toInt() - 1
+    doAfter(i * kStepTime) ->
+      for j = i * number_of_cities_per_step to min(cityCount - 1, (i + 1) * number_of_cities_per_step - 1)
+        int pl_id = cities[j].getCityUnit().getOwner().getId()
+        if cities[j].getCityUnit().getOwner().isIngame()
+          gold_change[pl_id] += cities[j].countTax()
+    if min(cityCount - 1, (i + 1) * number_of_cities_per_step - 1) == cityCount - 1
+      break
 
-	// Searching for ores
-	forUnitsAll() u ->
-		if usOres.has(u.getTypeId()) and players[u.getOwner().getId()].isIngame()
-			gold_change[u.getOwner().getId()] += usIncomeOres.get(u.getTypeId())
+  // Searching for ores
+  forUnitsAll() u ->
+    if usOres.has(u.getTypeId()) and players[u.getOwner().getId()].isIngame()
+      gold_change[u.getOwner().getId()] += usIncomeOres.get(u.getTypeId())
 
 init
-	doPeriodically(kIncomeCountToMultiboardRate / 30) cbUPKEEP_SHOWING ->
-		for i = 0 to PLAYER_SLOTS - 1
-			if player_stats[i].isInGame()
-				multiboards[i]
-					..setItem(kMBUpkeep[0], kMBUpkeep[1], getStringColoredBasedOnSign(player_stats[i].getUpkeep()))
+  doPeriodically(kIncomeCountToMultiboardRate / 30) cbUPKEEP_SHOWING ->
+    for i = 0 to PLAYER_SLOTS - 1
+      if player_stats[i].isInGame()
+        multiboards[i]
+          ..setItem(kMBUpkeep[0], kMBUpkeep[1], getStringColoredBasedOnSign(player_stats[i].getUpkeep()))
 
 
-	doPeriodically(kIncomeCountToMultiboardRate) cbINCOME_MULTIBOARD ->
-		income_counting_i++
-		for i = 0 to PLAYER_SLOTS - 1
-			if player_stats[i].isInGame()
-				multiboards[i]
-					..setItem(kMBIncome[0], kMBIncome[1], getStringColoredBasedOnSign(gold_change[i]))
-					..setItem(kMBUpkeep[0], kMBUpkeep[1], getStringColoredBasedOnSign(player_stats[i].getUpkeep()))
-		
-		if income_counting_i == (kIncomeCountRate / kIncomeCountToMultiboardRate).toInt()
-			income_counting_i = 0
-			for i = 0 to PLAYER_SLOTS - 1
-				if player_stats[i].isInGame()
-					let cur_gold = GetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD)
-					let cur_lumb = GetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER)
-					SetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD, cur_gold + gold_change[i] + player_stats[i].getUpkeep())
-					SetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + lumb_change[i])
+  doPeriodically(kIncomeCountToMultiboardRate) cbINCOME_MULTIBOARD ->
+    income_counting_i++
+    for i = 0 to PLAYER_SLOTS - 1
+      if player_stats[i].isInGame()
+        multiboards[i]
+          ..setItem(kMBIncome[0], kMBIncome[1], getStringColoredBasedOnSign(gold_change[i]))
+          ..setItem(kMBUpkeep[0], kMBUpkeep[1], getStringColoredBasedOnSign(player_stats[i].getUpkeep()))
+
+    if income_counting_i == (kIncomeCountRate / kIncomeCountToMultiboardRate).toInt()
+      income_counting_i = 0
+      for i = 0 to PLAYER_SLOTS - 1
+        if player_stats[i].isInGame()
+          let cur_gold = GetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD)
+          let cur_lumb = GetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER)
+          SetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD, cur_gold + gold_change[i] + player_stats[i].getUpkeep())
+          SetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + lumb_change[i])
 
 
-		countIncomeForAll()
+    countIncomeForAll()

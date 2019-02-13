@@ -3,29 +3,29 @@ package PublicOrderAddByUnits
 import Units
 
 public function getPublicOrderAddByUnit(int id) returns real
-	switch id
-		case uChurchWE
-			return 10.0
-		case uChurchBZ
-			return 10.0
-		case uChurchEE
-			return 10.0
-		case uMosque
-			return 10.0
+  switch id
+    case uChurchWE
+      return 10.0
+    case uChurchBZ
+      return 10.0
+    case uChurchEE
+      return 10.0
+    case uMosque
+      return 10.0
 
-		case uInn
-			return 5.0
-		case uInnEE
-			return 5.0
+    case uInn
+      return 5.0
+    case uInnEE
+      return 5.0
 
-		case uUniversityWE
-			return 15.0
-		case uUniversityEE
-			return 15.0
-		case uUniversityBZ
-			return 15.0
-		case uUniversityME
-			return 15.0
-		
-		default
-			return 0.0
+    case uUniversityWE
+      return 15.0
+    case uUniversityEE
+      return 15.0
+    case uUniversityBZ
+      return 15.0
+    case uUniversityME
+      return 15.0
+
+    default
+      return 0.0

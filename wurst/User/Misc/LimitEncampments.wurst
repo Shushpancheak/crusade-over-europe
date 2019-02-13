@@ -5,17 +5,16 @@ import Main
 int array encampments
 
 init
-	EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
-		let u =  GetConstructingStructure()
-		if u.getTypeId() == uEncampment
-			encampments[u.getOwner().getId()]--
-	EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->
-		let u = GetConstructingStructure()
-		if u.getTypeId() == uEncampment
-			if encampments[u.getOwner().getId()] < 3
-				encampments[u.getOwner().getId()]++
-			else
-				attentionToPlayer(ksTooManyEncampments, u.getOwner())
-				doAfter(0.01) ->
-					IssueImmediateOrderById(u, 851976)
-				
+  EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
+    let u =  GetConstructingStructure()
+    if u.getTypeId() == uEncampment
+      encampments[u.getOwner().getId()]--
+  EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->
+    let u = GetConstructingStructure()
+    if u.getTypeId() == uEncampment
+      if encampments[u.getOwner().getId()] < 3
+        encampments[u.getOwner().getId()]++
+      else
+        attentionToPlayer(ksTooManyEncampments, u.getOwner())
+        doAfter(0.01) ->
+          IssueImmediateOrderById(u, 851976)
