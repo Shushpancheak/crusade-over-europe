@@ -19,7 +19,6 @@ public function checkForRevolt(int city_id)
   let city_u = cities[city_id].getCityUnit()
   if not city_u.getOwner().isIngame()
     return
-  if uCastles.has(cities[city_id].getCityUnit().getTypeId())
   if po < kPOtoRevolt1
     last_time_city_revolted[city_id] = getElapsedTime()
     cities[city_id].addModifier(CityModifier.recently_revolted)

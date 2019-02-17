@@ -113,10 +113,6 @@ public class City
     population = getRandomValWithNormalDistribution(kCityPopInit[tier].get(0).toReal(), kCityPopInit[tier].get(1).toReal(), -5.0, 5.0, 0.15).toInt()
     public_order_add = 0
 
-    if uCastles.has(city_unit.getTypeId())
-      population = (population * 0.1).toInt() + 100
-      population_growth_rate *= 2
-
     //===========================POP COUNT AND MODIFIERS=======================
     // Fast count (for modifiers)
     doPeriodically(kCityPopCountRate / 2 + GetRandomReal(kCityPopCountRate / 2, kCityPopCountRate)) cbPOP ->
@@ -219,10 +215,6 @@ public class City
     else
       changeOwner(whoCapturesId)
 
-    if uCastles.has(city_unit.getTypeId())
-      replaceCity(getCastleByFaction(getCastleTier(city_unit.getTypeId()), whoCapturesForceId))
-      UnitAddAbility(city_unit, aCastleAura)
-
     if uCapitols.has(city_unit.getTypeId())
       replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), whoCapturesForceId))
       UnitAddAbility(city_unit, aTownHallCapitolAura)
@@ -276,9 +268,6 @@ public class City
 
 
     tax = (tax * tax_multiplier * kCityTaxLevelMultipliers[tax_level]).toInt()
-
-    if uCastles.has(city_unit.getTypeId())
-      tax = (tax * 0.4).toInt()
 
     return tax
 
