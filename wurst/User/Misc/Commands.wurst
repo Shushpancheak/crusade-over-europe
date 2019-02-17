@@ -7,6 +7,8 @@ import VoteKick
 public let kFarDistance = 3000.0
 public let kMedDistance = 2300.0
 
+public let kNameLimit = 40
+
 // String constants.
 public let ksFar = "far"
 public let ksMed = "med"
@@ -42,7 +44,7 @@ function action()
   else if args[0] == ksMed
     SetCameraFieldForPlayer(GetTriggerPlayer(), CAMERA_FIELD_TARGET_DISTANCE, kMedDistance, 0)
   else if (args[0] == ksName)
-    SetPlayerName(GetTriggerPlayer(), arg)
+    SetPlayerName(GetTriggerPlayer(), arg.substring(0, kNameLimit))
   else if args[0] == ksRenameCity
     int city_id = player_stats[pl.getId()].getSelectedCityId()
     if city_id >= 0 and city_id < cityCount
