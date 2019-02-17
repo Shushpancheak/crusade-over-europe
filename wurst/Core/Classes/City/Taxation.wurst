@@ -15,4 +15,6 @@ init
               lvl = 0
             case aHighTax
               lvl = 2
+            case aHarshTax
+              lvl = 3
           cities[getCityId(GetSpellTargetUnit())].changeTaxLevel(lvl)

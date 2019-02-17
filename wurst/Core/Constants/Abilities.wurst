@@ -12,6 +12,7 @@ public let aSubjugate = 'A030'
 public let aLowTax = 'A02J'
 public let aMedTax = 'A02I'
 public let aHighTax = 'A02H'
+public let aHarshTax = 'A04K'
 
 public let aTaxes = asList(aLowTax, aMedTax, aHighTax)
 

@@ -9,7 +9,7 @@ init
     unit u = GetAttackedUnitBJ()
 
     if uCastles.has(u.getTypeId())
-      if u.getLifePercent() <= kCityLifePercentToCapture and u.getOwner() != GetAttacker().getOwner() and (u.getPos() - GetAttacker().getPos()).length() > 300.0
+      if u.getLifePercent() <= kCityLifePercentToCapture and u.getOwner() != GetAttacker().getOwner() and (u.getPos() - GetAttacker().getPos()).length() <= 300.0
         let pl_attacker = GetAttacker().getOwner()
         u.setOwner(pl_attacker, true)
 

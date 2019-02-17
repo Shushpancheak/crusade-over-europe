@@ -39,23 +39,31 @@ let kCityPopInit = [
   asList(120000, 160000),
   asList(180000, 220000)
 ]
-// Med, Low, High
+// Med, Low, High, Harsh
 public let kCityTaxLevelMultipliers = [
   1.0,
   0.5,
-  1.6
+  1.6,
+  2.0
 ]
 public let kCityTaxLevelPOIncrease = [
   0.0,
   20.0,
-  -30.0
+  -25.0,
+  -50.0
 ]
 public let kCityTaxLevelPODecreasePerThousandPop = [
   0.05,
   0.0,
-  0.15
+  0.15,
+  0.30
 ]
-
+public let kCityTaxLevelPopModifier = [
+  1.0,
+  1.1,
+  0.85,
+  0.7
+]
 
 
 ///////////////////////////////////CITY CLASS//////////////////////////////////
@@ -119,7 +127,7 @@ public class City
       population_growth_rate += GetRandomReal(-0.0001, 0.00015) * population_growth_rate
 
       int pop_prev = population
-      population += (Pow(population * population_growth_rate, 0.8)).toInt()
+      population += (Pow(population * population_growth_rate, 0.8) * kCityTaxLevelPopModifier[tax_level]).toInt()
       int pop_growth = population - pop_prev
       int deviation = GetRandomInt((-0.25 * pop_growth).toInt(), (0.25 * pop_growth).toInt())
       population += deviation
@@ -181,7 +189,7 @@ public class City
       city_unit.setOwner(Player(pl_id), true)
 
       // Rebels would set tax to med.
-      tax_level = 0
+      changeTaxLevelFORCED(0)
     else
       city_unit.setOwner(players[pl_id], true)
 
@@ -247,6 +255,12 @@ public class City
       tax_level = lvl
     else
       noteToPlayer(ksCannotChangeTaxLevel, players[player_id])
+
+  private function changeTaxLevelFORCED(int lvl)
+    public_order_add -= kCityTaxLevelPOIncrease[tax_level]
+    public_order_add += kCityTaxLevelPOIncrease[lvl]
+
+    tax_level = lvl
 
   function countTax() returns int
     var tax = 0
