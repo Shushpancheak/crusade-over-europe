@@ -32,14 +32,14 @@ public constant string array ksCT = [
 
 // - - - - - - - - - - - - - - - - FUNCTIONS - - - - - - - - - - - - - - - - -
 
-function CountActivePlayers() returns int
+function countActivePlayers() returns int
   var c = 0
   for i = 0 to PLAYER_SLOTS - 1
     if players[i].isIngame()
       c++
   return c
 
-function SetPlayersAtStart()
+function setPlayersAtStart()
   var pl_left = PLAYER_SLOTS
   var pl_in_ring = kSpawnPlayersInFirstRing
   var rad = kSpawnFirstRingRadius
@@ -61,17 +61,17 @@ function SetPlayersAtStart()
     pl_in_ring = min(pl_left, pl_in_ring)
 
 bool array voted
-var pl_number = CountActivePlayers()
+var pl_number = countActivePlayers()
 var pl_esc = 0
 bool skip_tutorial = false
 
-function CinematicTutorial()
+function cinematicTutorial()
   if dbg_mode
     return
 
   EventListener.add(EVENT_PLAYER_END_CINEMATIC) ->
     if not voted[GetTriggerPlayer().getId()] and not skip_tutorial
-      pl_number = CountActivePlayers()
+      pl_number = countActivePlayers()
       voted[GetTriggerPlayer().getId()] = true
       pl_esc++
       textToAll("|cffff0000" + pl_esc.toString() + "|r out of |cffff0000" + ((pl_number + 1) / 2).toInt().toString() + "|r voted to skip the tutorial!", 5.0)
@@ -88,17 +88,6 @@ function CinematicTutorial()
   CinematicModeBJ(false, GetPlayersAll())
   skip_tutorial = true
 
-// -----------------------SETTING CITIES----------------------------------------
-// Better to have it before everything related to unit placing, since it could
-// screw it up.
-
-function SetDiploEconomyRangeMax()
-  let g = GetUnitsInRectAll(GetPlayableMapRect())
-
-  for u in g
-    if u.getTypeId() == uDiplomacy or u.getTypeId() == uEconomy
-      SetUnitAcquireRangeBJ(u, INF_REAL)
-
 //----------------------------INIT----------------------------------------------
 init
   if (dbg_msg)
@@ -106,10 +95,7 @@ init
   if (dbg_mode)
     print("Debug mode is on.")
 
-
-
-  SetupCities()
-  SetDiploEconomyRangeMax()
+  setupCities()
 
   // - - - - - - - - - - - - - - - - PLAYERS - - - - - - - - - - - - - - - - -
 
@@ -135,10 +121,10 @@ init
     player_stats[i] = new PlayerStats(players[i])
     player_stats[i].setInGame(players[i].isIngame())
 
-  SetPlayersAtStart()
+  setPlayersAtStart()
 
 
   // - - - - - - - - - - - - - - -CINEMATIC TUTORIAL- - - - - - - - - - - - - -
   CreateTrigger()
     ..registerTimerEvent(0.01, false)
-    ..addAction(function CinematicTutorial)
+    ..addAction(function cinematicTutorial)

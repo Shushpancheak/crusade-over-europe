@@ -53,6 +53,7 @@ public class CityModifierClass
     real POIncrease_,
     bool isPOIncreaseConstant_
     )
+
     time = time_
     POIncrease = POIncrease_
     isPOIncreaseConstant = isPOIncreaseConstant_
