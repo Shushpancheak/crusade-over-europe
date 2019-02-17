@@ -15,3 +15,6 @@ public function unit.setManaPercent(real p)
 
 public function unit.isVisibleForPlayer(player pl) returns bool
   return not IsUnitFogged(this, pl)
+
+public function unit.getDistance(unit other) returns real
+  return (this.getPos() - other.getPos()).length()

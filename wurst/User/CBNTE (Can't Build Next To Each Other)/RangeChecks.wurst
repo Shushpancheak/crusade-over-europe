@@ -1,21 +1,23 @@
 package RangeChecks
 import Main
-import ClosureForGroups
+import UnitTools
 
 public let kUnitsToCheck = asList(uSettlement, uChurchBZ, uChurchEE, uChurchWE, uMosque, uSettlementAnc1, uSettlementAnc2, uSettlementBZ, uSettlementEE, uCastleWE1, uCastleWE2, uCastleWE3, uCastleEE1, uCastleEE2, uCastleEE3, uCastleME1, uCastleME2, uCastleME3, uCastleBZ1, uCastleBZ2, uCastleBZ3, uInn, uInnEE)
+
+public let kBuildingCheckRange = 3000.0
 
 init
   EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->
     let un = GetTriggerUnit()
     let un_id = un.getTypeId()
-    let un_pos = un.getPos()
-    let pl = un.getOwner()
     if kUnitsToCheck.has(un_id)
-      var found = false
-      forUnitsInRange(un_pos, kBuildingCheckRange) u ->
+      let pl = un.getOwner()
+
+      let g = GetUnitsInRangeOfLocAll(kBuildingCheckRange, un.getLoc())
+
+      for u in g
         //@TODO may be laggy
-        if (not found) and (u.getTypeId() == un_id or ((u.getTypeId() == uSettlementAnc1 or u.getTypeId() == uSettlementAnc2) and (un_id == uSettlementBZ or un_id == uSettlementEE or un_id == uSettlement))) and u.getOwner() == pl and u != un
-          found = true
+        if u.getOwner() == pl and u != un and (u.getTypeId() == un_id and u.getDistance(un) <= kBuildingCheckRange / 2 or uCastles.has(un_id) and uCastles.has(u.getTypeId()))
           // cancel construction id
           doAfter(0.01) ->
             IssueImmediateOrderById(un, 851976)
@@ -42,3 +44,5 @@ init
               attentionToPlayer(ksTooCloseInn, pl)
             case uInnEE
               attentionToPlayer(ksTooCloseInn, pl)
+
+          break

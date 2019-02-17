@@ -8,7 +8,7 @@ import HashMap
 // u - unit type id
 // c - cost (g, l)
 
-public let kBuildingCheckRange = 1500.0
+
 
 public let uSettler = 'h00J'
 public let uSettlerReadyToSettle = 'h00I'
