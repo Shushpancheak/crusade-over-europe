@@ -1,5 +1,6 @@
 package Commands
 import Main
+import VoteKick
 
 // Constants
 // Commands
@@ -13,6 +14,7 @@ public let ksName = "name"
 public let ksRenameCity = "rename"
 public let ksAddModifier = "add_mod"
 public let ksDebug = "непереводимоесочетаниебукв"
+public let ksVoteKick = "votekick"
 
 // Errs
 
@@ -76,6 +78,8 @@ function action()
     dbg_mode = not dbg_mode
     dbg_msg = not dbg_msg
     enableDebugForPlayer(pl)
+  else if args[0] == ksVoteKick
+    voteKick(pl, args[1])
 
 
 function cond() returns bool

@@ -71,7 +71,7 @@ function action()
           noteToPlayer(source_s + " unallied " + target_s, players[i])
 
     //@TODO fix share!!!!!
-
+    /*
     case aShareUnits
       if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_ALLIED_ADVUNITS
         return

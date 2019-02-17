@@ -1,0 +1,78 @@
+package VoteKick
+import Main
+import HashSet
+
+public int array kick_count
+public HashSet<player> array who_voted_for_player
+
+public let playerstr = asList(
+  "red",
+  "blue",
+  "teal",
+  "purple",
+  "yellow",
+  "orange",
+  "green",
+  "pink",
+  "grey",
+  "light blue",
+  "dark green",
+  "brown",
+  "maroon",
+  "navy",
+  "turquoise",
+  "violet",
+  "wheat",
+  "peach",
+  "mint",
+  "lavender",
+  "coal",
+  "snow",
+  "emerald",
+  "peanut"
+)
+
+function countVotesNeeded() returns int
+  // How many active players.
+  var c = 0
+  for i = 0 to PLAYER_SLOTS - 1
+    if players[i].isIngame()
+      c++
+
+  return ((c - 1) / 2).toInt() + 1
+
+function tryToKickOrHowMuchLeft(int kick_id)
+  if kick_id < 0
+    return
+
+  if kick_count[kick_id] >= countVotesNeeded()
+    textToAll("The player " + players[kick_id].getNameColored() + " has been kicked with the power of democracy!", 10.0)
+  else
+    textToAll(kick_count[kick_id].toString() + " |cffff0000out of|r " + countVotesNeeded().toString() + " |cffff0000voted to kick the player|r " + players[kick_id].getNameColored() + "! |cff00ffdd(player number is " + kick_id.toString() + ")|r", 10.0)
+
+function getPlayerIdByName(string pl_str) returns int
+  for i = 0 to PLAYER_SLOTS - 1
+    if players[i].getName() == pl_str
+      return i
+  return -1
+
+public function addVote(int kick_id, player who_votes)
+  if kick_id < 0
+    return
+
+  if not who_voted_for_player[kick_id].has(who_votes)
+    kick_count[kick_id]++
+
+public function voteKick(player who_votes, string who_kick)
+  int kick_id = 24
+
+  // Number
+  if who_kick.length() <= 2 and who_kick.toInt() >= 0 and who_kick.toInt() < 24
+    kick_id = who_kick.toInt()
+  else if playerstr.has(who_kick)
+    kick_id = playerstr.indexOf(who_kick)
+  else if getPlayerIdByName(who_kick) != -1
+    kick_id = getPlayerIdByName(who_kick)
+
+  addVote(kick_id, who_votes)
+  tryToKickOrHowMuchLeft(kick_id)
