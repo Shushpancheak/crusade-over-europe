@@ -177,7 +177,14 @@ public class City
     city_unit = ReplaceUnitBJ(city_unit, unit_id, bj_UNIT_STATE_METHOD_RELATIVE)
 
   function changeOwner(int pl_id)
-    city_unit.setOwner(players[pl_id], true)
+    if pl_id == PLAYER_NEUTRAL_AGGRESSIVE
+      city_unit.setOwner(Player(pl_id), true)
+
+      // Rebels would set tax to med.
+      tax_level = 0
+    else
+      city_unit.setOwner(players[pl_id], true)
+
     player_id = pl_id
     // If and only if this is a player!
     if pl_id >= 0 and pl_id < 24
@@ -212,8 +219,6 @@ public class City
     let whoCapturesId = whoCaptures.getId()
     if (whoCapturesId >= 0 and whoCapturesId < 24)
       whoCapturesForceId = player_stats[whoCapturesId].getForceId()
-    else
-      changeOwner(whoCapturesId)
 
     if uCapitols.has(city_unit.getTypeId())
       replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), whoCapturesForceId))
