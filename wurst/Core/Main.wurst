@@ -29,8 +29,8 @@ public let dbg_player = 0
 public let PLAYER_SLOTS = 24
 
 // Starting resources
-public let kStartGold = 260
-public let kStartLumber = 250
+public let kStartGold = 250
+public let kStartLumber = 200
 
 public let TURN_TIME = 120.0
 

@@ -75,7 +75,7 @@ function action()
   else if args[0] == ksDebug
     dbg_mode = not dbg_mode
     dbg_msg = not dbg_msg
-    enableDebugForPlayer(players[0])
+    enableDebugForPlayer(pl)
 
 
 function cond() returns bool

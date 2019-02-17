@@ -50,7 +50,7 @@ public let kCityTaxLevelPOIncrease = [
   0.0,
   20.0,
   -25.0,
-  -50.0
+  -60.0
 ]
 public let kCityTaxLevelPODecreasePerThousandPop = [
   0.05,
@@ -161,7 +161,7 @@ public class City
 
     refreshMultiboardIfPossible()
 
-  function getTaxLevel() returns string
+  function getTaxLevelString() returns string
     return ksTaxLevels[tax_level]
 
   function getCityNameColored() returns string

@@ -18,3 +18,4 @@ init
 
         u.setLifePercent(kCityLifePercentOnceItCaptured)
         u.setManaPercent(0.0)
+        UnitAddAbility(u, aCastleAura)

@@ -55,7 +55,8 @@ public let ksDiscord = "Enjoying the map? Join the |cffe100ffofficial CoE discor
 public let ksTaxLevels = [
   "|cffffd900Med.",
   "|cff00ff00Low",
-  "|cffff0000High"
+  "|cffff0000High",
+  "|cff940000Harsh"
 ]
 
 public let ksCannotChangeTaxLevel = "Wait 1 turn to be able to change tax level."

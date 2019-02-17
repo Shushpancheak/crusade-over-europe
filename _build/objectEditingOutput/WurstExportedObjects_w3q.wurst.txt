@@ -136,14 +136,14 @@ import ObjEditingNatives
 	..setLvlDataString("gub1", 1, 0, "Enable the production of additional types of structures and units.")
 	..setLvlDataString("greq", 1, 0, "hbar")
 	..setLvlDataUnreal("gba1", 0, 0, 3.0)
-	..setLvlDataInt("gglb", 0, 0, 220)
-	..setLvlDataInt("glmb", 0, 0, 475)
+	..setLvlDataInt("gglb", 0, 0, 300)
+	..setLvlDataInt("glmb", 0, 0, 0)
 	..setLvlDataString("ghk1", 1, 0, "R")
 	..setLvlDataString("greq", 2, 0, "h003,h015,h01E,h009,R003")
 	..setLvlDataString("gnam", 2, 0, "Gunpowder")
 	..setLvlDataInt("gbpy", 0, 0, 0)
 	..setLvlDataInt("gbpx", 0, 0, 3)
-	..setLvlDataInt("gtib", 0, 0, 160)
+	..setLvlDataInt("gtib", 0, 0, 130)
 
 
 @compiletime function create_w3q_R007()
@@ -384,7 +384,7 @@ import ObjEditingNatives
 	..setLvlDataString("gar1", 1, 0, "ReplaceableTextures\\CommandButtons\\BTNHumanMissileUpTwo.blp")
 	..setLvlDataInt("gglb", 0, 0, 1450)
 	..setLvlDataInt("glmb", 0, 0, 2750)
-	..setLvlDataInt("gtib", 0, 0, 500)
+	..setLvlDataInt("gtib", 0, 0, 60)
 	..setLvlDataInt("gbpx", 0, 0, 3)
 	..setLvlDataInt("gbpy", 0, 0, 0)
 

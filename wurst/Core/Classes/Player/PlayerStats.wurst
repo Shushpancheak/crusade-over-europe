@@ -55,7 +55,7 @@ public class PlayerStats
     string tax_level
 
     tax = cities[selected_city_id].countTax()
-    tax_level = cities[selected_city_id].getTaxLevel()
+    tax_level = cities[selected_city_id].getTaxLevelString()
     public_order_str = cities[selected_city_id].getPublicOrderStr()
     population_str = cities[selected_city_id].getPopulationStr()
     population_growth_str = cities[selected_city_id].getPopulationGrowthStr()
