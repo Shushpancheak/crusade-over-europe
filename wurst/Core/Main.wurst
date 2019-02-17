@@ -18,6 +18,11 @@ import public CityModifiers
 
 public var dbg_msg = false
 public var dbg_mode = false
+
+@test function runmap()
+  dbg_msg = true
+  dbg_mode = true
+
 public let dbg_player = 0
 
 // Maximum number of players.

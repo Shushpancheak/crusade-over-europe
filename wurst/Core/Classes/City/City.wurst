@@ -30,7 +30,7 @@ let kCityLongCount    = 120.0 // long count
 let kCityTaxLevelTimeToChange = TURN_TIME
 
 // Per month
-let kCityPopGrowthRateMinMax = [0.0010, 0.0015]
+let kCityPopGrowthRateMinMax = [0.0020, 0.0025]
 // tiers
 let kCityPopInit = [
   asList(10000, 20000),
@@ -116,10 +116,10 @@ public class City
     //===========================POP COUNT AND MODIFIERS=======================
     // Fast count (for modifiers)
     doPeriodically(kCityPopCountRate / 2 + GetRandomReal(kCityPopCountRate / 2, kCityPopCountRate)) cbPOP ->
-      population_growth_rate += GetRandomReal(-0.003, 0.005) * population_growth_rate
+      population_growth_rate += GetRandomReal(-0.0001, 0.00015) * population_growth_rate
 
       int pop_prev = population
-      population += (population * population_growth_rate).toInt()
+      population += (Pow(population * population_growth_rate, 0.8)).toInt()
       int pop_growth = population - pop_prev
       int deviation = GetRandomInt((-0.25 * pop_growth).toInt(), (0.25 * pop_growth).toInt())
       population += deviation

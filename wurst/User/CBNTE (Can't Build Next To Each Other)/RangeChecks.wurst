@@ -14,7 +14,7 @@ init
       var found = false
       forUnitsInRange(un_pos, kBuildingCheckRange) u ->
         //@TODO may be laggy
-        if (not found) and (u.getTypeId() == un_id or ((u.getTypeId() == uSettlementAnc1 or u.getTypeId() == uSettlementAnc2) and (un_id == uSettlementBZ or un_id == uSettlementEE or un_id == uSettlement))) and u.getOwner() == pl and u != un		
+        if (not found) and (u.getTypeId() == un_id or ((u.getTypeId() == uSettlementAnc1 or u.getTypeId() == uSettlementAnc2) and (un_id == uSettlementBZ or un_id == uSettlementEE or un_id == uSettlement))) and u.getOwner() == pl and u != un
           found = true
           // cancel construction id
           doAfter(0.01) ->

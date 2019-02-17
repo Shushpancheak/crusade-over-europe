@@ -192,12 +192,7 @@ public let kCityTypes =   asList(
   uCapitolEE1, uCapitolEE2, uCapitolEE3,
   uCapitolME1, uCapitolME2, uCapitolME3,
   uCapitolBZ1, uCapitolBZ2, uCapitolBZ3,
-  uAutonomousTH, uTH, uCH,
-  uCastleWE1, uCastleWE2, uCastleWE3,
-  uCastleEE1, uCastleEE2, uCastleEE3,
-  uCastleME1, uCastleME2, uCastleME3,
-  uCastleBZ1, uCastleBZ2, uCastleBZ3,
-  uDummyCH, uDummyCH2Castle, uDummyTH
+  uAutonomousTH, uTH, uCH
 )
 
 public let uRebels = [
