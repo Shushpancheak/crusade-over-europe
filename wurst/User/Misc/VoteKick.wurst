@@ -5,6 +5,10 @@ import HashSet
 public int array kick_count
 public HashSet<player> array who_voted_for_player
 
+init
+  for i = 0 to PLAYER_SLOTS - 1
+    who_voted_for_player[i] = new HashSet<player>()
+
 public let playerstr = asList(
   "red",
   "blue",
@@ -46,6 +50,7 @@ function tryToKickOrHowMuchLeft(int kick_id)
     return
 
   if kick_count[kick_id] >= countVotesNeeded()
+    CustomDefeatBJ(players[kick_id], "You've been kicked from the game!")
     textToAll("The player " + players[kick_id].getNameColored() + " has been kicked with the power of democracy!", 10.0)
   else
     textToAll(kick_count[kick_id].toString() + " |cffff0000out of|r " + countVotesNeeded().toString() + " |cffff0000voted to kick the player|r " + players[kick_id].getNameColored() + "! |cff00ffdd(player number is " + kick_id.toString() + ")|r", 10.0)
