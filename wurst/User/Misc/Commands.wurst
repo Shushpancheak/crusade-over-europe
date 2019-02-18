@@ -81,7 +81,7 @@ function action()
     dbg_msg = not dbg_msg
     enableDebugForPlayer(pl)
   else if args[0] == ksVoteKick
-    voteKick(pl, args[1])
+    voteKick(pl, arg)
 
 
 function cond() returns bool
