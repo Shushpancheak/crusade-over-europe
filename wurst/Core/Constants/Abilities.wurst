@@ -14,7 +14,7 @@ public let aMedTax = 'A02I'
 public let aHighTax = 'A02H'
 public let aHarshTax = 'A04K'
 
-public let aTaxes = asList(aLowTax, aMedTax, aHighTax)
+public let aTaxes = asList(aLowTax, aMedTax, aHighTax, aHarshTax)
 
 public let aCallToArmsPeasant = 'A043'
 public let aCallToArmsWorker = 'A04D'

@@ -16,12 +16,8 @@ import public Messages
 import public AbilityObjEditing
 import public CityModifiers
 
-public var dbg_msg = false
-public var dbg_mode = false
-
-@test function runmap()
-  dbg_msg = true
-  dbg_mode = true
+public var dbg_msg = true
+public var dbg_mode = true
 
 public let dbg_player = 0
 

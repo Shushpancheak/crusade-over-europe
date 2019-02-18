@@ -244,6 +244,7 @@ public class City
    ** 0 - Med
    ** 1 - Low
    ** 2 - High
+   ** 3 - Harsh
    */
   function changeTaxLevel(int lvl)
     if getElapsedTime() - last_time_tax_level_changed >= kCityTaxLevelTimeToChange
