@@ -5,8 +5,8 @@ import Main
 init
   EventListener.add(EVENT_PLAYER_UNIT_ISSUED_ORDER) ->
     // Load
-    if GetIssuedOrderId() == 852056 and GetOrderedUnit().getTypeId() != uTransportShipWE
+    if GetIssuedOrderId() == 852056 and not IsUnitType(GetOrderedUnit(), UNIT_TYPE_STRUCTURE)
       GetOrderedUnit().removeAbility(aUnitHunger)
     // Unload
-    if GetIssuedOrderId() == 851972 and GetOrderedUnit().getTypeId() != uTransportShipWE
+    if GetIssuedOrderId() == 851972 and not IsUnitType(GetOrderedUnit(), UNIT_TYPE_STRUCTURE)
       GetOrderedUnit().addAbility(aUnitHunger)
