@@ -18,7 +18,7 @@ public let kCTfade = 10.0
 public let kCTchange = 12.5
 
 public constant ksCT = asList(
-"You're playing |cffffff65Crusade over Europe|r.\nUse your |cff15ff00settler|r to choose the foundation of your new kingdom.\nThe location you choose will |cffff0000determine the faction you will get|r.\nUse the |cff00ffffF1|r menu to create alliances.\nExpand quickly, Capture cities and ores to |cffff0000fincrease your income|r.\nUse the |cff00fff22F2|r menu to set the taxes of your newly acquired |cff15ff00cities|r.\nFor more information, please go to |cff00d3f8F9 menu|r\n|cffff0000Press ESC button to skip the tutorial.|r"
+"You're playing |cffffff65Crusade over Europe|r.\nUse your |cff15ff00settler|r to choose the foundation of your new kingdom.\nThe location you choose will |cffff0000determine the faction you will get|r.\nUse the |cff00ffffF1|r menu to create alliances.\nExpand quickly, Capture cities and ores to |cffff0000fincrease your income|r.\nUse the |cff00fff22F2|r menu to set the taxes of your newly acquired |cff15ff00cities|r.\nFor more information, please, go to |cff00d3f8F9 menu|r\n|cffff0000Press ESC button to skip the tutorial.|r"
 
 //,"Use your |cffff8040Settler|r to choose the location of your Kingdom, use the ability |cffffff80Create Capitol|r on any Town Hall to build your Capitol.\nChoose your postion carefully and be mindful of the other players positions."
 

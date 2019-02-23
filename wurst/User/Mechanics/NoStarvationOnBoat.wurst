@@ -1,0 +1,12 @@
+package NoStarvationOnBoat
+
+import Main
+
+init
+  EventListener.add(EVENT_PLAYER_UNIT_ISSUED_ORDER) ->
+    // Load
+    if GetIssuedOrderId() == 852056 and GetOrderedUnit().getTypeId() != uTransportShipWE
+      GetOrderedUnit().removeAbility(aUnitHunger)
+    // Unload
+    if GetIssuedOrderId() == 851972 and GetOrderedUnit().getTypeId() != uTransportShipWE
+      GetOrderedUnit().addAbility(aUnitHunger)
