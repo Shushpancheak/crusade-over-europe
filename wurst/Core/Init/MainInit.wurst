@@ -18,7 +18,7 @@ public let kCTfade = 10.0
 public let kCTchange = 12.5
 
 public constant ksCT = asList(
-"You're playing |cffffff65Crusade over Europe|r.\nUse your |cff15ff00settler|r to choose the foundation of your new kingdom.\nThe location you choose will |cffff0000determine the faction you will get|r.\nUse the |cff00ffffF1|r menu to create alliances.\nExpand quickly, Capture cities and ores to |cffff0000fincrease your income|r.\nUse the |cff00fff22F2|r menu to set the taxes of your newly acquired |cff15ff00cities|r.\nFor more information, please, go to |cff00d3f8F9 menu|r\n|cffff0000Press ESC button to skip the tutorial.|r"
+"You're playing |cffffff65Crusade over Europe|r.\n\nUse your |cff0011ffsettler|r to choose the foundation of your new kingdom.\nThe location you choose will |cffff0000determine the faction you will get|r.\nUse the |cff00ffffF1|r menu to create alliances.\nExpand quickly, Capture cities and ores to |cffff0000increase your income|r.\nUse the |cff00fff2F2|r menu to set the taxes of your newly acquired |cff0026ffcities|r.\nFor more information, please, go to |cff00d3f8F9 menu|r\n|cffff0000Press ESC button to skip the tutorial.|r"
 
 //,"Use your |cffff8040Settler|r to choose the location of your Kingdom, use the ability |cffffff80Create Capitol|r on any Town Hall to build your Capitol.\nChoose your postion carefully and be mindful of the other players positions."
 
@@ -68,7 +68,7 @@ function cinematicTutorial()
   if dbg_mode
     return
 
-  EventListener.add(EVENT_PLAYER_END_CINEMATIC) ->
+  /* EventListener.add(EVENT_PLAYER_END_CINEMATIC) ->
     if not voted[GetTriggerPlayer().getId()] and not skip_tutorial
       pl_number = countActivePlayers()
       voted[GetTriggerPlayer().getId()] = true
@@ -78,7 +78,7 @@ function cinematicTutorial()
       if pl_esc >= ((pl_number + 1) / 2).toInt()
         skip_tutorial = true
         textToAll("|cffff0000Tutorial will shut down soon...|r", 5.0)
-        CinematicModeBJ(false, GetPlayersAll())
+        CinematicModeBJ(false, GetPlayersAll()) */
 
   ShowInterfaceForceOff(GetPlayersAll(), 0.50)
   for str in ksCT
