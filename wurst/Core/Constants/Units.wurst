@@ -107,6 +107,8 @@ public let uRebel = 'h03H'
 public let uRebelKnight = 'h03N'
 public let uRebelRam = 'h03Y'
 
+public let uSupplyHorse = 'h016'
+
 // Ores (Mined)
 public let uCopperMine = 'h03E'
 public let uGoldMine = 'h039'
@@ -124,25 +126,29 @@ public let kStartingUnits = [
   uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE, uPeasantWE,
   uWorkerWE, uWorkerWE, uWorkerWE, uWorkerWE,
   uGeneralWE,
-  uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE
+  uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE, uSpearmanWE,
+  uSupplyHorse
 ),asList(
   // EE
   uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE, uPeasantEE,
   uWorkerEE, uWorkerEE, uWorkerEE, uWorkerEE,
   uGeneralEE,
-  uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE
+  uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE, uSpearmanEE,
+  uSupplyHorse
 ),asList(
   // ME
   uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME, uPeasantME,
   uWorkerME, uWorkerME, uWorkerME, uWorkerME,
   uGeneralME,
-  uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME
+  uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME, uSpearmanME,
+  uSupplyHorse
 ),asList(
   // BZ
   uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ, uPeasantBZ,
   uWorkerBZ, uWorkerBZ, uWorkerBZ, uWorkerBZ,
   uGeneralBZ,
-  uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ
+  uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ, uSpearmanBZ,
+  uSupplyHorse
 )]
 
 public let uPlebs = asList(
