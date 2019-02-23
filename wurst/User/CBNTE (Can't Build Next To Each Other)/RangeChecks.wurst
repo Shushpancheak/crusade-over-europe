@@ -4,7 +4,8 @@ import UnitTools
 
 public let kUnitsToCheck = asList(uSettlement, uChurchBZ, uChurchEE, uChurchWE, uMosque, uSettlementAnc1, uSettlementAnc2, uSettlementBZ, uSettlementEE, uCastleWE1, uCastleWE2, uCastleWE3, uCastleEE1, uCastleEE2, uCastleEE3, uCastleME1, uCastleME2, uCastleME3, uCastleBZ1, uCastleBZ2, uCastleBZ3, uInn, uInnEE)
 
-public let kBuildingCheckRange = 3000.0
+// Maily for castles, everything else should be 1500.
+public let kBuildingCheckRange = 2000.0
 
 init
   EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->
@@ -17,7 +18,7 @@ init
 
       for u in g
         //@TODO may be laggy
-        if u.getOwner() == pl and u != un and (u.getTypeId() == un_id and u.getDistance(un) <= kBuildingCheckRange / 2 or uCastles.has(un_id) and uCastles.has(u.getTypeId()))
+        if u.getOwner() == pl and u != un and (u.getTypeId() == un_id and u.getDistance(un) <= kBuildingCheckRange * 0.75 or uCastles.has(un_id) and uCastles.has(u.getTypeId()))
           // cancel construction id
           doAfter(0.01) ->
             IssueImmediateOrderById(un, 851976)
