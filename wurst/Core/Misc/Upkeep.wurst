@@ -3,6 +3,19 @@ package Upkeep
 import Main
 
 init
+  EventListener.add(EVENT_PLAYER_UNIT_SPELL_FINISH) ->
+    if GetSpellAbilityId() == aConversion
+      let u1 = GetSpellAbilityUnit()
+      let u2 = GetSpellTargetUnit()
+
+      let player_id1 = u1.getOwner().getId()
+      let player_id2 = u2.getOwner().getId()
+
+      if players[player_id1].isIngame()
+        player_stats[player_id1].changeUpkeep(-GetUnitLevel(u2))
+      if players[player_id2].isIngame()
+        player_stats[player_id2].changeUpkeep(GetUnitLevel(u2))
+
 	let t_enter = CreateTrigger()
 	TriggerRegisterEnterRectSimple(t_enter, GetEntireMapRect())
 	t_enter.addAction(() -> begin

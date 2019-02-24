@@ -23,7 +23,7 @@ public let aCallToArmsBlacksmith = 'A04E'
 public let aMassCommand = 'A04J'
 
 public let aUnitHunger = 'A03P'
-public let aUnitHunger1 = 'A03P'
+public let aConversion = 'A024'
 
 public let aTownHallCapitolAura = 'A02B'
 public let aCastleAura = 'A03H'

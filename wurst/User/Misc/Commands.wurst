@@ -17,6 +17,7 @@ public let ksRenameCity = "rename"
 public let ksAddModifier = "add_mod"
 public let ksDebug = "непереводимоесочетаниебукв"
 public let ksVoteKick = "votekick"
+public let ksZoom = "zoom"
 
 // Errs
 
@@ -82,6 +83,9 @@ function action()
     enableDebugForPlayer(pl)
   else if args[0] == ksVoteKick
     voteKick(pl, arg)
+  else if args[0] == ksZoom
+    let num = args[1].toInt()
+    SetCameraFieldForPlayer(GetTriggerPlayer(), CAMERA_FIELD_TARGET_DISTANCE, num.toReal(), 0)
 
 
 function cond() returns bool

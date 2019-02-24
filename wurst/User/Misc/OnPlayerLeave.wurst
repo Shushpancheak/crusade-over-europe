@@ -6,5 +6,6 @@ init
   EventListener.add(EVENT_PLAYER_LEAVE) ->
     textToAll(GetTriggerPlayer().getNameColored() + " has left the game!", 5.0)
     player_stats[GetPlayerId(GetTriggerPlayer())].setInGame(false)
+    GetTriggerPlayer().setName(GetTriggerPlayer().getName() + " [LEFT]")
     /* forUnitsOfPlayer(GetTriggerPlayer()) u ->
       u.setOwner(players[PLAYER_NEUTRAL_AGGRESSIVE], true) */
