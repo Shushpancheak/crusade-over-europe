@@ -32,13 +32,11 @@ init
   EventListener.add(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER) ->
     if uGenerals.has(GetOrderedUnit().getTypeId())
       if units_of_general.has(GetOrderedUnit())
-        dbg(units_of_general.get(GetOrderedUnit()).size().toString())
         let g = units_of_general.get(GetOrderedUnit())
         let order = GetIssuedOrderId()
         let pos = getOrderPos()
         for u in g
           doAfter(0.01) ->
             u.issuePointOrderById(order, pos)
-          dbg(" issued = " + u.getName())
 
         units_of_general.remove(GetOrderedUnit())
