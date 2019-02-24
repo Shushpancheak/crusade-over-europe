@@ -25,6 +25,10 @@ init
           switch un_id
             case uSettlement
               attentionToPlayer(ksTooCloseSettlement, pl)
+            case uSettlementBZ
+              attentionToPlayer(ksTooCloseSettlement, pl)
+            case uSettlementEE
+              attentionToPlayer(ksTooCloseSettlement, pl)
             case uChurchBZ
               attentionToPlayer(ksTooCloseChurchBZ, pl)
             case uChurchEE

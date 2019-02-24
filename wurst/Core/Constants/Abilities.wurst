@@ -27,3 +27,5 @@ public let aConversion = 'A024'
 
 public let aTownHallCapitolAura = 'A02B'
 public let aCastleAura = 'A03H'
+
+public let oGarrison = "spiritwolf"

@@ -16,17 +16,17 @@ init
       if players[player_id2].isIngame()
         player_stats[player_id2].changeUpkeep(GetUnitLevel(u2))
 
-	let t_enter = CreateTrigger()
-	TriggerRegisterEnterRectSimple(t_enter, GetEntireMapRect())
-	t_enter.addAction(() -> begin
-		let u = GetEnteringUnit()
-		let player_id = u.getOwner().getId()
-		if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
-			player_stats[player_id].changeUpkeep(-GetUnitLevel(u))
-	end)
+  let t_enter = CreateTrigger()
+  TriggerRegisterEnterRectSimple(t_enter, GetEntireMapRect())
+  t_enter.addAction(() -> begin
+    let u = GetEnteringUnit()
+    let player_id = u.getOwner().getId()
+    if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
+      player_stats[player_id].changeUpkeep(-GetUnitLevel(u))
+  end)
 
-	EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
-		let u = GetDyingUnit()
-		let player_id = u.getOwner().getId()
-		if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
-			player_stats[player_id].changeUpkeep(GetUnitLevel(u))
+  EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
+    let u = GetDyingUnit()
+    let player_id = u.getOwner().getId()
+    if players[player_id].isIngame() and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
+      player_stats[player_id].changeUpkeep(GetUnitLevel(u))
