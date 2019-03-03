@@ -69,15 +69,18 @@ public function addVote(int kick_id, player who_votes)
     kick_count[kick_id]++
 
 public function voteKick(player who_votes, string who_kick)
-  int kick_id = 24
+  int kick_id = PLAYER_SLOTS - 1
 
   // Number
-  if who_kick.length() <= 2 and who_kick.toInt() >= 0 and who_kick.toInt() < 24
+  if who_kick.length() <= 2 and who_kick.toInt() > 0 and who_kick.toInt() < 24
     kick_id = who_kick.toInt()
   else if playerstr.has(who_kick)
     kick_id = playerstr.indexOf(who_kick)
   else if getPlayerIdByName(who_kick) != -1
     kick_id = getPlayerIdByName(who_kick)
+  else
+    noteToPlayer("Couldn't find player: '" + who_kick + "'", who_votes)
+    return
 
   addVote(kick_id, who_votes)
   tryToKickOrHowMuchLeft(kick_id)

@@ -321,6 +321,7 @@ import ObjEditingNatives
 	..setLvlDataString("aub1", 2, 0, "Prevents |cffff0000Hunger|r and increases movement speed by 0.20")
 	..setLvlDataString("ansf", 0, 0, "(Supply Horse)")
 	..setLvlDataInt("abpx", 0, 0, 0)
+	..setLvlDataUnreal("Uau1", 1, 1, 0.2)
 
 
 @compiletime function create_w3a_A00Y()
@@ -720,6 +721,7 @@ import ObjEditingNatives
 	..setLvlDataString("atp1", 3, 0, "Garrison (|cffffff00G|r)")
 	..setLvlDataInt("achd", 0, 0, 1)
 	..setLvlDataUnreal("ahdu", 1, 0, 45.0)
+	..setLvlDataString("aord", 0, 0, "spiritwolf")
 
 
 @compiletime function create_w3a_A01Q()
@@ -741,7 +743,7 @@ import ObjEditingNatives
 	..setLvlDataString("atp1", 2, 0, "Improved Food Supply - [|cffffcc00Level 2|r]")
 	..setLvlDataString("aub1", 2, 0, "Prevents |cffff0000Hunger|r and increases movement speed by 0.20")
 	..setLvlDataString("ansf", 0, 0, "(Supply Horse")
-	..setLvlDataUnreal("Uau1", 1, 1, 0.25)
+	..setLvlDataUnreal("Uau1", 1, 1, 0.35)
 	..setLvlDataInt("abpx", 0, 0, 0)
 
 
@@ -995,8 +997,8 @@ import ObjEditingNatives
 	let def = createObjectDefinition("w3a", 'A024', 'ANch')
 	..setLvlDataString("anam", 0, 0, "Conversion ")
 	..setLvlDataInt("aher", 0, 0, 0)
-	..setLvlDataUnreal("acdn", 1, 0, 10.0)
-	..setLvlDataUnreal("acas", 1, 0, 7.0)
+	..setLvlDataUnreal("acdn", 1, 0, 30.0)
+	..setLvlDataUnreal("acas", 1, 0, 12.0)
 	..setLvlDataInt("amcs", 1, 0, 125)
 	..setLvlDataInt("Nch1", 1, 1, 40)
 	..setLvlDataString("arac", 0, 0, "human")
@@ -1006,6 +1008,7 @@ import ObjEditingNatives
 	..setLvlDataString("atp1", 1, 0, "Convert (|cffffff00Q|r)")
 	..setLvlDataInt("abpx", 0, 0, 0)
 	..setLvlDataInt("auby", 0, 0, 2)
+	..setLvlDataUnreal("aran", 1, 0, 500.0)
 
 
 @compiletime function create_w3a_A025()
@@ -2174,7 +2177,7 @@ import ObjEditingNatives
 	..setLvlDataString("aart", 0, 0, "ReplaceableTextures\\PassiveButtons\\PASBTNHumanArtilleryUpOne.blp")
 	..setLvlDataString("atp1", 1, 0, "Armour Piercing")
 	..setLvlDataString("anam", 0, 0, "Armour Piercing")
-	..setLvlDataString("aub1", 1, 0, "Decreases the armour of targetted unit by 5")
+	..setLvlDataString("aub1", 1, 0, "Gunpowder will punch through heavy armour, reducing their effectiveness.")
 	..setLvlDataString("ansf", 0, 0, "(UI Gun)")
 	..setLvlDataString("arac", 0, 0, "other")
 	..setLvlDataInt("achd", 0, 0, 0)

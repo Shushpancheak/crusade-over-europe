@@ -1,0 +1,51 @@
+package Religion
+import initlater Main
+
+public enum Religion
+  catholicism
+  orthodoxy
+  islam
+  paganism
+
+public class ReligionClass
+  string noun
+  string adjective
+  color clr
+
+  construct(
+    string noun_,
+    string adjective_,
+    color clr_
+  )
+    noun = noun_
+    adjective = adjective_
+    clr = clr_
+
+  function getNounColored() returns string
+    return clr.toColorString() + noun + "|r"
+  function getAdjectiveColored() returns string
+    return clr.toColorString() + adjective + "|r"
+
+ReligionClass rc_catholicism = new ReligionClass(
+  "Catholicism",
+  "Catholic",
+  color(244, 255, 96)
+)
+
+ReligionClass rc_orthodoxy = new ReligionClass(
+  "Orthodoxy",
+  "Orthodox",
+  color(234, 0, 255)
+)
+
+ReligionClass rc_islam = new ReligionClass(
+  "Islam",
+  "Muslim",
+  color(0, 151, 0)
+)
+
+ReligionClass rc_paganism = new ReligionClass(
+  "Orthodoxy",
+  "Orthodox",
+  color(234, 0, 255)
+)

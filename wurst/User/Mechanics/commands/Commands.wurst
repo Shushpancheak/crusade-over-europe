@@ -21,7 +21,6 @@ public let ksZoom = "zoom"
 public let ksObserve = "observe"
 
 // Errs
-
 public let kseNotYourCity = "The city you wanted to rename so eagerly doesn't belong to you!"
 
 
@@ -99,6 +98,8 @@ function action()
         textToAll(pl.getNameColored() + ksBecomeObserver, 10.0)
       else
         noteToPlayer(ksToBecomeObserver, pl)
+  else
+    noteToPlayer("Couldn't find command: '" + args[0] + "'", pl)
 
 
 function cond() returns bool

@@ -80,12 +80,20 @@ function cinematicTutorial()
         textToAll("|cffff0000Tutorial will shut down soon...|r", 5.0)
         CinematicModeBJ(false, GetPlayersAll()) */
 
+  fogmodifier array fm
+  for i = 0 to PLAYER_SLOTS - 1
+    fm[i] = CreateFogModifierRadiusLocBJ(true, players[i], FOG_OF_WAR_VISIBLE, GetRectCenter(GetPlayableMapRect()), 999999.00)
+    FogModifierStart(fm[i])
+
   ShowInterfaceForceOff(GetPlayersAll(), 0.50)
   for str in ksCT
     if not skip_tutorial
       DisplayTimedTextToForce(GetPlayersAll(), kCTfade, str)
       TriggerSleepAction(kCTchange)
   CinematicModeBJ(false, GetPlayersAll())
+
+  for i = 0 to PLAYER_SLOTS - 1
+    FogModifierStop(fm[i])
   skip_tutorial = true
 
 //----------------------------INIT----------------------------------------------
