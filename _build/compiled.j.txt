@@ -3671,24 +3671,6 @@ function pushUnit takes unit u_5 returns nothing
 	set OnUnitEnterLeave_tempUnitsCount = OnUnitEnterLeave_tempUnitsCount + 1
 endfunction
 
-function trigger_execute takes trigger this_7 returns nothing
-	call TriggerExecute(this_7)
-endfunction
-
-function unit_getAbilityLevel takes unit this_7, integer id returns integer
-	return GetUnitAbilityLevel(this_7, id)
-endfunction
-
-function OnUnitEnterLeave_closure_impl takes nothing returns nothing
-	local unit leavingUnit = GetTriggerUnit()
-	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
-		call pushUnit(leavingUnit)
-		call trigger_execute(OnUnitEnterLeave_eventTrigger)
-		call popUnit()
-	endif
-	set leavingUnit = null
-endfunction
-
 function trigger_evaluate takes trigger this_7 returns boolean
 	return TriggerEvaluate(this_7)
 endfunction
@@ -3714,12 +3696,30 @@ function prepareUnit takes unit u_5 returns nothing
 	set receiver_2 = null
 endfunction
 
-function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
+function OnUnitEnterLeave_closure_impl takes nothing returns nothing
 	call prepareUnit(GetEnumUnit())
 endfunction
 
-function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
+function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
 	call prepareUnit(GetFilterUnit())
+endfunction
+
+function trigger_execute takes trigger this_7 returns nothing
+	call TriggerExecute(this_7)
+endfunction
+
+function unit_getAbilityLevel takes unit this_7, integer id returns integer
+	return GetUnitAbilityLevel(this_7, id)
+endfunction
+
+function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
+	local unit leavingUnit = GetTriggerUnit()
+	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
+		call pushUnit(leavingUnit)
+		call trigger_execute(OnUnitEnterLeave_eventTrigger)
+		call popUnit()
+	endif
+	set leavingUnit = null
 endfunction
 
 function Trig_Archer_1_Actions takes nothing returns nothing
@@ -7433,7 +7433,7 @@ function City_addPopulation takes integer this_7, integer tier, real multiplier,
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set prev_pop = City_population[this_7]
-	set City_population[this_7] = City_population[this_7] + real_toInt(multiplier * GetRandomReal(realFromIndex(dispatch_LinkedList_LinkedList_LinkedList_get(CityModifiers_mPortions[tier], 0, "when calling get in City, line 399")), realFromIndex(dispatch_LinkedList_LinkedList_LinkedList_get(CityModifiers_mPortions[tier], 1, "when calling get in City, line 399"))) * City_population[this_7])
+	set City_population[this_7] = City_population[this_7] + real_toInt(multiplier * GetRandomReal(realFromIndex(dispatch_LinkedList_LinkedList_LinkedList_get(CityModifiers_mPortions[tier], 0, "when calling get in City, line 400")), realFromIndex(dispatch_LinkedList_LinkedList_LinkedList_get(CityModifiers_mPortions[tier], 1, "when calling get in City, line 400"))) * City_population[this_7])
 	set City_last_pop_growth[this_7] = City_last_pop_growth[this_7] + (City_population[this_7] - prev_pop)
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -7443,12 +7443,12 @@ function dispatch_City_City_City_addPopulation takes integer this_7, integer tie
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.addPopulation", "when calling error in City, line 397")
+			call error("Nullpointer exception when calling City.addPopulation", "when calling error in City, line 398")
 		else
-			call error("Called City.addPopulation on invalid object.", "when calling error in City, line 397")
+			call error("Called City.addPopulation on invalid object.", "when calling error in City, line 398")
 		endif
 	endif
-	call City_addPopulation(this_7, tier, multiplier, "when calling addPopulation in City, line 397")
+	call City_addPopulation(this_7, tier, multiplier, "when calling addPopulation in City, line 398")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -7502,11 +7502,11 @@ function City_getCityModifierOnFastCount takes integer this_7, integer cm_2, str
 	local real mult
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set tier = CityModifierClass_popIncreaseTier[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 404")]
-	set mult = CityModifierClass_popIncreaseMultiplier[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 405")]
-	call dispatch_City_City_City_addPopulation(this_7, tier, mult, "when calling addPopulation in City, line 406")
-	if CityModifierClass_isPOIncreaseConstant[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 408")] == false then
-		set City_public_order_add[this_7] = City_public_order_add[this_7] - CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 409")] * City_kCityFastCount / CityModifierClass_time[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 409")]
+	set tier = CityModifierClass_popIncreaseTier[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 405")]
+	set mult = CityModifierClass_popIncreaseMultiplier[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 406")]
+	call dispatch_City_City_City_addPopulation(this_7, tier, mult, "when calling addPopulation in City, line 407")
+	if CityModifierClass_isPOIncreaseConstant[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 409")] == false then
+		set City_public_order_add[this_7] = City_public_order_add[this_7] - CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 410")] * City_kCityFastCount / CityModifierClass_time[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 410")]
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -7516,16 +7516,16 @@ function dispatch_City_City_City_getCityModifierOnFastCount takes integer this_7
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getCityModifierOnFastCount", "when calling error in City, line 403")
+			call error("Nullpointer exception when calling City.getCityModifierOnFastCount", "when calling error in City, line 404")
 		else
-			call error("Called City.getCityModifierOnFastCount on invalid object.", "when calling error in City, line 403")
+			call error("Called City.getCityModifierOnFastCount on invalid object.", "when calling error in City, line 404")
 		endif
 	endif
-	call City_getCityModifierOnFastCount(this_7, cm_2, "when calling getCityModifierOnFastCount in City, line 403")
+	call City_getCityModifierOnFastCount(this_7, cm_2, "when calling getCityModifierOnFastCount in City, line 404")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function City_City_call_line135 takes integer this_7, integer cbPOP, string stackPos returns nothing
+function City_City_call_line136 takes integer this_7, integer cbPOP, string stackPos returns nothing
 	local integer pop_prev
 	local integer pop_growth
 	local integer deviation
@@ -7540,17 +7540,17 @@ function City_City_call_line135 takes integer this_7, integer cbPOP, string stac
 	set deviation = GetRandomInt(real_toInt( - (0.25 * pop_growth)), real_toInt(0.25 * pop_growth))
 	set City_population[this_5[this_7]] = City_population[this_5[this_7]] + deviation
 	set City_last_pop_growth[this_5[this_7]] = City_population[this_5[this_7]] - pop_prev
-	set iterator = LinkedList_iterator(City_modifiers[this_5[this_7]], "when calling iterator in City, line 146")
+	set iterator = LinkedList_iterator(City_modifiers[this_5[this_7]], "when calling iterator in City, line 147")
 	loop
 		exitwhen  not LLIterator_hasNext(iterator)
 		set m = LLIterator_next(iterator)
-		call dispatch_City_City_City_getCityModifierOnFastCount(this_5[this_7], m, "when calling getCityModifierOnFastCount in City, line 147")
+		call dispatch_City_City_City_getCityModifierOnFastCount(this_5[this_7], m, "when calling getCityModifierOnFastCount in City, line 148")
 	endloop
-	call LLIterator_close(iterator, "when calling close in City, line 146")
+	call LLIterator_close(iterator, "when calling close in City, line 147")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function alloc_City_City_CallbackSingle_line371 takes string stackPos returns integer
+function alloc_City_City_CallbackSingle_line372 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -7560,7 +7560,7 @@ function alloc_City_City_CallbackSingle_line371 takes string stackPos returns in
 			set this_7 = CallbackSingle_maxIndex
 			set CallbackSingle_typeId[this_7] = 639
 		else
-			call error("Out of memory: Could not create City_City_CallbackSingle_line371.", "when calling error in City, line 371")
+			call error("Out of memory: Could not create City_City_CallbackSingle_line372.", "when calling error in City, line 372")
 			set this_7 = 0
 		endif
 	else
@@ -7578,8 +7578,8 @@ endfunction
 function City_getCityModifierOnAdd takes integer this_7, integer cm_2, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set City_public_order_add[this_7] = City_public_order_add[this_7] + CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 417")]
-	set City_tax_multiplier[this_7] = City_tax_multiplier[this_7] + CityModifierClass_taxIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 418")]
+	set City_public_order_add[this_7] = City_public_order_add[this_7] + CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 418")]
+	set City_tax_multiplier[this_7] = City_tax_multiplier[this_7] + CityModifierClass_taxIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 419")]
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -7588,12 +7588,12 @@ function dispatch_City_City_City_getCityModifierOnAdd takes integer this_7, inte
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getCityModifierOnAdd", "when calling error in City, line 416")
+			call error("Nullpointer exception when calling City.getCityModifierOnAdd", "when calling error in City, line 417")
 		else
-			call error("Called City.getCityModifierOnAdd on invalid object.", "when calling error in City, line 416")
+			call error("Called City.getCityModifierOnAdd on invalid object.", "when calling error in City, line 417")
 		endif
 	endif
-	call City_getCityModifierOnAdd(this_7, cm_2, "when calling getCityModifierOnAdd in City, line 416")
+	call City_getCityModifierOnAdd(this_7, cm_2, "when calling getCityModifierOnAdd in City, line 417")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -7796,18 +7796,18 @@ function City_addModifier takes integer this_7, integer cm_2, string stackPos re
 	local real temp
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if dispatch_LinkedList_LinkedList_LinkedList_has(City_modifiers[this_7], cm_2, "when calling has in City, line 366") then
+	if dispatch_LinkedList_LinkedList_LinkedList_has(City_modifiers[this_7], cm_2, "when calling has in City, line 367") then
 		set wurst_stack_depth = wurst_stack_depth - 1
 		return false
 	endif
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(City_modifiers[this_7], cm_2, "when calling add in City, line 368")
-	call dispatch_City_City_City_getCityModifierOnAdd(this_7, cm_2, "when calling getCityModifierOnAdd in City, line 369")
-	set temp = CityModifierClass_time[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 371")]
-	set clVar = alloc_City_City_CallbackSingle_line371("when calling alloc_City_City_CallbackSingle_line371 in City, line 371")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(City_modifiers[this_7], cm_2, "when calling add in City, line 369")
+	call dispatch_City_City_City_getCityModifierOnAdd(this_7, cm_2, "when calling getCityModifierOnAdd in City, line 370")
+	set temp = CityModifierClass_time[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 372")]
+	set clVar = alloc_City_City_CallbackSingle_line372("when calling alloc_City_City_CallbackSingle_line372 in City, line 372")
 	call construct_CallbackSingle(clVar)
 	set this_3[clVar] = this_7
 	set cm[clVar] = cm_2
-	call doAfter(temp, clVar, "when calling doAfter in City, line 371")
+	call doAfter(temp, clVar, "when calling doAfter in City, line 372")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return true
 endfunction
@@ -7818,12 +7818,12 @@ function dispatch_City_City_City_addModifier takes integer this_7, integer cm_2,
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 365")
+			call error("Nullpointer exception when calling City.addModifier", "when calling error in City, line 366")
 		else
-			call error("Called City.addModifier on invalid object.", "when calling error in City, line 365")
+			call error("Called City.addModifier on invalid object.", "when calling error in City, line 366")
 		endif
 	endif
-	set City_City_addModifier_result = City_addModifier(this_7, cm_2, "when calling addModifier in City, line 365")
+	set City_City_addModifier_result = City_addModifier(this_7, cm_2, "when calling addModifier in City, line 366")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return City_City_addModifier_result
 endfunction
@@ -7836,9 +7836,9 @@ function dispatch_City_City_City_getCityModifierOnLongCount takes integer this_7
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getCityModifierOnLongCount", "when calling error in City, line 412")
+			call error("Nullpointer exception when calling City.getCityModifierOnLongCount", "when calling error in City, line 413")
 		else
-			call error("Called City.getCityModifierOnLongCount on invalid object.", "when calling error in City, line 412")
+			call error("Called City.getCityModifierOnLongCount on invalid object.", "when calling error in City, line 413")
 		endif
 	endif
 	call City_getCityModifierOnLongCount(this_7, w_cm)
@@ -7849,33 +7849,33 @@ function getChance takes real ch returns boolean
 	return GetRandomReal(0.0, 1.0) <= ch
 endfunction
 
-function City_City_call_line151 takes integer this_7, integer cbLONG, string stackPos returns nothing
+function City_City_call_line152 takes integer this_7, integer cbLONG, string stackPos returns nothing
 	local integer iterator
 	local integer m
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 2, "when calling get in City, line 152")]) then
-		call dispatch_City_City_City_addModifier(this_6[this_7], 2, "when calling addModifier in City, line 153")
+	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 2, "when calling get in City, line 153")]) then
+		call dispatch_City_City_City_addModifier(this_6[this_7], 2, "when calling addModifier in City, line 154")
 	endif
-	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 5, "when calling get in City, line 154")]) then
-		call dispatch_City_City_City_addModifier(this_6[this_7], 5, "when calling addModifier in City, line 155")
+	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 5, "when calling get in City, line 155")]) then
+		call dispatch_City_City_City_addModifier(this_6[this_7], 5, "when calling addModifier in City, line 156")
 	endif
-	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 7, "when calling get in City, line 156")]) then
-		call dispatch_City_City_City_addModifier(this_6[this_7], 7, "when calling addModifier in City, line 157")
+	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 7, "when calling get in City, line 157")]) then
+		call dispatch_City_City_City_addModifier(this_6[this_7], 7, "when calling addModifier in City, line 158")
 	endif
-	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 3, "when calling get in City, line 158")]) then
-		call dispatch_City_City_City_addModifier(this_6[this_7], 3, "when calling addModifier in City, line 159")
+	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 3, "when calling get in City, line 159")]) then
+		call dispatch_City_City_City_addModifier(this_6[this_7], 3, "when calling addModifier in City, line 160")
 	endif
-	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 4, "when calling get in City, line 160")]) then
-		call dispatch_City_City_City_addModifier(this_6[this_7], 4, "when calling addModifier in City, line 161")
+	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 4, "when calling get in City, line 161")]) then
+		call dispatch_City_City_City_addModifier(this_6[this_7], 4, "when calling addModifier in City, line 162")
 	endif
-	set iterator = LinkedList_iterator(City_modifiers[this_6[this_7]], "when calling iterator in City, line 163")
+	set iterator = LinkedList_iterator(City_modifiers[this_6[this_7]], "when calling iterator in City, line 164")
 	loop
 		exitwhen  not LLIterator_hasNext(iterator)
 		set m = LLIterator_next(iterator)
-		call dispatch_City_City_City_getCityModifierOnLongCount(this_6[this_7], m, "when calling getCityModifierOnLongCount in City, line 164")
+		call dispatch_City_City_City_getCityModifierOnLongCount(this_6[this_7], m, "when calling getCityModifierOnLongCount in City, line 165")
 	endloop
-	call LLIterator_close(iterator, "when calling close in City, line 163")
+	call LLIterator_close(iterator, "when calling close in City, line 164")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -8217,7 +8217,7 @@ function Economy_call_line55 takes integer this_7, integer cbINCOME_MULTIBOARD, 
 	set receiver_2 = null
 endfunction
 
-function alloc_City_City_ForGroupCallback_line310 takes string stackPos returns integer
+function alloc_City_City_ForGroupCallback_line311 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -8227,7 +8227,7 @@ function alloc_City_City_ForGroupCallback_line310 takes string stackPos returns 
 			set this_7 = ForGroupCallback_maxIndex
 			set ForGroupCallback_typeId[this_7] = 684
 		else
-			call error("Out of memory: Could not create City_City_ForGroupCallback_line310.", "when calling error in City, line 310")
+			call error("Out of memory: Could not create City_City_ForGroupCallback_line311.", "when calling error in City, line 311")
 			set this_7 = 0
 		endif
 	else
@@ -8239,7 +8239,7 @@ function alloc_City_City_ForGroupCallback_line310 takes string stackPos returns 
 	return this_7
 endfunction
 
-function alloc_City_City_ForGroupCallback_line314 takes string stackPos returns integer
+function alloc_City_City_ForGroupCallback_line315 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -8249,7 +8249,7 @@ function alloc_City_City_ForGroupCallback_line314 takes string stackPos returns 
 			set this_7 = ForGroupCallback_maxIndex
 			set ForGroupCallback_typeId[this_7] = 685
 		else
-			call error("Out of memory: Could not create City_City_ForGroupCallback_line314.", "when calling error in City, line 314")
+			call error("Out of memory: Could not create City_City_ForGroupCallback_line315.", "when calling error in City, line 315")
 			set this_7 = 0
 		endif
 	else
@@ -8332,9 +8332,9 @@ function dispatch_City_City_City_getCityNameColored takes integer this_7, string
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getCityNameColored", "when calling error in City, line 176")
+			call error("Nullpointer exception when calling City.getCityNameColored", "when calling error in City, line 177")
 		else
-			call error("Called City.getCityNameColored on invalid object.", "when calling error in City, line 176")
+			call error("Called City.getCityNameColored on invalid object.", "when calling error in City, line 177")
 		endif
 	endif
 	set City_City_getCityNameColored_result = City_getCityNameColored(this_7)
@@ -8352,9 +8352,9 @@ function dispatch_City_City_City_getCityUnit takes integer this_7, string stackP
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getCityUnit", "when calling error in City, line 185")
+			call error("Nullpointer exception when calling City.getCityUnit", "when calling error in City, line 186")
 		else
-			call error("Called City.getCityUnit on invalid object.", "when calling error in City, line 185")
+			call error("Called City.getCityUnit on invalid object.", "when calling error in City, line 186")
 		endif
 	endif
 	set City_City_getCityUnit_result = City_getCityUnit(this_7)
@@ -8374,9 +8374,9 @@ function dispatch_City_City_City_getLastPublicOrder takes integer this_7, string
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getLastPublicOrder", "when calling error in City, line 332")
+			call error("Nullpointer exception when calling City.getLastPublicOrder", "when calling error in City, line 333")
 		else
-			call error("Called City.getLastPublicOrder on invalid object.", "when calling error in City, line 332")
+			call error("Called City.getLastPublicOrder on invalid object.", "when calling error in City, line 333")
 		endif
 	endif
 	set City_City_getLastPublicOrder_result = City_getLastPublicOrder(this_7)
@@ -8509,17 +8509,17 @@ function City_countPublicOrder takes integer this_7, string stackPos returns rea
 	set temp_x = tuple_temp
 	set temp_y = tuple_temp_2
 	set temp = City_kCityRange / 3.
-	set clVar = alloc_City_City_ForGroupCallback_line310("when calling alloc_City_City_ForGroupCallback_line310 in City, line 310")
+	set clVar = alloc_City_City_ForGroupCallback_line311("when calling alloc_City_City_ForGroupCallback_line311 in City, line 311")
 	set this[clVar] = this_7
-	call forUnitsInRange(temp_x, temp_y, temp, clVar, "when calling forUnitsInRange in City, line 310")
+	call forUnitsInRange(temp_x, temp_y, temp, clVar, "when calling forUnitsInRange in City, line 311")
 	set tuple_temp_3 = City_city_pos_x[this_7]
 	set tuple_temp_4 = City_city_pos_y[this_7]
 	set temp_x_2 = tuple_temp_3
 	set temp_y_2 = tuple_temp_4
 	set temp_2 = City_kCityRange
-	set clVar_2 = alloc_City_City_ForGroupCallback_line314("when calling alloc_City_City_ForGroupCallback_line314 in City, line 314")
+	set clVar_2 = alloc_City_City_ForGroupCallback_line315("when calling alloc_City_City_ForGroupCallback_line315 in City, line 315")
 	set this_2[clVar_2] = this_7
-	call forUnitsInRange(temp_x_2, temp_y_2, temp_2, clVar_2, "when calling forUnitsInRange in City, line 314")
+	call forUnitsInRange(temp_x_2, temp_y_2, temp_2, clVar_2, "when calling forUnitsInRange in City, line 315")
 	if City_public_order_last[this_7] < 0.0 then
 		set City_public_order_last[this_7] = 0.0
 	endif
@@ -8527,7 +8527,7 @@ function City_countPublicOrder takes integer this_7, string stackPos returns rea
 		set City_public_order_last[this_7] = 100.0
 	endif
 	if City_public_order_last[this_7] < 50.0 and getChance(0.01) then
-		call checkForRevolt(City_city_id[this_7], "when calling checkForRevolt in City, line 325")
+		call checkForRevolt(City_city_id[this_7], "when calling checkForRevolt in City, line 326")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return City_public_order_last[this_7]
@@ -8539,12 +8539,12 @@ function dispatch_City_City_City_countPublicOrder takes integer this_7, string s
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.countPublicOrder", "when calling error in City, line 305")
+			call error("Nullpointer exception when calling City.countPublicOrder", "when calling error in City, line 306")
 		else
-			call error("Called City.countPublicOrder on invalid object.", "when calling error in City, line 305")
+			call error("Called City.countPublicOrder on invalid object.", "when calling error in City, line 306")
 		endif
 	endif
-	set City_City_countPublicOrder_result = City_countPublicOrder(this_7, "when calling countPublicOrder in City, line 305")
+	set City_City_countPublicOrder_result = City_countPublicOrder(this_7, "when calling countPublicOrder in City, line 306")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return City_City_countPublicOrder_result
 endfunction
@@ -8573,8 +8573,8 @@ function City_countTax takes integer this_7, string stackPos returns integer
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set tax = 0
-	set tax = tax + dispatch_HashMap_HashMap_HashMap_get(CityBaseTaxes_kCityBaseTaxes, unit_getTypeId(City_city_unit[this_7]), "when calling get in City, line 280")
-	set pop_tax = real_toInt(SquareRoot(int_toReal(City_population[this_7]) * max_2(0.75, dispatch_City_City_City_countPublicOrder(this_7, "when calling countPublicOrder in City, line 292") / 100.)) / 6.)
+	set tax = tax + dispatch_HashMap_HashMap_HashMap_get(CityBaseTaxes_kCityBaseTaxes, unit_getTypeId(City_city_unit[this_7]), "when calling get in City, line 281")
+	set pop_tax = real_toInt(SquareRoot(int_toReal(City_population[this_7]) * max_2(0.75, dispatch_City_City_City_countPublicOrder(this_7, "when calling countPublicOrder in City, line 293") / 100.)) / 6.)
 	set tax = tax + pop_tax
 	set tax = real_toInt(tax * City_tax_multiplier[this_7] * City_kCityTaxLevelMultipliers[City_tax_level[this_7]])
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -8587,12 +8587,12 @@ function dispatch_City_City_City_countTax takes integer this_7, string stackPos 
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.countTax", "when calling error in City, line 276")
+			call error("Nullpointer exception when calling City.countTax", "when calling error in City, line 277")
 		else
-			call error("Called City.countTax on invalid object.", "when calling error in City, line 276")
+			call error("Called City.countTax on invalid object.", "when calling error in City, line 277")
 		endif
 	endif
-	set City_City_countTax_result = City_countTax(this_7, "when calling countTax in City, line 276")
+	set City_City_countTax_result = City_countTax(this_7, "when calling countTax in City, line 277")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return City_City_countTax_result
 endfunction
@@ -8607,9 +8607,9 @@ function dispatch_City_City_City_getModifiers takes integer this_7, string stack
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getModifiers", "when calling error in City, line 388")
+			call error("Nullpointer exception when calling City.getModifiers", "when calling error in City, line 389")
 		else
-			call error("Called City.getModifiers on invalid object.", "when calling error in City, line 388")
+			call error("Called City.getModifiers on invalid object.", "when calling error in City, line 389")
 		endif
 	endif
 	set City_City_getModifiers_result = City_getModifiers(this_7)
@@ -8627,9 +8627,9 @@ function dispatch_City_City_City_getPopulationGrowthStr takes integer this_7, st
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getPopulationGrowthStr", "when calling error in City, line 353")
+			call error("Nullpointer exception when calling City.getPopulationGrowthStr", "when calling error in City, line 354")
 		else
-			call error("Called City.getPopulationGrowthStr on invalid object.", "when calling error in City, line 353")
+			call error("Called City.getPopulationGrowthStr on invalid object.", "when calling error in City, line 354")
 		endif
 	endif
 	set City_City_getPopulationGrowthStr_result = City_getPopulationGrowthStr(this_7)
@@ -8653,9 +8653,9 @@ function dispatch_City_City_City_getPopulationStr takes integer this_7, string s
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getPopulationStr", "when calling error in City, line 356")
+			call error("Nullpointer exception when calling City.getPopulationStr", "when calling error in City, line 357")
 		else
-			call error("Called City.getPopulationStr on invalid object.", "when calling error in City, line 356")
+			call error("Called City.getPopulationStr on invalid object.", "when calling error in City, line 357")
 		endif
 	endif
 	set City_City_getPopulationStr_result = City_getPopulationStr(this_7)
@@ -8678,7 +8678,7 @@ function City_getPublicOrderStr takes integer this_7, string stackPos returns st
 	local integer tuple_temp_3
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set po = dispatch_City_City_City_countPublicOrder(this_7, "when calling countPublicOrder in City, line 336")
+	set po = dispatch_City_City_City_countPublicOrder(this_7, "when calling countPublicOrder in City, line 337")
 	set tuple_temp = real_toInt(255. - po / 100. * 255.)
 	set tuple_temp_2 = real_toInt(po / 100. * 255.)
 	set tuple_temp_3 = 0
@@ -8696,12 +8696,12 @@ function dispatch_City_City_City_getPublicOrderStr takes integer this_7, string 
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getPublicOrderStr", "when calling error in City, line 335")
+			call error("Nullpointer exception when calling City.getPublicOrderStr", "when calling error in City, line 336")
 		else
-			call error("Called City.getPublicOrderStr on invalid object.", "when calling error in City, line 335")
+			call error("Called City.getPublicOrderStr on invalid object.", "when calling error in City, line 336")
 		endif
 	endif
-	set City_City_getPublicOrderStr_result = City_getPublicOrderStr(this_7, "when calling getPublicOrderStr in City, line 335")
+	set City_City_getPublicOrderStr_result = City_getPublicOrderStr(this_7, "when calling getPublicOrderStr in City, line 336")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return City_City_getPublicOrderStr_result
 endfunction
@@ -8716,9 +8716,9 @@ function dispatch_City_City_City_getTaxLevelString takes integer this_7, string 
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getTaxLevelString", "when calling error in City, line 173")
+			call error("Nullpointer exception when calling City.getTaxLevelString", "when calling error in City, line 174")
 		else
-			call error("Called City.getTaxLevelString on invalid object.", "when calling error in City, line 173")
+			call error("Called City.getTaxLevelString on invalid object.", "when calling error in City, line 174")
 		endif
 	endif
 	set City_City_getTaxLevelString_result = City_getTaxLevelString(this_7)
@@ -8882,9 +8882,9 @@ function dispatch_CallbackPeriodic_ClosureTimers_CallbackPeriodic_call takes int
 	if CallbackPeriodic_typeId[this_7] <= 634 then
 		if CallbackPeriodic_typeId[this_7] <= 632 then
 			if CallbackPeriodic_typeId[this_7] <= 631 then
-				call City_City_call_line135(this_7, cb, "when calling City_City_call_line135 in ClosureTimers, line 130")
+				call City_City_call_line136(this_7, cb, "when calling City_City_call_line136 in ClosureTimers, line 130")
 			else
-				call City_City_call_line151(this_7, cb, "when calling City_City_call_line151 in ClosureTimers, line 130")
+				call City_City_call_line152(this_7, cb, "when calling City_City_call_line152 in ClosureTimers, line 130")
 			endif
 		elseif CallbackPeriodic_typeId[this_7] <= 633 then
 			call Credits_call_line5(this_7, cb)
@@ -8929,10 +8929,10 @@ endfunction
 function City_getCityModifierOnRemove takes integer this_7, integer cm_2, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if CityModifierClass_isPOIncreaseConstant[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 422")] then
-		set City_public_order_add[this_7] = City_public_order_add[this_7] - CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 423")]
+	if CityModifierClass_isPOIncreaseConstant[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 423")] then
+		set City_public_order_add[this_7] = City_public_order_add[this_7] - CityModifierClass_POIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 424")]
 	endif
-	set City_tax_multiplier[this_7] = City_tax_multiplier[this_7] - CityModifierClass_taxIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 424")]
+	set City_tax_multiplier[this_7] = City_tax_multiplier[this_7] - CityModifierClass_taxIncrease[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, cm_2, "when calling get in City, line 425")]
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -8941,12 +8941,12 @@ function dispatch_City_City_City_getCityModifierOnRemove takes integer this_7, i
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getCityModifierOnRemove", "when calling error in City, line 421")
+			call error("Nullpointer exception when calling City.getCityModifierOnRemove", "when calling error in City, line 422")
 		else
-			call error("Called City.getCityModifierOnRemove on invalid object.", "when calling error in City, line 421")
+			call error("Called City.getCityModifierOnRemove on invalid object.", "when calling error in City, line 422")
 		endif
 	endif
-	call City_getCityModifierOnRemove(this_7, cm_2, "when calling getCityModifierOnRemove in City, line 421")
+	call City_getCityModifierOnRemove(this_7, cm_2, "when calling getCityModifierOnRemove in City, line 422")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9046,12 +9046,12 @@ endfunction
 function City_removeModifier takes integer this_7, integer cm_2, string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if  not dispatch_LinkedList_LinkedList_LinkedList_has(City_modifiers[this_7], cm_2, "when calling has in City, line 376") then
+	if  not dispatch_LinkedList_LinkedList_LinkedList_has(City_modifiers[this_7], cm_2, "when calling has in City, line 377") then
 		set wurst_stack_depth = wurst_stack_depth - 1
 		return false
 	endif
-	call dispatch_LinkedList_LinkedList_LinkedList_remove(City_modifiers[this_7], cm_2, "when calling remove in City, line 378")
-	call dispatch_City_City_City_getCityModifierOnRemove(this_7, cm_2, "when calling getCityModifierOnRemove in City, line 380")
+	call dispatch_LinkedList_LinkedList_LinkedList_remove(City_modifiers[this_7], cm_2, "when calling remove in City, line 379")
+	call dispatch_City_City_City_getCityModifierOnRemove(this_7, cm_2, "when calling getCityModifierOnRemove in City, line 381")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return true
 endfunction
@@ -9062,20 +9062,20 @@ function dispatch_City_City_City_removeModifier takes integer this_7, integer cm
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.removeModifier", "when calling error in City, line 375")
+			call error("Nullpointer exception when calling City.removeModifier", "when calling error in City, line 376")
 		else
-			call error("Called City.removeModifier on invalid object.", "when calling error in City, line 375")
+			call error("Called City.removeModifier on invalid object.", "when calling error in City, line 376")
 		endif
 	endif
-	set City_City_removeModifier_result = City_removeModifier(this_7, cm_2, "when calling removeModifier in City, line 375")
+	set City_City_removeModifier_result = City_removeModifier(this_7, cm_2, "when calling removeModifier in City, line 376")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return City_City_removeModifier_result
 endfunction
 
-function City_City_call_line371 takes integer this_7, string stackPos returns nothing
+function City_City_call_line372 takes integer this_7, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_City_City_City_removeModifier(this_3[this_7], cm[this_7], "when calling removeModifier in City, line 372")
+	call dispatch_City_City_City_removeModifier(this_3[this_7], cm[this_7], "when calling removeModifier in City, line 373")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9440,10 +9440,10 @@ function alloc_Preloader_ForGroupCallback_line45 takes string stackPos returns i
 	return this_7
 endfunction
 
-function City_City_callback_line310 takes integer this_7, unit u_5, string stackPos returns nothing
+function City_City_callback_line311 takes integer this_7, unit u_5, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if ( not dispatch_LinkedList_LinkedList_LinkedList_has(Units_uPlebs, unit_getTypeId(u_5), "when calling has in City, line 311")) and unit_getOwner(u_5) == Player_players[City_player_id[this[this_7]]] then
+	if ( not dispatch_LinkedList_LinkedList_LinkedList_has(Units_uPlebs, unit_getTypeId(u_5), "when calling has in City, line 312")) and unit_getOwner(u_5) == Player_players[City_player_id[this[this_7]]] then
 		set City_public_order_last[this[this_7]] = City_public_order_last[this[this_7]] + City_kCityUnitPOAdd
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -9476,7 +9476,7 @@ function getPublicOrderAddByUnit takes integer id returns real
 	endif
 endfunction
 
-function City_City_callback_line314 takes integer this_7, unit u_5 returns nothing
+function City_City_callback_line315 takes integer this_7, unit u_5 returns nothing
 	if IsUnitType(u_5, UNIT_TYPE_STRUCTURE) and unit_getOwner(u_5) == Player_players[City_player_id[this_2[this_7]]] then
 		set City_public_order_last[this_2[this_7]] = City_public_order_last[this_2[this_7]] + getPublicOrderAddByUnit(unit_getTypeId(u_5))
 	endif
@@ -9532,9 +9532,9 @@ function dispatch_ForGroupCallback_ClosureForGroups_ForGroupCallback_callback ta
 	if ForGroupCallback_typeId[this_7] <= 686 then
 		if ForGroupCallback_typeId[this_7] <= 685 then
 			if ForGroupCallback_typeId[this_7] <= 684 then
-				call City_City_callback_line310(this_7, u_5, "when calling City_City_callback_line310 in ClosureForGroups, line 4")
+				call City_City_callback_line311(this_7, u_5, "when calling City_City_callback_line311 in ClosureForGroups, line 4")
 			else
-				call City_City_callback_line314(this_7, u_5)
+				call City_City_callback_line315(this_7, u_5)
 			endif
 		else
 			call Economy_callback_line43(this_7, u_5, "when calling Economy_callback_line43 in ClosureForGroups, line 4")
@@ -9620,7 +9620,7 @@ function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_call takes integer
 		if CallbackSingle_typeId[this_7] <= 642 then
 			if CallbackSingle_typeId[this_7] <= 640 then
 				if CallbackSingle_typeId[this_7] <= 639 then
-					call City_City_call_line371(this_7, "when calling City_City_call_line371 in ClosureTimers, line 109")
+					call City_City_call_line372(this_7, "when calling City_City_call_line372 in ClosureTimers, line 109")
 				else
 					call ClosureEvents_call_line290(this_7)
 				endif
@@ -9763,9 +9763,9 @@ function dispatch_City_City_City_getCityForceId takes integer this_7, string sta
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.getCityForceId", "when calling error in City, line 188")
+			call error("Nullpointer exception when calling City.getCityForceId", "when calling error in City, line 189")
 		else
-			call error("Called City.getCityForceId on invalid object.", "when calling error in City, line 188")
+			call error("Called City.getCityForceId on invalid object.", "when calling error in City, line 189")
 		endif
 	endif
 	set City_City_getCityForceId_result = City_getCityForceId(this_7)
@@ -9784,9 +9784,9 @@ function dispatch_City_City_City_changeTaxLevelFORCED takes integer this_7, inte
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.changeTaxLevelFORCED", "when calling error in City, line 270")
+			call error("Nullpointer exception when calling City.changeTaxLevelFORCED", "when calling error in City, line 271")
 		else
-			call error("Called City.changeTaxLevelFORCED on invalid object.", "when calling error in City, line 270")
+			call error("Called City.changeTaxLevelFORCED on invalid object.", "when calling error in City, line 271")
 		endif
 	endif
 	call City_changeTaxLevelFORCED(this_7, lvl)
@@ -9822,8 +9822,8 @@ function City_refreshMultiboardIfPossible takes integer this_7, string stackPos 
 	set temp = Main_PLAYER_SLOTS - 1
 	loop
 		exitwhen i_2 > temp
-		if dispatch_PlayerStats_PlayerStats_PlayerStats_getSelectedCityId(PlayerStats_player_stats[i_2], "when calling getSelectedCityId in City, line 249") == City_city_id[this_7] then
-			call dispatch_PlayerStats_PlayerStats_PlayerStats_refreshMultiboardCity(PlayerStats_player_stats[i_2], "when calling refreshMultiboardCity in City, line 250")
+		if dispatch_PlayerStats_PlayerStats_PlayerStats_getSelectedCityId(PlayerStats_player_stats[i_2], "when calling getSelectedCityId in City, line 250") == City_city_id[this_7] then
+			call dispatch_PlayerStats_PlayerStats_PlayerStats_refreshMultiboardCity(PlayerStats_player_stats[i_2], "when calling refreshMultiboardCity in City, line 251")
 		endif
 		set i_2 = i_2 + 1
 	endloop
@@ -9835,12 +9835,12 @@ function dispatch_City_City_City_refreshMultiboardIfPossible takes integer this_
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.refreshMultiboardIfPossible", "when calling error in City, line 247")
+			call error("Nullpointer exception when calling City.refreshMultiboardIfPossible", "when calling error in City, line 248")
 		else
-			call error("Called City.refreshMultiboardIfPossible on invalid object.", "when calling error in City, line 247")
+			call error("Called City.refreshMultiboardIfPossible on invalid object.", "when calling error in City, line 248")
 		endif
 	endif
-	call City_refreshMultiboardIfPossible(this_7, "when calling refreshMultiboardIfPossible in City, line 247")
+	call City_refreshMultiboardIfPossible(this_7, "when calling refreshMultiboardIfPossible in City, line 248")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9853,15 +9853,15 @@ function City_changeOwner takes integer this_7, integer pl_id, string stackPos r
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if pl_id == PLAYER_NEUTRAL_AGGRESSIVE then
 		call unit_setOwner(City_city_unit[this_7], Player(PLAYER_NEUTRAL_AGGRESSIVE), true)
-		call dispatch_City_City_City_changeTaxLevelFORCED(this_7, 0, "when calling changeTaxLevelFORCED in City, line 201")
+		call dispatch_City_City_City_changeTaxLevelFORCED(this_7, 0, "when calling changeTaxLevelFORCED in City, line 202")
 	else
 		call unit_setOwner(City_city_unit[this_7], Player_players[pl_id], true)
 	endif
 	set City_player_id[this_7] = pl_id
 	if pl_id >= 0 and pl_id < Main_PLAYER_SLOTS then
-		set City_force_id[this_7] = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[pl_id], "when calling getForceId in City, line 208")
+		set City_force_id[this_7] = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[pl_id], "when calling getForceId in City, line 209")
 	endif
-	call dispatch_City_City_City_refreshMultiboardIfPossible(this_7, "when calling refreshMultiboardIfPossible in City, line 210")
+	call dispatch_City_City_City_refreshMultiboardIfPossible(this_7, "when calling refreshMultiboardIfPossible in City, line 211")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9870,19 +9870,19 @@ function dispatch_City_City_City_changeOwner takes integer this_7, integer pl_id
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.changeOwner", "when calling error in City, line 196")
+			call error("Nullpointer exception when calling City.changeOwner", "when calling error in City, line 197")
 		else
-			call error("Called City.changeOwner on invalid object.", "when calling error in City, line 196")
+			call error("Called City.changeOwner on invalid object.", "when calling error in City, line 197")
 		endif
 	endif
-	call City_changeOwner(this_7, pl_id, "when calling changeOwner in City, line 196")
+	call City_changeOwner(this_7, pl_id, "when calling changeOwner in City, line 197")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function City_replaceCity takes integer this_7, integer unit_id, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	if  not dispatch_LinkedList_LinkedList_LinkedList_has(Units_kCityTypes, unit_id, "when calling has in City, line 192") then
+	if  not dispatch_LinkedList_LinkedList_LinkedList_has(Units_kCityTypes, unit_id, "when calling has in City, line 193") then
 		set wurst_stack_depth = wurst_stack_depth - 1
 		return
 	endif
@@ -9895,12 +9895,12 @@ function dispatch_City_City_City_replaceCity takes integer this_7, integer unit_
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.replaceCity", "when calling error in City, line 191")
+			call error("Nullpointer exception when calling City.replaceCity", "when calling error in City, line 192")
 		else
-			call error("Called City.replaceCity on invalid object.", "when calling error in City, line 191")
+			call error("Called City.replaceCity on invalid object.", "when calling error in City, line 192")
 		endif
 	endif
-	call City_replaceCity(this_7, unit_id, "when calling replaceCity in City, line 191")
+	call City_replaceCity(this_7, unit_id, "when calling replaceCity in City, line 192")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9910,15 +9910,15 @@ function City_settleCity takes integer this_7, integer pl_id, string stackPos re
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set temp = City_force_id[this_7]
 	if temp == Forces_kWE then
-		call dispatch_City_City_City_replaceCity(this_7, Units_uCapitolWE1, "when calling replaceCity in City, line 215")
+		call dispatch_City_City_City_replaceCity(this_7, Units_uCapitolWE1, "when calling replaceCity in City, line 216")
 	elseif temp == Forces_kBZ then
-		call dispatch_City_City_City_replaceCity(this_7, Units_uCapitolBZ1, "when calling replaceCity in City, line 217")
+		call dispatch_City_City_City_replaceCity(this_7, Units_uCapitolBZ1, "when calling replaceCity in City, line 218")
 	elseif temp == Forces_kEE then
-		call dispatch_City_City_City_replaceCity(this_7, Units_uCapitolEE1, "when calling replaceCity in City, line 219")
+		call dispatch_City_City_City_replaceCity(this_7, Units_uCapitolEE1, "when calling replaceCity in City, line 220")
 	elseif temp == Forces_kME then
-		call dispatch_City_City_City_replaceCity(this_7, Units_uCapitolME1, "when calling replaceCity in City, line 221")
+		call dispatch_City_City_City_replaceCity(this_7, Units_uCapitolME1, "when calling replaceCity in City, line 222")
 	endif
-	call dispatch_City_City_City_changeOwner(this_7, pl_id, "when calling changeOwner in City, line 222")
+	call dispatch_City_City_City_changeOwner(this_7, pl_id, "when calling changeOwner in City, line 223")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9927,12 +9927,12 @@ function dispatch_City_City_City_settleCity takes integer this_7, integer pl_id,
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.settleCity", "when calling error in City, line 212")
+			call error("Nullpointer exception when calling City.settleCity", "when calling error in City, line 213")
 		else
-			call error("Called City.settleCity on invalid object.", "when calling error in City, line 212")
+			call error("Called City.settleCity on invalid object.", "when calling error in City, line 213")
 		endif
 	endif
-	call City_settleCity(this_7, pl_id, "when calling settleCity in City, line 212")
+	call City_settleCity(this_7, pl_id, "when calling settleCity in City, line 213")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9998,7 +9998,7 @@ function getCityId takes unit u_5, string stackPos returns integer
 	set temp = City_cityCount - 1
 	loop
 		exitwhen i_2 > temp
-		if dispatch_City_City_City_getCityUnit(City_cities[i_2], "when calling getCityUnit in City, line 439") == u_5 then
+		if dispatch_City_City_City_getCityUnit(City_cities[i_2], "when calling getCityUnit in City, line 440") == u_5 then
 			set wurst_stack_depth = wurst_stack_depth - 1
 			return i_2
 		endif
@@ -10801,7 +10801,9 @@ function CastleCapture_onEvent_line8 takes integer this_7, string stackPos retur
 		if unit_getLifePercent(u_5) <= City_kCityLifePercentToCapture and unit_getOwner(u_5) != unit_getOwner(GetAttacker()) and vec2_length(vec2_op_minus(unit_getPos(u_5), unit_getPos_return_y, unit_getPos(GetAttacker()), unit_getPos_return_y), vec2_op_minus_return_y) <= 300.0 then
 			set pl_attacker = unit_getOwner(GetAttacker())
 			call unit_setOwner(u_5, pl_attacker, true)
-			call ReplaceUnitBJ(u_5, getCastleByFaction(getCastleTier(unit_getTypeId(u_5)), dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(pl_attacker)], "when calling getForceId in CastleCapture, line 16")), bj_UNIT_STATE_METHOD_RELATIVE)
+			if player_getId(pl_attacker) != PLAYER_NEUTRAL_AGGRESSIVE then
+				call ReplaceUnitBJ(u_5, getCastleByFaction(getCastleTier(unit_getTypeId(u_5)), dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(pl_attacker)], "when calling getForceId in CastleCapture, line 17")), bj_UNIT_STATE_METHOD_RELATIVE)
+			endif
 			call unit_setLifePercent(u_5, City_kCityLifePercentOnceItCaptured)
 			call unit_setManaPercent(u_5, 0.0)
 			call UnitAddAbility(u_5, Abilities_aCastleAura)
@@ -10822,7 +10824,7 @@ function alloc_City takes string stackPos returns integer
 			set this_7 = City_maxIndex
 			set City_typeId[this_7] = 653
 		else
-			call error("Out of memory: Could not create City.", "when calling error in City, line 70")
+			call error("Out of memory: Could not create City.", "when calling error in City, line 71")
 			set this_7 = 0
 		endif
 	else
@@ -10918,7 +10920,7 @@ function EventListener_add takes eventid eventId, integer listener, string stack
 	return listener
 endfunction
 
-function alloc_City_City_CallbackPeriodic_line135 takes string stackPos returns integer
+function alloc_City_City_CallbackPeriodic_line136 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -10928,7 +10930,7 @@ function alloc_City_City_CallbackPeriodic_line135 takes string stackPos returns 
 			set this_7 = CallbackPeriodic_maxIndex
 			set CallbackPeriodic_typeId[this_7] = 631
 		else
-			call error("Out of memory: Could not create City_City_CallbackPeriodic_line135.", "when calling error in City, line 135")
+			call error("Out of memory: Could not create City_City_CallbackPeriodic_line136.", "when calling error in City, line 136")
 			set this_7 = 0
 		endif
 	else
@@ -10940,7 +10942,7 @@ function alloc_City_City_CallbackPeriodic_line135 takes string stackPos returns 
 	return this_7
 endfunction
 
-function alloc_City_City_CallbackPeriodic_line151 takes string stackPos returns integer
+function alloc_City_City_CallbackPeriodic_line152 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -10950,7 +10952,7 @@ function alloc_City_City_CallbackPeriodic_line151 takes string stackPos returns 
 			set this_7 = CallbackPeriodic_maxIndex
 			set CallbackPeriodic_typeId[this_7] = 632
 		else
-			call error("Out of memory: Could not create City_City_CallbackPeriodic_line151.", "when calling error in City, line 151")
+			call error("Out of memory: Could not create City_City_CallbackPeriodic_line152.", "when calling error in City, line 152")
 			set this_7 = 0
 		endif
 	else
@@ -10962,7 +10964,7 @@ function alloc_City_City_CallbackPeriodic_line151 takes string stackPos returns 
 	return this_7
 endfunction
 
-function alloc_City_City_EventListener_line120 takes string stackPos returns integer
+function alloc_City_City_EventListener_line121 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -10972,7 +10974,7 @@ function alloc_City_City_EventListener_line120 takes string stackPos returns int
 			set this_7 = EventListener_maxIndex
 			set EventListener_typeId[this_7] = 666
 		else
-			call error("Out of memory: Could not create City_City_EventListener_line120.", "when calling error in City, line 120")
+			call error("Out of memory: Could not create City_City_EventListener_line121.", "when calling error in City, line 121")
 			set this_7 = 0
 		endif
 	else
@@ -11113,7 +11115,7 @@ function construct_City takes integer this_7, unit u_5, string n, integer f_id, 
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set City_tax_level[this_7] = 0
 	set City_last_time_tax_level_changed[this_7] = 0.
-	set City_modifiers[this_7] = new_LinkedList("when calling new_LinkedList in City, line 103")
+	set City_modifiers[this_7] = new_LinkedList("when calling new_LinkedList in City, line 104")
 	set City_tax_multiplier[this_7] = 1.0
 	set City_city_unit[this_7] = u_5
 	set tuple_temp = unit_getPos(City_city_unit[this_7])
@@ -11127,23 +11129,23 @@ function construct_City takes integer this_7, unit u_5, string n, integer f_id, 
 	set City_city_id[this_7] = City_cityCount
 	set City_cityCount = City_cityCount + 1
 	set temp = EVENT_PLAYER_UNIT_DEATH
-	set clVar = alloc_City_City_EventListener_line120("when calling alloc_City_City_EventListener_line120 in City, line 120")
+	set clVar = alloc_City_City_EventListener_line121("when calling alloc_City_City_EventListener_line121 in City, line 121")
 	call construct_EventListener(clVar)
 	set this_4[clVar] = this_7
-	call EventListener_add(temp, clVar, "when calling add in City, line 120")
+	call EventListener_add(temp, clVar, "when calling add in City, line 121")
 	set City_population_growth_rate[this_7] = getRandomValWithNormalDistribution(City_kCityPopGrowthRateMinMax[0], City_kCityPopGrowthRateMinMax[1],  - 5.0, 5.0, 0.15)
-	set City_population[this_7] = real_toInt(getRandomValWithNormalDistribution(int_toReal(dispatch_LinkedList_LinkedList_LinkedList_get(City_kCityPopInit[tier], 0, "when calling get in City, line 130")), int_toReal(dispatch_LinkedList_LinkedList_LinkedList_get(City_kCityPopInit[tier], 1, "when calling get in City, line 130")),  - 5.0, 5.0, 0.15))
+	set City_population[this_7] = real_toInt(getRandomValWithNormalDistribution(int_toReal(dispatch_LinkedList_LinkedList_LinkedList_get(City_kCityPopInit[tier], 0, "when calling get in City, line 131")), int_toReal(dispatch_LinkedList_LinkedList_LinkedList_get(City_kCityPopInit[tier], 1, "when calling get in City, line 131")),  - 5.0, 5.0, 0.15))
 	set City_public_order_add[this_7] = 0.
 	set temp_2 = City_kCityPopCountRate / 2. + GetRandomReal(City_kCityPopCountRate / 2., City_kCityPopCountRate)
-	set clVar_2 = alloc_City_City_CallbackPeriodic_line135("when calling alloc_City_City_CallbackPeriodic_line135 in City, line 135")
+	set clVar_2 = alloc_City_City_CallbackPeriodic_line136("when calling alloc_City_City_CallbackPeriodic_line136 in City, line 136")
 	call construct_CallbackPeriodic(clVar_2)
 	set this_5[clVar_2] = this_7
-	call doPeriodically(temp_2, clVar_2, "when calling doPeriodically in City, line 135")
+	call doPeriodically(temp_2, clVar_2, "when calling doPeriodically in City, line 136")
 	set temp_3 = City_kCityLongCount / 2. + GetRandomReal(City_kCityLongCount / 2., City_kCityLongCount)
-	set clVar_3 = alloc_City_City_CallbackPeriodic_line151("when calling alloc_City_City_CallbackPeriodic_line151 in City, line 151")
+	set clVar_3 = alloc_City_City_CallbackPeriodic_line152("when calling alloc_City_City_CallbackPeriodic_line152 in City, line 152")
 	call construct_CallbackPeriodic(clVar_3)
 	set this_6[clVar_3] = this_7
-	call doPeriodically(temp_3, clVar_3, "when calling doPeriodically in City, line 151")
+	call doPeriodically(temp_3, clVar_3, "when calling doPeriodically in City, line 152")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set temp = null
 endfunction
@@ -11152,8 +11154,8 @@ function new_City takes unit u_5, string n, integer f_id, integer tier, string s
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set this_7 = alloc_City("when calling alloc_City in City, line 100")
-	call construct_City(this_7, u_5, n, f_id, tier, "when calling construct_City in City, line 100")
+	set this_7 = alloc_City("when calling alloc_City in City, line 101")
+	call construct_City(this_7, u_5, n, f_id, tier, "when calling construct_City in City, line 101")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
 endfunction
@@ -11162,7 +11164,7 @@ function isCity takes unit u_5, string stackPos returns boolean
 	local boolean stackTrace_tempReturn
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = dispatch_LinkedList_LinkedList_LinkedList_has(Units_kCityTypes, unit_getTypeId(u_5), "when calling has in City, line 433")
+	set stackTrace_tempReturn = dispatch_LinkedList_LinkedList_LinkedList_has(Units_kCityTypes, unit_getTypeId(u_5), "when calling has in City, line 434")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return stackTrace_tempReturn
 endfunction
@@ -11305,19 +11307,19 @@ function City_capture takes integer this_7, player whoCaptures, string stackPos 
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call SetUnitLifePercentBJ(City_city_unit[this_7], City_kCityLifePercentOnceItCaptured)
 	call SetUnitManaPercentBJ(City_city_unit[this_7], City_kCityManaPercentOnceItCapruted)
-	call dispatch_City_City_City_addModifier(this_7, 0, "when calling addModifier in City, line 231")
-	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 6, "when calling get in City, line 232")]) then
-		call dispatch_City_City_City_addModifier(this_7, 6, "when calling addModifier in City, line 233")
+	call dispatch_City_City_City_addModifier(this_7, 0, "when calling addModifier in City, line 232")
+	if getChance(CityModifierClass_chance[dispatch_HashMap_HashMap_HashMap_get(CityModifiers_cityModifiers, 6, "when calling get in City, line 233")]) then
+		call dispatch_City_City_City_addModifier(this_7, 6, "when calling addModifier in City, line 234")
 	endif
 	set whoCapturesForceId = City_force_id[this_7]
 	set whoCapturesId = player_getId(whoCaptures)
 	if whoCapturesId >= 0 and whoCapturesId < Main_PLAYER_SLOTS then
-		set whoCapturesForceId = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[whoCapturesId], "when calling getForceId in City, line 239")
+		set whoCapturesForceId = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[whoCapturesId], "when calling getForceId in City, line 240")
 	endif
-	if dispatch_LinkedList_LinkedList_LinkedList_has(Units_uCapitols, unit_getTypeId(City_city_unit[this_7]), "when calling has in City, line 241") then
-		call dispatch_City_City_City_replaceCity(this_7, getCapitolByFaction(getCapitolTier(unit_getTypeId(City_city_unit[this_7])), whoCapturesForceId), "when calling replaceCity in City, line 242")
+	if dispatch_LinkedList_LinkedList_LinkedList_has(Units_uCapitols, unit_getTypeId(City_city_unit[this_7]), "when calling has in City, line 242") then
+		call dispatch_City_City_City_replaceCity(this_7, getCapitolByFaction(getCapitolTier(unit_getTypeId(City_city_unit[this_7])), whoCapturesForceId), "when calling replaceCity in City, line 243")
 	endif
-	call dispatch_City_City_City_changeOwner(this_7, whoCapturesId, "when calling changeOwner in City, line 244")
+	call dispatch_City_City_City_changeOwner(this_7, whoCapturesId, "when calling changeOwner in City, line 245")
 	call UnitAddAbility(City_city_unit[this_7], Abilities_aTownHallCapitolAura)
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -11327,12 +11329,12 @@ function dispatch_City_City_City_capture takes integer this_7, player whoCapture
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.capture", "when calling error in City, line 227")
+			call error("Nullpointer exception when calling City.capture", "when calling error in City, line 228")
 		else
-			call error("Called City.capture on invalid object.", "when calling error in City, line 227")
+			call error("Called City.capture on invalid object.", "when calling error in City, line 228")
 		endif
 	endif
-	call City_capture(this_7, whoCaptures, "when calling capture in City, line 227")
+	call City_capture(this_7, whoCaptures, "when calling capture in City, line 228")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -11488,7 +11490,7 @@ function unit_setMana takes unit this_7, real wval returns nothing
 	call unit_setState(this_7, UNIT_STATE_MANA, wval)
 endfunction
 
-function City_City_onEvent_line120 takes integer this_7 returns nothing
+function City_City_onEvent_line121 takes integer this_7 returns nothing
 	local unit dying_u = GetDyingUnit()
 	if dying_u == City_city_unit[this_4[this_7]] then
 		set City_city_unit[this_4[this_7]] = CreateUnitAtLoc(Player_players[City_player_id[this_4[this_7]]], unit_getTypeId(dying_u), unit_getLoc(dying_u), bj_UNIT_FACING)
@@ -11605,7 +11607,7 @@ function LimitMercenaryCamps_onEvent_line12 takes integer this_7, string stackPo
 endfunction
 
 function LimitMercenaryCamps_onEvent_line8 takes integer this_7 returns nothing
-	local unit u_5 = GetConstructingStructure()
+	local unit u_5 = GetTriggerUnit()
 	if unit_getTypeId(u_5) == Units_uMercenaryCamp then
 		set LimitMercenaryCamps_mercenary_camps[player_getId(unit_getOwner(u_5))] = LimitMercenaryCamps_mercenary_camps[player_getId(unit_getOwner(u_5))] - 1
 	endif
@@ -12112,7 +12114,7 @@ function City_changeTaxLevel takes integer this_7, integer lvl, string stackPos 
 		set City_public_order_add[this_7] = City_public_order_add[this_7] + City_kCityTaxLevelPOIncrease[lvl]
 		set City_tax_level[this_7] = lvl
 	else
-		call noteToPlayer(Strings_ksCannotChangeTaxLevel, Player_players[City_player_id[this_7]], "when calling noteToPlayer in City, line 268")
+		call noteToPlayer(Strings_ksCannotChangeTaxLevel, Player_players[City_player_id[this_7]], "when calling noteToPlayer in City, line 269")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -12122,12 +12124,12 @@ function dispatch_City_City_City_changeTaxLevel takes integer this_7, integer lv
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if City_typeId[this_7] == 0 then
 		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.changeTaxLevel", "when calling error in City, line 259")
+			call error("Nullpointer exception when calling City.changeTaxLevel", "when calling error in City, line 260")
 		else
-			call error("Called City.changeTaxLevel on invalid object.", "when calling error in City, line 259")
+			call error("Called City.changeTaxLevel on invalid object.", "when calling error in City, line 260")
 		endif
 	endif
-	call City_changeTaxLevel(this_7, lvl, "when calling changeTaxLevel in City, line 259")
+	call City_changeTaxLevel(this_7, lvl, "when calling changeTaxLevel in City, line 260")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -12238,7 +12240,7 @@ function dispatch_EventListener_ClosureEvents_EventListener_onEvent takes intege
 			elseif EventListener_typeId[this_7] <= 665 then
 				call CityManage_onEvent_line9(this_7, "when calling CityManage_onEvent_line9 in ClosureEvents, line 109")
 			else
-				call City_City_onEvent_line120(this_7)
+				call City_City_onEvent_line121(this_7)
 			endif
 		elseif EventListener_typeId[this_7] <= 669 then
 			if EventListener_typeId[this_7] <= 668 then
@@ -12321,13 +12323,13 @@ endfunction
 function ClosureEvents_closure_impl_3 takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 293")
+	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 292")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_ClosureEvents_closure_impl_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call ClosureEvents_closure_impl_3("ClosureEvents, line 293")
+	call ClosureEvents_closure_impl_3("ClosureEvents, line 292")
 endfunction
 
 function ClosureEvents_closure_impl_4 takes string stackPos returns nothing
@@ -12345,13 +12347,13 @@ endfunction
 function ClosureEvents_closure_impl_5 takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 292")
+	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 293")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_ClosureEvents_closure_impl_4 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call ClosureEvents_closure_impl_5("ClosureEvents, line 292")
+	call ClosureEvents_closure_impl_5("ClosureEvents, line 293")
 endfunction
 
 function dispatch_OnCast_ClosureEvents_OnCast_fireEx takes integer this_7, integer id returns nothing
@@ -12894,6 +12896,46 @@ function bridge_Upkeep_closure_impl takes nothing returns nothing
 	call Upkeep_closure_impl("Upkeep, line 21")
 endfunction
 
+function City_addPublicOrder takes integer this_7, real amount returns nothing
+	set City_public_order_add[this_7] = City_public_order_add[this_7] + amount
+endfunction
+
+function dispatch_City_City_City_addPublicOrder takes integer this_7, real amount, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if City_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling City.addPublicOrder", "when calling error in City, line 330")
+		else
+			call error("Called City.addPublicOrder on invalid object.", "when calling error in City, line 330")
+		endif
+	endif
+	call City_addPublicOrder(this_7, amount)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function City_changeCityName takes integer this_7, string new_name, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set City_city_name[this_7] = string_substring(new_name, 0, City_kCityNameLimit)
+	call dispatch_City_City_City_refreshMultiboardIfPossible(this_7, "when calling refreshMultiboardIfPossible in City, line 172")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_City_City_City_changeCityName takes integer this_7, string new_name, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if City_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling City.changeCityName", "when calling error in City, line 169")
+		else
+			call error("Called City.changeCityName on invalid object.", "when calling error in City, line 169")
+		endif
+	endif
+	call City_changeCityName(this_7, new_name, "when calling changeCityName in City, line 169")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
 function PlayerStats_alliance_states_get takes integer index1, integer index2, string stackPos returns integer
 	local integer returnVal
 	if index2 < 0 or index2 >= 24 then
@@ -12978,31 +13020,6 @@ function PlayerStats_alliance_states_get takes integer index1, integer index2, s
 		set returnVal = PlayerStats_alliance_states_23[index1]
 	endif
 	return returnVal
-endfunction
-
-function PlayerStats_getAllianceState takes integer this_7, player which_player, string stackPos returns integer
-	local integer stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = PlayerStats_alliance_states_get(this_7, player_getId(which_player), "when reading array PlayerStats_alliance_states in  in PlayerStats, line 67")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return stackTrace_tempReturn
-endfunction
-
-function dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState takes integer this_7, player which_player, string stackPos returns integer
-	local integer PlayerStats_PlayerStats_getAllianceState_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if PlayerStats_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling PlayerStats.getAllianceState", "when calling error in PlayerStats, line 66")
-		else
-			call error("Called PlayerStats.getAllianceState on invalid object.", "when calling error in PlayerStats, line 66")
-		endif
-	endif
-	set PlayerStats_PlayerStats_getAllianceState_result = PlayerStats_getAllianceState(this_7, which_player, "when calling getAllianceState in PlayerStats, line 66")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return PlayerStats_PlayerStats_getAllianceState_result
 endfunction
 
 function PlayerStats_alliance_states_set takes integer instanceId, integer arrayIndex, integer value, string stackPos returns nothing
@@ -13122,269 +13139,6 @@ function dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance takes integer 
 		endif
 	endif
 	call PlayerStats_setAlliance(this_7, which_player, alliance_state, "when calling setAlliance in PlayerStats, line 55")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function getGoodNewsStringForPlayer takes player pl, string stackPos returns string
-	local integer f
-	local integer r
-	local string s
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set f = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(pl)], "when calling getForceId in Messages, line 37")
-	set r = GetRandomInt(0, Strings_ksMsgCount - 1)
-	if f == Forces_kWE then
-		set s = Strings_ksGoodNewsWE[r]
-	elseif f == Forces_kEE then
-		set s = Strings_ksGoodNewsEE[r]
-	elseif f == Forces_kME then
-		set s = Strings_ksGoodNewsME[r]
-	elseif f == Forces_kBZ then
-		set s = Strings_ksGoodNewsBZ[r]
-	else
-		set s = Strings_ksGoodNews[0]
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return "|cff00ff00" + s + "|r"
-endfunction
-
-function goodNewsToPlayer takes string msg, player pl, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kGoodNewsDur, getGoodNewsStringForPlayer(pl, "when calling getGoodNewsStringForPlayer in Messages, line 85"))
-	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kGoodNewsDur, msg)
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function getWarningStringForPlayer takes player pl, string stackPos returns string
-	local integer f
-	local integer r
-	local string s
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set f = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(pl)], "when calling getForceId in Messages, line 5")
-	set r = GetRandomInt(0, Strings_ksMsgCount - 1)
-	if f == Forces_kWE then
-		set s = Strings_ksWarningWE[r]
-	elseif f == Forces_kEE then
-		set s = Strings_ksWarningEE[r]
-	elseif f == Forces_kME then
-		set s = Strings_ksWarningME[r]
-	elseif f == Forces_kBZ then
-		set s = Strings_ksWarningBZ[r]
-	else
-		set s = Strings_ksWarning[0]
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return "|cffff0000" + s + "|r"
-endfunction
-
-function warningToPlayer takes string msg, player pl, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kWarningDur, getWarningStringForPlayer(pl, "when calling getWarningStringForPlayer in Messages, line 79"))
-	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kWarningDur, msg)
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function action takes string stackPos returns nothing
-	local player source
-	local player target
-	local string source_s
-	local string target_s
-	local integer source_id
-	local force f1
-	local force f2
-	local integer temp
-	local integer i_2
-	local integer temp_2
-	local force current_f
-	local integer i_3
-	local integer temp_3
-	local force current_f_2
-	local integer i_4
-	local integer temp_4
-	local force current_f_3
-	local integer i_5
-	local integer temp_5
-	local force current_f_4
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set source = unit_getOwner(GetSpellAbilityUnit())
-	set target = unit_getOwner(GetSpellTargetUnit())
-	set source_s = player_getNameColored(source)
-	set target_s = player_getNameColored(target)
-	set source_id = GetPlayerId(source)
-	set f1 = GetForceOfPlayer(source)
-	set f2 = GetForceOfPlayer(source)
-	set temp = GetSpellAbilityId()
-	if temp == Abilities_aWar then
-		if dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState(PlayerStats_player_stats[source_id], target, "when calling getAllianceState in Diplomacy, line 16") == bj_ALLIANCE_UNALLIED then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			return
-		endif
-		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[source_id], target, bj_ALLIANCE_UNALLIED, "when calling setAlliance in Diplomacy, line 18")
-		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[player_getId(target)], source, bj_ALLIANCE_UNALLIED, "when calling setAlliance in Diplomacy, line 19")
-		set i_2 = 0
-		set temp_2 = Main_PLAYER_SLOTS - 1
-		loop
-			exitwhen i_2 > temp_2
-			set current_f = GetForceOfPlayer(Player_players[i_2])
-			if Player_players[i_2] == target then
-				call warningToPlayer(source_s + " has declared war on you!", Player_players[i_2], "when calling warningToPlayer in Diplomacy, line 24")
-			elseif current_f == f1 or current_f == f2 then
-				call attentionToPlayer(source_s + " has declared war on your brother-in-arms, " + target_s + "!", Player_players[i_2], "when calling attentionToPlayer in Diplomacy, line 26")
-			else
-				call noteToPlayer(source_s + " has declared war on " + target_s, Player_players[i_2], "when calling noteToPlayer in Diplomacy, line 28")
-			endif
-			set i_2 = i_2 + 1
-		endloop
-	elseif temp == Abilities_aAlly then
-		if dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState(PlayerStats_player_stats[source_id], target, "when calling getAllianceState in Diplomacy, line 31") == bj_ALLIANCE_ALLIED_VISION then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			return
-		endif
-		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[source_id], target, bj_ALLIANCE_ALLIED_VISION, "when calling setAlliance in Diplomacy, line 33")
-		set i_3 = 0
-		set temp_3 = Main_PLAYER_SLOTS - 1
-		loop
-			exitwhen i_3 > temp_3
-			set current_f_2 = GetForceOfPlayer(Player_players[i_3])
-			if Player_players[i_3] == target then
-				call goodNewsToPlayer(source_s + " seeks an alliance with you!", Player_players[i_3], "when calling goodNewsToPlayer in Diplomacy, line 38")
-			elseif current_f_2 == f1 or current_f_2 == f2 then
-				call noteToPlayer(source_s + " has allied " + target_s, Player_players[i_3], "when calling noteToPlayer in Diplomacy, line 40")
-			else
-				call noteToPlayer(source_s + " has allied " + target_s, Player_players[i_3], "when calling noteToPlayer in Diplomacy, line 42")
-			endif
-			set i_3 = i_3 + 1
-		endloop
-	elseif temp == Abilities_aNeutral then
-		if dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState(PlayerStats_player_stats[source_id], target, "when calling getAllianceState in Diplomacy, line 45") == bj_ALLIANCE_NEUTRAL then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			return
-		endif
-		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[source_id], target, bj_ALLIANCE_NEUTRAL, "when calling setAlliance in Diplomacy, line 47")
-		set i_4 = 0
-		set temp_4 = Main_PLAYER_SLOTS - 1
-		loop
-			exitwhen i_4 > temp_4
-			set current_f_3 = GetForceOfPlayer(Player_players[i_4])
-			if Player_players[i_4] == target then
-				call noteToPlayer(source_s + " is now neutral towards you!", Player_players[i_4], "when calling noteToPlayer in Diplomacy, line 52")
-			elseif current_f_3 == f1 or current_f_3 == f2 then
-				call noteToPlayer(source_s + " shows neutrality towards " + target_s, Player_players[i_4], "when calling noteToPlayer in Diplomacy, line 54")
-			else
-				call noteToPlayer(source_s + " shows neutrality towards " + target_s, Player_players[i_4], "when calling noteToPlayer in Diplomacy, line 56")
-			endif
-			set i_4 = i_4 + 1
-		endloop
-	elseif temp == Abilities_aUnally then
-		if dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState(PlayerStats_player_stats[source_id], target, "when calling getAllianceState in Diplomacy, line 59") == bj_ALLIANCE_NEUTRAL then
-			set wurst_stack_depth = wurst_stack_depth - 1
-			set source = null
-			set target = null
-			set f1 = null
-			set f2 = null
-			set current_f = null
-			set current_f_2 = null
-			set current_f_3 = null
-			set current_f_4 = null
-			return
-		endif
-		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[source_id], target, bj_ALLIANCE_NEUTRAL, "when calling setAlliance in Diplomacy, line 61")
-		set i_5 = 0
-		set temp_5 = Main_PLAYER_SLOTS - 1
-		loop
-			exitwhen i_5 > temp_5
-			set current_f_4 = GetForceOfPlayer(Player_players[i_5])
-			if Player_players[i_5] == target then
-				call noteToPlayer(source_s + " unallies you!", Player_players[i_5], "when calling noteToPlayer in Diplomacy, line 66")
-			elseif current_f_4 == f1 or current_f_4 == f2 then
-				call noteToPlayer(source_s + " has unallied " + target_s, Player_players[i_5], "when calling noteToPlayer in Diplomacy, line 68")
-			else
-				call noteToPlayer(source_s + " has unallied " + target_s, Player_players[i_5], "when calling noteToPlayer in Diplomacy, line 70")
-			endif
-			set i_5 = i_5 + 1
-		endloop
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	set source = null
-	set target = null
-	set f1 = null
-	set f2 = null
-	set current_f = null
-	set current_f_2 = null
-	set current_f_3 = null
-	set current_f_4 = null
-endfunction
-
-function bridge_action takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call action("Diplomacy, line 119")
-endfunction
-
-function City_addPublicOrder takes integer this_7, real amount returns nothing
-	set City_public_order_add[this_7] = City_public_order_add[this_7] + amount
-endfunction
-
-function dispatch_City_City_City_addPublicOrder takes integer this_7, real amount, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if City_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.addPublicOrder", "when calling error in City, line 329")
-		else
-			call error("Called City.addPublicOrder on invalid object.", "when calling error in City, line 329")
-		endif
-	endif
-	call City_addPublicOrder(this_7, amount)
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function City_changeCityName takes integer this_7, string new_name, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set City_city_name[this_7] = string_substring(new_name, 0, City_kCityNameLimit)
-	call dispatch_City_City_City_refreshMultiboardIfPossible(this_7, "when calling refreshMultiboardIfPossible in City, line 171")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_City_City_City_changeCityName takes integer this_7, string new_name, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if City_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling City.changeCityName", "when calling error in City, line 168")
-		else
-			call error("Called City.changeCityName on invalid object.", "when calling error in City, line 168")
-		endif
-	endif
-	call City_changeCityName(this_7, new_name, "when calling changeCityName in City, line 168")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -13634,7 +13388,7 @@ function voteKick takes player who_votes, string who_kick, string stackPos retur
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function action_2 takes string stackPos returns nothing
+function action takes string stackPos returns nothing
 	local string input
 	local string array args
 	local string arg
@@ -13767,9 +13521,257 @@ function action_2 takes string stackPos returns nothing
 	set u_5 = null
 endfunction
 
+function bridge_action takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call action("Commands, line 118")
+endfunction
+
+function PlayerStats_getAllianceState takes integer this_7, player which_player, string stackPos returns integer
+	local integer stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = PlayerStats_alliance_states_get(this_7, player_getId(which_player), "when reading array PlayerStats_alliance_states in  in PlayerStats, line 67")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return stackTrace_tempReturn
+endfunction
+
+function dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState takes integer this_7, player which_player, string stackPos returns integer
+	local integer PlayerStats_PlayerStats_getAllianceState_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if PlayerStats_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling PlayerStats.getAllianceState", "when calling error in PlayerStats, line 66")
+		else
+			call error("Called PlayerStats.getAllianceState on invalid object.", "when calling error in PlayerStats, line 66")
+		endif
+	endif
+	set PlayerStats_PlayerStats_getAllianceState_result = PlayerStats_getAllianceState(this_7, which_player, "when calling getAllianceState in PlayerStats, line 66")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return PlayerStats_PlayerStats_getAllianceState_result
+endfunction
+
+function getGoodNewsStringForPlayer takes player pl, string stackPos returns string
+	local integer f
+	local integer r
+	local string s
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set f = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(pl)], "when calling getForceId in Messages, line 37")
+	set r = GetRandomInt(0, Strings_ksMsgCount - 1)
+	if f == Forces_kWE then
+		set s = Strings_ksGoodNewsWE[r]
+	elseif f == Forces_kEE then
+		set s = Strings_ksGoodNewsEE[r]
+	elseif f == Forces_kME then
+		set s = Strings_ksGoodNewsME[r]
+	elseif f == Forces_kBZ then
+		set s = Strings_ksGoodNewsBZ[r]
+	else
+		set s = Strings_ksGoodNews[0]
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return "|cff00ff00" + s + "|r"
+endfunction
+
+function goodNewsToPlayer takes string msg, player pl, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kGoodNewsDur, getGoodNewsStringForPlayer(pl, "when calling getGoodNewsStringForPlayer in Messages, line 85"))
+	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kGoodNewsDur, msg)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function getWarningStringForPlayer takes player pl, string stackPos returns string
+	local integer f
+	local integer r
+	local string s
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set f = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(pl)], "when calling getForceId in Messages, line 5")
+	set r = GetRandomInt(0, Strings_ksMsgCount - 1)
+	if f == Forces_kWE then
+		set s = Strings_ksWarningWE[r]
+	elseif f == Forces_kEE then
+		set s = Strings_ksWarningEE[r]
+	elseif f == Forces_kME then
+		set s = Strings_ksWarningME[r]
+	elseif f == Forces_kBZ then
+		set s = Strings_ksWarningBZ[r]
+	else
+		set s = Strings_ksWarning[0]
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return "|cffff0000" + s + "|r"
+endfunction
+
+function warningToPlayer takes string msg, player pl, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kWarningDur, getWarningStringForPlayer(pl, "when calling getWarningStringForPlayer in Messages, line 79"))
+	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kWarningDur, msg)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function action_2 takes string stackPos returns nothing
+	local player source
+	local player target
+	local string source_s
+	local string target_s
+	local integer source_id
+	local force f1
+	local force f2
+	local integer temp
+	local integer i_2
+	local integer temp_2
+	local force current_f
+	local integer i_3
+	local integer temp_3
+	local force current_f_2
+	local integer i_4
+	local integer temp_4
+	local force current_f_3
+	local integer i_5
+	local integer temp_5
+	local force current_f_4
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set source = unit_getOwner(GetSpellAbilityUnit())
+	set target = unit_getOwner(GetSpellTargetUnit())
+	set source_s = player_getNameColored(source)
+	set target_s = player_getNameColored(target)
+	set source_id = GetPlayerId(source)
+	set f1 = GetForceOfPlayer(source)
+	set f2 = GetForceOfPlayer(source)
+	set temp = GetSpellAbilityId()
+	if temp == Abilities_aWar then
+		if dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState(PlayerStats_player_stats[source_id], target, "when calling getAllianceState in Diplomacy, line 16") == bj_ALLIANCE_UNALLIED then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			return
+		endif
+		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[source_id], target, bj_ALLIANCE_UNALLIED, "when calling setAlliance in Diplomacy, line 18")
+		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[player_getId(target)], source, bj_ALLIANCE_UNALLIED, "when calling setAlliance in Diplomacy, line 19")
+		set i_2 = 0
+		set temp_2 = Main_PLAYER_SLOTS - 1
+		loop
+			exitwhen i_2 > temp_2
+			set current_f = GetForceOfPlayer(Player_players[i_2])
+			if Player_players[i_2] == target then
+				call warningToPlayer(source_s + " has declared war on you!", Player_players[i_2], "when calling warningToPlayer in Diplomacy, line 24")
+			elseif current_f == f1 or current_f == f2 then
+				call attentionToPlayer(source_s + " has declared war on your brother-in-arms, " + target_s + "!", Player_players[i_2], "when calling attentionToPlayer in Diplomacy, line 26")
+			else
+				call noteToPlayer(source_s + " has declared war on " + target_s, Player_players[i_2], "when calling noteToPlayer in Diplomacy, line 28")
+			endif
+			set i_2 = i_2 + 1
+		endloop
+	elseif temp == Abilities_aAlly then
+		if dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState(PlayerStats_player_stats[source_id], target, "when calling getAllianceState in Diplomacy, line 31") == bj_ALLIANCE_ALLIED_VISION then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			return
+		endif
+		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[source_id], target, bj_ALLIANCE_ALLIED_VISION, "when calling setAlliance in Diplomacy, line 33")
+		set i_3 = 0
+		set temp_3 = Main_PLAYER_SLOTS - 1
+		loop
+			exitwhen i_3 > temp_3
+			set current_f_2 = GetForceOfPlayer(Player_players[i_3])
+			if Player_players[i_3] == target then
+				call goodNewsToPlayer(source_s + " seeks an alliance with you!", Player_players[i_3], "when calling goodNewsToPlayer in Diplomacy, line 38")
+			elseif current_f_2 == f1 or current_f_2 == f2 then
+				call noteToPlayer(source_s + " has allied " + target_s, Player_players[i_3], "when calling noteToPlayer in Diplomacy, line 40")
+			else
+				call noteToPlayer(source_s + " has allied " + target_s, Player_players[i_3], "when calling noteToPlayer in Diplomacy, line 42")
+			endif
+			set i_3 = i_3 + 1
+		endloop
+	elseif temp == Abilities_aNeutral then
+		if dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState(PlayerStats_player_stats[source_id], target, "when calling getAllianceState in Diplomacy, line 45") == bj_ALLIANCE_NEUTRAL then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			return
+		endif
+		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[source_id], target, bj_ALLIANCE_NEUTRAL, "when calling setAlliance in Diplomacy, line 47")
+		set i_4 = 0
+		set temp_4 = Main_PLAYER_SLOTS - 1
+		loop
+			exitwhen i_4 > temp_4
+			set current_f_3 = GetForceOfPlayer(Player_players[i_4])
+			if Player_players[i_4] == target then
+				call noteToPlayer(source_s + " is now neutral towards you!", Player_players[i_4], "when calling noteToPlayer in Diplomacy, line 52")
+			elseif current_f_3 == f1 or current_f_3 == f2 then
+				call noteToPlayer(source_s + " shows neutrality towards " + target_s, Player_players[i_4], "when calling noteToPlayer in Diplomacy, line 54")
+			else
+				call noteToPlayer(source_s + " shows neutrality towards " + target_s, Player_players[i_4], "when calling noteToPlayer in Diplomacy, line 56")
+			endif
+			set i_4 = i_4 + 1
+		endloop
+	elseif temp == Abilities_aUnally then
+		if dispatch_PlayerStats_PlayerStats_PlayerStats_getAllianceState(PlayerStats_player_stats[source_id], target, "when calling getAllianceState in Diplomacy, line 59") == bj_ALLIANCE_NEUTRAL then
+			set wurst_stack_depth = wurst_stack_depth - 1
+			set source = null
+			set target = null
+			set f1 = null
+			set f2 = null
+			set current_f = null
+			set current_f_2 = null
+			set current_f_3 = null
+			set current_f_4 = null
+			return
+		endif
+		call dispatch_PlayerStats_PlayerStats_PlayerStats_setAlliance(PlayerStats_player_stats[source_id], target, bj_ALLIANCE_NEUTRAL, "when calling setAlliance in Diplomacy, line 61")
+		set i_5 = 0
+		set temp_5 = Main_PLAYER_SLOTS - 1
+		loop
+			exitwhen i_5 > temp_5
+			set current_f_4 = GetForceOfPlayer(Player_players[i_5])
+			if Player_players[i_5] == target then
+				call noteToPlayer(source_s + " unallies you!", Player_players[i_5], "when calling noteToPlayer in Diplomacy, line 66")
+			elseif current_f_4 == f1 or current_f_4 == f2 then
+				call noteToPlayer(source_s + " has unallied " + target_s, Player_players[i_5], "when calling noteToPlayer in Diplomacy, line 68")
+			else
+				call noteToPlayer(source_s + " has unallied " + target_s, Player_players[i_5], "when calling noteToPlayer in Diplomacy, line 70")
+			endif
+			set i_5 = i_5 + 1
+		endloop
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set source = null
+	set target = null
+	set f1 = null
+	set f2 = null
+	set current_f = null
+	set current_f_2 = null
+	set current_f_3 = null
+	set current_f_4 = null
+endfunction
+
 function bridge_action_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call action_2("Commands, line 118")
+	call action_2("Diplomacy, line 119")
 endfunction
 
 function cinematicTutorial takes string stackPos returns nothing
@@ -13950,11 +13952,11 @@ function init_City takes string stackPos returns boolean
 	set City_kCityTaxLevelTimeToChange = Main_TURN_TIME
 	set City_kCityPopGrowthRateMinMax[0] = 0.0020
 	set City_kCityPopGrowthRateMinMax[1] = 0.0025
-	set City_kCityPopInit[0] = asList_2(10000, 20000, "when calling asList in City, line 36")
-	set City_kCityPopInit[1] = asList_2(30000, 40000, "when calling asList in City, line 37")
-	set City_kCityPopInit[2] = asList_2(60000, 90000, "when calling asList in City, line 38")
-	set City_kCityPopInit[3] = asList_2(120000, 160000, "when calling asList in City, line 39")
-	set City_kCityPopInit[4] = asList_2(180000, 220000, "when calling asList in City, line 40")
+	set City_kCityPopInit[0] = asList_2(10000, 20000, "when calling asList in City, line 37")
+	set City_kCityPopInit[1] = asList_2(30000, 40000, "when calling asList in City, line 38")
+	set City_kCityPopInit[2] = asList_2(60000, 90000, "when calling asList in City, line 39")
+	set City_kCityPopInit[3] = asList_2(120000, 160000, "when calling asList in City, line 40")
+	set City_kCityPopInit[4] = asList_2(180000, 220000, "when calling asList in City, line 41")
 	set City_kCityTaxLevelMultipliers[0] = 1.0
 	set City_kCityTaxLevelMultipliers[1] = 0.5
 	set City_kCityTaxLevelMultipliers[2] = 1.6
@@ -15517,7 +15519,7 @@ function newCity takes rect r, string n, integer f, integer tier, string stackPo
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set g_2 = GetUnitsInRectAll(r)
 	set u_5 = group_next(g_2)
-	set City_cities[City_cityCount] = new_City(u_5, n, f, tier, "when calling new_City in SettingCities, line 7")
+	set City_cities[City_cityCount] = new_City(u_5, n, f, tier, "when calling new_City in SettingCities, line 8")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set g_2 = null
 	set u_5 = null
@@ -15526,190 +15528,190 @@ endfunction
 function setupCities takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call newCity(gg_rct_CITY_BYZ_Adrianopolis, "Adrianopolis", Forces_kBZ, 1, "when calling newCity in SettingCities, line 26")
-	call newCity(gg_rct_CITY_BYZ_Arta, "Arta", Forces_kBZ, 0, "when calling newCity in SettingCities, line 27")
-	call newCity(gg_rct_CITY_BYZ_Athens, "Athens", Forces_kBZ, 1, "when calling newCity in SettingCities, line 28")
-	call newCity(gg_rct_CITY_BYZ_Ragusa, "Ragusa", Forces_kBZ, 0, "when calling newCity in SettingCities, line 29")
-	call newCity(gg_rct_CITY_BYZ_Canakkale, "Canakkale", Forces_kBZ, 0, "when calling newCity in SettingCities, line 30")
-	call newCity(gg_rct_CITY_BYZ_Candia, "Candia", Forces_kBZ, 0, "when calling newCity in SettingCities, line 31")
-	call newCity(gg_rct_CITY_BYZ_Constantinople, "Constantinople", Forces_kBZ, 4, "when calling newCity in SettingCities, line 32")
-	call newCity(gg_rct_CITY_BYZ_Corinth, "Corinth", Forces_kBZ, 0, "when calling newCity in SettingCities, line 33")
-	call newCity(gg_rct_CITY_BYZ_Durrazo, "Durazzo", Forces_kBZ, 0, "when calling newCity in SettingCities, line 34")
-	call newCity(gg_rct_CITY_BYZ_Nikomedaia, "Nikomedeia", Forces_kBZ, 0, "when calling newCity in SettingCities, line 35")
-	call newCity(gg_rct_CITY_BYZ_Kutaisi, "Kutaisi", Forces_kBZ, 0, "when calling newCity in SettingCities, line 36")
-	call newCity(gg_rct_CITY_BYZ_Nicae, "Nicae", Forces_kBZ, 2, "when calling newCity in SettingCities, line 37")
-	call newCity(gg_rct_CITY_BYZ_Nicosia, "Nicosia", Forces_kBZ, 0, "when calling newCity in SettingCities, line 38")
-	call newCity(gg_rct_CITY_BYZ_Rhodes, "Rhodes", Forces_kBZ, 0, "when calling newCity in SettingCities, line 39")
-	call newCity(gg_rct_CITY_BYZ_Scopia, "Scopia", Forces_kBZ, 0, "when calling newCity in SettingCities, line 40")
-	call newCity(gg_rct_CITY_BYZ_Smyrna, "Smyrna", Forces_kBZ, 0, "when calling newCity in SettingCities, line 41")
-	call newCity(gg_rct_CITY_BYZ_Tbilisi, "Tbilisi", Forces_kBZ, 0, "when calling newCity in SettingCities, line 42")
-	call newCity(gg_rct_CITY_BYZ_Trebizond, "Trebizond", Forces_kBZ, 1, "when calling newCity in SettingCities, line 43")
-	call newCity(gg_rct_CITY_Byz_Thessalonika, "Thessalonika", Forces_kBZ, 3, "when calling newCity in SettingCities, line 44")
-	call newCity(gg_rct_CITY_EE_Astrakhan, "Astrakhan'", Forces_kEE, 2, "when calling newCity in SettingCities, line 48")
-	call newCity(gg_rct_CITY_EE_Azaq, "Azaq", Forces_kEE, 0, "when calling newCity in SettingCities, line 49")
-	call newCity(gg_rct_CITY_EE_Baia, "Baia", Forces_kEE, 0, "when calling newCity in SettingCities, line 50")
-	call newCity(gg_rct_CITY_EE_Bryansk, "Bryansk", Forces_kEE, 0, "when calling newCity in SettingCities, line 51")
-	call newCity(gg_rct_CITY_EE_Caffa, "Caffa", Forces_kEE, 0, "when calling newCity in SettingCities, line 52")
-	call newCity(gg_rct_CITY_EE_Constanta, "Constanta", Forces_kEE, 0, "when calling newCity in SettingCities, line 53")
-	call newCity(gg_rct_CITY_EE_Dnipro, "Dnipro", Forces_kEE, 0, "when calling newCity in SettingCities, line 54")
-	call newCity(gg_rct_CITY_EE_Halych, "Halych", Forces_kEE, 0, "when calling newCity in SettingCities, line 55")
-	call newCity(gg_rct_CITY_EE_Kiev, "Kiev", Forces_kEE, 2, "when calling newCity in SettingCities, line 56")
-	call newCity(gg_rct_CITY_EE_Konigsberg, "Konigsberg", Forces_kEE, 0, "when calling newCity in SettingCities, line 57")
-	call newCity(gg_rct_CITY_EE_Hrodna, "Hrodna", Forces_kEE, 0, "when calling newCity in SettingCities, line 58")
-	call newCity(gg_rct_CITY_EE_Minsk, "Minsk", Forces_kEE, 1, "when calling newCity in SettingCities, line 59")
-	call newCity(gg_rct_CITY_EE_Moscow, "Moscow", Forces_kEE, 0, "when calling newCity in SettingCities, line 60")
-	call newCity(gg_rct_CITY_EE_Novgorod, "Novgorod", Forces_kEE, 0, "when calling newCity in SettingCities, line 61")
-	call newCity(gg_rct_CITY_EE_Oleshe, "Olesh'e", Forces_kEE, 0, "when calling newCity in SettingCities, line 62")
-	call newCity(gg_rct_CITY_EE_Polotsk, "Polotsk", Forces_kEE, 0, "when calling newCity in SettingCities, line 63")
-	call newCity(gg_rct_CITY_EE_Pskov, "Pskov", Forces_kEE, 0, "when calling newCity in SettingCities, line 64")
-	call newCity(gg_rct_CITY_EE_Reval, "Reval", Forces_kEE, 0, "when calling newCity in SettingCities, line 65")
-	call newCity(gg_rct_CITY_EE_Riga, "Riga", Forces_kEE, 1, "when calling newCity in SettingCities, line 66")
-	call newCity(gg_rct_CITY_EE_Syrt, "Bulgar", Forces_kEE, 0, "when calling newCity in SettingCities, line 67")
-	call newCity(gg_rct_CITY_EE_Ryazan, "Ryazan'", Forces_kEE, 0, "when calling newCity in SettingCities, line 68")
-	call newCity(gg_rct_CITY_EE_Sarkel, "Sarkel", Forces_kEE, 0, "when calling newCity in SettingCities, line 69")
-	call newCity(gg_rct_CITY_EE_Smolensk, "Smolensk", Forces_kEE, 1, "when calling newCity in SettingCities, line 70")
-	call newCity(gg_rct_CITY_EE_Sofia, "Sofia", Forces_kEE, 0, "when calling newCity in SettingCities, line 71")
-	call newCity(gg_rct_CITY_EE_Targoviste, "Targovitse", Forces_kEE, 1, "when calling newCity in SettingCities, line 72")
-	call newCity(gg_rct_CITY_EE_Timutarakan, "Tmutarakan'", Forces_kEE, 0, "when calling newCity in SettingCities, line 73")
-	call newCity(gg_rct_CITY_EE_Turku, "Turku", Forces_kEE, 0, "when calling newCity in SettingCities, line 74")
-	call newCity(gg_rct_CITY_EE_Vilnius, "Vilnius", Forces_kEE, 1, "when calling newCity in SettingCities, line 75")
-	call newCity(gg_rct_CITY_EE_Zhytomyr, "Zhytomir", Forces_kEE, 0, "when calling newCity in SettingCities, line 76")
-	call newCity(gg_rct_CITY_ME_Acre, "Acre", Forces_kME, 2, "when calling newCity in SettingCities, line 80")
-	call newCity(gg_rct_CITY_ME_Adana, "Adana", Forces_kME, 0, "when calling newCity in SettingCities, line 81")
-	call newCity(gg_rct_CITY_ME_Alamut, "Alamut", Forces_kME, 0, "when calling newCity in SettingCities, line 82")
-	call newCity(gg_rct_CITY_ME_Al_Aqaba, "Al-Aqaba", Forces_kME, 0, "when calling newCity in SettingCities, line 83")
-	call newCity(gg_rct_CITY_ME_Alexandria, "Alexandria", Forces_kME, 2, "when calling newCity in SettingCities, line 84")
-	call newCity(gg_rct_CITY_ME_Algiers, "Algiers", Forces_kME, 0, "when calling newCity in SettingCities, line 85")
-	call newCity(gg_rct_CITY_ME_Ankara, "Ankara", Forces_kME, 1, "when calling newCity in SettingCities, line 86")
-	call newCity(gg_rct_CITY_ME_Antioch, "Antioch", Forces_kME, 2, "when calling newCity in SettingCities, line 87")
-	call newCity(gg_rct_CITY_ME_Badajoz, "Badajoz", Forces_kME, 0, "when calling newCity in SettingCities, line 88")
-	call newCity(gg_rct_CITY_ME_Baghdad, "Baghdad", Forces_kME, 4, "when calling newCity in SettingCities, line 89")
-	call newCity(gg_rct_CITY_ME_Baku, "Baku", Forces_kME, 0, "when calling newCity in SettingCities, line 90")
-	call newCity(gg_rct_CITY_ME_Benghazi, "Benghazi", Forces_kME, 1, "when calling newCity in SettingCities, line 91")
-	call newCity(gg_rct_CITY_ME_Beleb_el_Anab, "Beleb-el-Anab", Forces_kME, 0, "when calling newCity in SettingCities, line 92")
-	call newCity(gg_rct_CITY_ME_Cairo, "Cairo", Forces_kME, 3, "when calling newCity in SettingCities, line 93")
-	call newCity(gg_rct_CITY_ME_Cordoba, "Cordoba", Forces_kME, 4, "when calling newCity in SettingCities, line 94")
-	call newCity(gg_rct_CITY_ME_Damascus, "Damascus", Forces_kME, 2, "when calling newCity in SettingCities, line 95")
-	call newCity(gg_rct_CITY_ME_Damietta, "Damietta", Forces_kME, 1, "when calling newCity in SettingCities, line 96")
-	call newCity(gg_rct_CITY_ME_Diyarbakir, "Diyarbakir", Forces_kME, 0, "when calling newCity in SettingCities, line 97")
-	call newCity(gg_rct_CITY_ME_Edessa, "Edessa", Forces_kME, 1, "when calling newCity in SettingCities, line 98")
-	call newCity(gg_rct_CITY_ME_Erez, "Erez", Forces_kME, 1, "when calling newCity in SettingCities, line 99")
-	call newCity(gg_rct_CITY_ME_Fes, "Fes", Forces_kME, 3, "when calling newCity in SettingCities, line 100")
-	call newCity(gg_rct_CITY_ME_Gaza, "Gaza", Forces_kME, 0, "when calling newCity in SettingCities, line 101")
-	call newCity(gg_rct_CITY_ME_Granada, "Granada", Forces_kME, 2, "when calling newCity in SettingCities, line 102")
-	call newCity(gg_rct_CITY_ME_Isparta, "Isparta", Forces_kME, 0, "when calling newCity in SettingCities, line 103")
-	call newCity(gg_rct_CITY_ME_JERUSALEM, "Jerusalem", Forces_kME, 3, "when calling newCity in SettingCities, line 104")
-	call newCity(gg_rct_CITY_ME_Kayseri, "Kayseri", Forces_kME, 1, "when calling newCity in SettingCities, line 105")
-	call newCity(gg_rct_CITY_ME_Kerak, "Kerak", Forces_kME, 0, "when calling newCity in SettingCities, line 106")
-	call newCity(gg_rct_CITY_ME_Kermanshah, "Kermanshah", Forces_kME, 0, "when calling newCity in SettingCities, line 107")
-	call newCity(gg_rct_CITY_ME_Konya, "Konya", Forces_kME, 0, "when calling newCity in SettingCities, line 108")
-	call newCity(gg_rct_CITY_ME_Lisbon, "Lisbon", Forces_kME, 0, "when calling newCity in SettingCities, line 109")
-	call newCity(gg_rct_CITY_ME_Luxor, "Luxor", Forces_kME, 0, "when calling newCity in SettingCities, line 110")
-	call newCity(gg_rct_CITY_ME_Madrid, "Madrid", Forces_kME, 0, "when calling newCity in SettingCities, line 111")
-	call newCity(gg_rct_CITY_ME_Mahdya, "Mahdya", Forces_kME, 0, "when calling newCity in SettingCities, line 112")
-	call newCity(gg_rct_CITY_ME_Marakesh, "Marrakesh", Forces_kME, 3, "when calling newCity in SettingCities, line 113")
-	call newCity(gg_rct_CITY_ME_Medina, "Medina", Forces_kME, 2, "when calling newCity in SettingCities, line 114")
-	call newCity(gg_rct_CITY_ME_Melilla, "Melilla", Forces_kME, 0, "when calling newCity in SettingCities, line 115")
-	call newCity(gg_rct_CITY_ME_Mosul, "Mosul", Forces_kME, 1, "when calling newCity in SettingCities, line 116")
-	call newCity(gg_rct_CITY_ME_Murcia, "Murcia", Forces_kME, 1, "when calling newCity in SettingCities, line 117")
-	call newCity(gg_rct_CITY_ME_Oran, "Oran", Forces_kME, 0, "when calling newCity in SettingCities, line 118")
-	call newCity(gg_rct_CITY_ME_Palma, "Palma", Forces_kME, 1, "when calling newCity in SettingCities, line 119")
-	call newCity(gg_rct_CITY_ME_Quarisiya, "Quarisiya", Forces_kME, 1, "when calling newCity in SettingCities, line 120")
-	call newCity(gg_rct_CITY_ME_Silves, "Silves", Forces_kME, 0, "when calling newCity in SettingCities, line 121")
-	call newCity(gg_rct_CITY_ME_Sinop, "Sinop", Forces_kME, 0, "when calling newCity in SettingCities, line 122")
-	call newCity(gg_rct_CITY_ME_Tamiya, "Tamiya", Forces_kME, 0, "when calling newCity in SettingCities, line 123")
-	call newCity(gg_rct_CITY_ME_Tartus, "Tartus", Forces_kME, 0, "when calling newCity in SettingCities, line 124")
-	call newCity(gg_rct_CITY_ME_Tabriz, "Tabriz", Forces_kME, 0, "when calling newCity in SettingCities, line 125")
-	call newCity(gg_rct_CITY_ME_Tripoli, "Tripoli", Forces_kME, 1, "when calling newCity in SettingCities, line 126")
-	call newCity(gg_rct_CITY_ME_Tunis, "Tunis", Forces_kME, 1, "when calling newCity in SettingCities, line 127")
-	call newCity(gg_rct_CITY_ME_Valencia, "Valencia", Forces_kME, 0, "when calling newCity in SettingCities, line 128")
-	call newCity(gg_rct_CITY_ME_Yerevan, "Yerevan", Forces_kME, 0, "when calling newCity in SettingCities, line 129")
-	call newCity(gg_rct_CITY_WE_Aarhus, "Aarhus", Forces_kWE, 1, "when calling newCity in SettingCities, line 133")
-	call newCity(gg_rct_CITY_WE_Aberdeen, "Aberdeen", Forces_kWE, 1, "when calling newCity in SettingCities, line 134")
-	call newCity(gg_rct_CITY_WE_Ajaccio, "Ajaccio", Forces_kWE, 0, "when calling newCity in SettingCities, line 135")
-	call newCity(gg_rct_CITY_WE_Ancona, "Ancona", Forces_kWE, 1, "when calling newCity in SettingCities, line 136")
-	call newCity(gg_rct_CITY_WE_Angers, "Angers", Forces_kWE, 0, "when calling newCity in SettingCities, line 137")
-	call newCity(gg_rct_CITY_WE_Antwerp, "Antwerp", Forces_kWE, 0, "when calling newCity in SettingCities, line 138")
-	call newCity(gg_rct_CITY_WE_Barcelona, "Barcelona", Forces_kWE, 1, "when calling newCity in SettingCities, line 139")
-	call newCity(gg_rct_CITY_WE_Bari, "Bari", Forces_kWE, 0, "when calling newCity in SettingCities, line 140")
-	call newCity(gg_rct_CITY_WE_Belgrade, "Belgrade", Forces_kWE, 1, "when calling newCity in SettingCities, line 141")
-	call newCity(gg_rct_CITY_WE_Bergen, "Bergen", Forces_kWE, 1, "when calling newCity in SettingCities, line 142")
-	call newCity(gg_rct_CITY_WE_Bern, "Bern", Forces_kWE, 0, "when calling newCity in SettingCities, line 143")
-	call newCity(gg_rct_CITY_WE_Bologna, "Bologna", Forces_kWE, 1, "when calling newCity in SettingCities, line 144")
-	call newCity(gg_rct_CITY_WE_Bordeaux, "Bordeaux", Forces_kWE, 1, "when calling newCity in SettingCities, line 145")
-	call newCity(gg_rct_CITY_WE_Brasov, "Brasov", Forces_kWE, 0, "when calling newCity in SettingCities, line 146")
-	call newCity(gg_rct_CITY_WE_Bruges, "Bruges", Forces_kWE, 0, "when calling newCity in SettingCities, line 147")
-	call newCity(gg_rct_CITY_WE_Burgh, "Burgh", Forces_kWE, 0, "when calling newCity in SettingCities, line 148")
-	call newCity(gg_rct_CITY_WE_Burgos, "Burgos", Forces_kWE, 1, "when calling newCity in SettingCities, line 149")
-	call newCity(gg_rct_CITY_WE_Caen, "Caen", Forces_kWE, 0, "when calling newCity in SettingCities, line 150")
-	call newCity(gg_rct_CITY_WE_Caernarfon, "Caenarfon", Forces_kWE, 0, "when calling newCity in SettingCities, line 151")
-	call newCity(gg_rct_CITY_WE_Cagliari, "Cagliari", Forces_kWE, 0, "when calling newCity in SettingCities, line 152")
-	call newCity(gg_rct_CITY_WE_Cardiff, "Cardiff", Forces_kWE, 0, "when calling newCity in SettingCities, line 153")
-	call newCity(gg_rct_CITY_WE_Clermont, "Clermont", Forces_kWE, 1, "when calling newCity in SettingCities, line 154")
-	call newCity(gg_rct_CITY_WE_Cologne, "Cologne", Forces_kWE, 1, "when calling newCity in SettingCities, line 155")
-	call newCity(gg_rct_CITY_WE_Dijon, "Dijon", Forces_kWE, 0, "when calling newCity in SettingCities, line 156")
-	call newCity(gg_rct_CITY_WE_Dublin, "Dublin", Forces_kWE, 0, "when calling newCity in SettingCities, line 157")
-	call newCity(gg_rct_CITY_WE_Edinburgh, "Edinburgh", Forces_kWE, 0, "when calling newCity in SettingCities, line 158")
-	call newCity(gg_rct_CITY_WE_Eikundarsund, "Eikundarsund", Forces_kWE, 0, "when calling newCity in SettingCities, line 159")
-	call newCity(gg_rct_CITY_WE_Esztergom, "Esztergom", Forces_kWE, 1, "when calling newCity in SettingCities, line 160")
-	call newCity(gg_rct_CITY_WE_Exeter, "Exeter", Forces_kWE, 0, "when calling newCity in SettingCities, line 161")
-	call newCity(gg_rct_CITY_WE_Gdansk, "Gdansk", Forces_kWE, 0, "when calling newCity in SettingCities, line 162")
-	call newCity(gg_rct_CITY_WE_Flensburg, "Flensburg", Forces_kWE, 0, "when calling newCity in SettingCities, line 163")
-	call newCity(gg_rct_CITY_WE_Frankfurt, "Frankfurt", Forces_kWE, 1, "when calling newCity in SettingCities, line 164")
-	call newCity(gg_rct_CITY_WE_Galway, "Galway", Forces_kWE, 0, "when calling newCity in SettingCities, line 165")
-	call newCity(gg_rct_CITY_WE_Genoa, "Genoa", Forces_kWE, 2, "when calling newCity in SettingCities, line 166")
-	call newCity(gg_rct_CITY_WE_Groningen, "Groningen", Forces_kWE, 0, "when calling newCity in SettingCities, line 167")
-	call newCity(gg_rct_CITY_WE_Innsbruck, "Innsbruck", Forces_kWE, 0, "when calling newCity in SettingCities, line 168")
-	call newCity(gg_rct_CITY_WE_Inverness, "Inverness", Forces_kWE, 0, "when calling newCity in SettingCities, line 169")
-	call newCity(gg_rct_CITY_WE_Desmond, "Desmond", Forces_kWE, 0, "when calling newCity in SettingCities, line 170")
-	call newCity(gg_rct_CITY_WE_Reggio, "Reggio", Forces_kWE, 0, "when calling newCity in SettingCities, line 172")
-	call newCity(gg_rct_CITY_WE_Kalmar, "Kalmar", Forces_kWE, 0, "when calling newCity in SettingCities, line 173")
-	call newCity(gg_rct_CITY_WE_Kassa, "Kassa", Forces_kWE, 0, "when calling newCity in SettingCities, line 174")
-	call newCity(gg_rct_CITY_WE_Krakow, "Krakow", Forces_kWE, 2, "when calling newCity in SettingCities, line 175")
-	call newCity(gg_rct_CITY_WE_Leon, "Leon", Forces_kWE, 1, "when calling newCity in SettingCities, line 176")
-	call newCity(gg_rct_CITY_WE_London, "London", Forces_kWE, 0, "when calling newCity in SettingCities, line 177")
-	call newCity(gg_rct_CITY_WE_Lund, "Lund", Forces_kWE, 0, "when calling newCity in SettingCities, line 178")
-	call newCity(gg_rct_CITY_WE_Lyon, "Lyon", Forces_kWE, 0, "when calling newCity in SettingCities, line 179")
-	call newCity(gg_rct_CITY_WE_Madgeburg, "Madgeburg", Forces_kWE, 0, "when calling newCity in SettingCities, line 180")
-	call newCity(gg_rct_CITY_WE_Marseille, "Marsellie", Forces_kWE, 1, "when calling newCity in SettingCities, line 181")
-	call newCity(gg_rct_CITY_WE_Metz, "Metz", Forces_kWE, 0, "when calling newCity in SettingCities, line 182")
-	call newCity(gg_rct_CITY_WE_Milan, "Milan", Forces_kWE, 1, "when calling newCity in SettingCities, line 183")
-	call newCity(gg_rct_CITY_WE_Naples, "Naples", Forces_kWE, 1, "when calling newCity in SettingCities, line 184")
-	call newCity(gg_rct_CITY_WE_Nuremburg, "Nuremburg", Forces_kWE, 0, "when calling newCity in SettingCities, line 185")
-	call newCity(gg_rct_CITY_WE_Nykoping, "Nykoping", Forces_kWE, 0, "when calling newCity in SettingCities, line 186")
-	call newCity(gg_rct_CITY_WE_Oporto, "Oporto", Forces_kWE, 0, "when calling newCity in SettingCities, line 187")
-	call newCity(gg_rct_CITY_WE_Oslo, "Oslo", Forces_kWE, 1, "when calling newCity in SettingCities, line 188")
-	call newCity(gg_rct_CITY_WE_Buda, "Buda", Forces_kWE, 1, "when calling newCity in SettingCities, line 189")
-	call newCity(gg_rct_CITY_WE_Palermo, "Palermo", Forces_kWE, 3, "when calling newCity in SettingCities, line 190")
-	call newCity(gg_rct_CITY_WE_Pamplona, "Pamplona", Forces_kWE, 0, "when calling newCity in SettingCities, line 191")
-	call newCity(gg_rct_CITY_WE_Paris, "Paris", Forces_kWE, 1, "when calling newCity in SettingCities, line 192")
-	call newCity(gg_rct_CITY_WE_Pisa, "Pisa", Forces_kWE, 0, "when calling newCity in SettingCities, line 193")
-	call newCity(gg_rct_CITY_WE_Plock, "Plock", Forces_kWE, 0, "when calling newCity in SettingCities, line 194")
-	call newCity(gg_rct_CITY_WE_Poznan, "Poznan", Forces_kWE, 1, "when calling newCity in SettingCities, line 195")
-	call newCity(gg_rct_CITY_WE_Prague, "Prague", Forces_kWE, 0, "when calling newCity in SettingCities, line 196")
-	call newCity(gg_rct_CITY_WE_Zadar, "Zadar", Forces_kWE, 0, "when calling newCity in SettingCities, line 197")
-	call newCity(gg_rct_CITY_WE_Rennes, "Rennes", Forces_kWE, 0, "when calling newCity in SettingCities, line 198")
-	call newCity(gg_rct_CITY_WE_Rheims, "Rheims", Forces_kWE, 0, "when calling newCity in SettingCities, line 199")
-	call newCity(gg_rct_CITY_WE_Rome, "Rome", Forces_kWE, 1, "when calling newCity in SettingCities, line 200")
-	call newCity(gg_rct_CITY_WE_Roskilde, "Roskilde", Forces_kWE, 0, "when calling newCity in SettingCities, line 201")
-	call newCity(gg_rct_CITY_WE_Salamanca, "Salamanca", Forces_kWE, 0, "when calling newCity in SettingCities, line 202")
-	call newCity(gg_rct_CITY_WE_Salzburg, "Salzburg", Forces_kWE, 0, "when calling newCity in SettingCities, line 203")
-	call newCity(gg_rct_CITY_WE_Skara, "Skara", Forces_kWE, 0, "when calling newCity in SettingCities, line 204")
-	call newCity(gg_rct_CITY_WE_Stettin, "Stettin", Forces_kWE, 0, "when calling newCity in SettingCities, line 205")
-	call newCity(gg_rct_CITY_WE_Stockholm, "Stockholm", Forces_kWE, 1, "when calling newCity in SettingCities, line 206")
-	call newCity(gg_rct_CITY_WE_Syracuse, "Syracuse", Forces_kWE, 0, "when calling newCity in SettingCities, line 207")
-	call newCity(gg_rct_CITY_WE_Toulouse, "Toulouse", Forces_kWE, 0, "when calling newCity in SettingCities, line 208")
-	call newCity(gg_rct_CITY_WE_Varad, "Varad", Forces_kWE, 0, "when calling newCity in SettingCities, line 209")
-	call newCity(gg_rct_CITY_WE_Venice, "Venice", Forces_kWE, 2, "when calling newCity in SettingCities, line 210")
-	call newCity(gg_rct_CITY_WE_Vienna, "Vienna", Forces_kWE, 0, "when calling newCity in SettingCities, line 211")
-	call newCity(gg_rct_CITY_WE_Visby, "Visby", Forces_kWE, 0, "when calling newCity in SettingCities, line 212")
-	call newCity(gg_rct_CITY_WE_Warwick, "Warwick", Forces_kWE, 0, "when calling newCity in SettingCities, line 213")
-	call newCity(gg_rct_CITY_WE_Winchester, "Winchester", Forces_kWE, 1, "when calling newCity in SettingCities, line 214")
-	call newCity(gg_rct_CITY_WE_Wroclaw, "Wroclaw", Forces_kWE, 0, "when calling newCity in SettingCities, line 215")
-	call newCity(gg_rct_CITY_WE_York, "York", Forces_kWE, 1, "when calling newCity in SettingCities, line 216")
-	call newCity(gg_rct_CITY_WE_Zagreb, "Zagreb", Forces_kWE, 0, "when calling newCity in SettingCities, line 217")
-	call newCity(gg_rct_CITY_WE_Zaragoza, "Zaragoza", Forces_kWE, 0, "when calling newCity in SettingCities, line 218")
-	call newCity(gg_rct_CITY_WE_Hamburg, "Hamburg", Forces_kWE, 1, "when calling newCity in SettingCities, line 219")
+	call newCity(gg_rct_CITY_BYZ_Adrianopolis, "Adrianopolis", Forces_kBZ, 1, "when calling newCity in SettingCities, line 27")
+	call newCity(gg_rct_CITY_BYZ_Arta, "Arta", Forces_kBZ, 0, "when calling newCity in SettingCities, line 28")
+	call newCity(gg_rct_CITY_BYZ_Athens, "Athens", Forces_kBZ, 1, "when calling newCity in SettingCities, line 29")
+	call newCity(gg_rct_CITY_BYZ_Ragusa, "Ragusa", Forces_kBZ, 0, "when calling newCity in SettingCities, line 30")
+	call newCity(gg_rct_CITY_BYZ_Canakkale, "Canakkale", Forces_kBZ, 0, "when calling newCity in SettingCities, line 31")
+	call newCity(gg_rct_CITY_BYZ_Candia, "Candia", Forces_kBZ, 0, "when calling newCity in SettingCities, line 32")
+	call newCity(gg_rct_CITY_BYZ_Constantinople, "Constantinople", Forces_kBZ, 4, "when calling newCity in SettingCities, line 33")
+	call newCity(gg_rct_CITY_BYZ_Corinth, "Corinth", Forces_kBZ, 0, "when calling newCity in SettingCities, line 34")
+	call newCity(gg_rct_CITY_BYZ_Durrazo, "Durazzo", Forces_kBZ, 0, "when calling newCity in SettingCities, line 35")
+	call newCity(gg_rct_CITY_BYZ_Nikomedaia, "Nikomedeia", Forces_kBZ, 0, "when calling newCity in SettingCities, line 36")
+	call newCity(gg_rct_CITY_BYZ_Kutaisi, "Kutaisi", Forces_kBZ, 0, "when calling newCity in SettingCities, line 37")
+	call newCity(gg_rct_CITY_BYZ_Nicae, "Nicae", Forces_kBZ, 2, "when calling newCity in SettingCities, line 38")
+	call newCity(gg_rct_CITY_BYZ_Nicosia, "Nicosia", Forces_kBZ, 0, "when calling newCity in SettingCities, line 39")
+	call newCity(gg_rct_CITY_BYZ_Rhodes, "Rhodes", Forces_kBZ, 0, "when calling newCity in SettingCities, line 40")
+	call newCity(gg_rct_CITY_BYZ_Scopia, "Scopia", Forces_kBZ, 0, "when calling newCity in SettingCities, line 41")
+	call newCity(gg_rct_CITY_BYZ_Smyrna, "Smyrna", Forces_kBZ, 0, "when calling newCity in SettingCities, line 42")
+	call newCity(gg_rct_CITY_BYZ_Tbilisi, "Tbilisi", Forces_kBZ, 0, "when calling newCity in SettingCities, line 43")
+	call newCity(gg_rct_CITY_BYZ_Trebizond, "Trebizond", Forces_kBZ, 1, "when calling newCity in SettingCities, line 44")
+	call newCity(gg_rct_CITY_Byz_Thessalonika, "Thessalonika", Forces_kBZ, 3, "when calling newCity in SettingCities, line 45")
+	call newCity(gg_rct_CITY_EE_Astrakhan, "Astrakhan'", Forces_kEE, 2, "when calling newCity in SettingCities, line 49")
+	call newCity(gg_rct_CITY_EE_Azaq, "Azaq", Forces_kEE, 0, "when calling newCity in SettingCities, line 50")
+	call newCity(gg_rct_CITY_EE_Baia, "Baia", Forces_kEE, 0, "when calling newCity in SettingCities, line 51")
+	call newCity(gg_rct_CITY_EE_Bryansk, "Bryansk", Forces_kEE, 0, "when calling newCity in SettingCities, line 52")
+	call newCity(gg_rct_CITY_EE_Caffa, "Caffa", Forces_kEE, 0, "when calling newCity in SettingCities, line 53")
+	call newCity(gg_rct_CITY_EE_Constanta, "Constanta", Forces_kEE, 0, "when calling newCity in SettingCities, line 54")
+	call newCity(gg_rct_CITY_EE_Dnipro, "Dnipro", Forces_kEE, 0, "when calling newCity in SettingCities, line 55")
+	call newCity(gg_rct_CITY_EE_Halych, "Halych", Forces_kEE, 0, "when calling newCity in SettingCities, line 56")
+	call newCity(gg_rct_CITY_EE_Kiev, "Kiev", Forces_kEE, 2, "when calling newCity in SettingCities, line 57")
+	call newCity(gg_rct_CITY_EE_Konigsberg, "Konigsberg", Forces_kEE, 0, "when calling newCity in SettingCities, line 58")
+	call newCity(gg_rct_CITY_EE_Hrodna, "Hrodna", Forces_kEE, 0, "when calling newCity in SettingCities, line 59")
+	call newCity(gg_rct_CITY_EE_Minsk, "Minsk", Forces_kEE, 1, "when calling newCity in SettingCities, line 60")
+	call newCity(gg_rct_CITY_EE_Moscow, "Moscow", Forces_kEE, 0, "when calling newCity in SettingCities, line 61")
+	call newCity(gg_rct_CITY_EE_Novgorod, "Novgorod", Forces_kEE, 0, "when calling newCity in SettingCities, line 62")
+	call newCity(gg_rct_CITY_EE_Oleshe, "Olesh'e", Forces_kEE, 0, "when calling newCity in SettingCities, line 63")
+	call newCity(gg_rct_CITY_EE_Polotsk, "Polotsk", Forces_kEE, 0, "when calling newCity in SettingCities, line 64")
+	call newCity(gg_rct_CITY_EE_Pskov, "Pskov", Forces_kEE, 0, "when calling newCity in SettingCities, line 65")
+	call newCity(gg_rct_CITY_EE_Reval, "Reval", Forces_kEE, 0, "when calling newCity in SettingCities, line 66")
+	call newCity(gg_rct_CITY_EE_Riga, "Riga", Forces_kEE, 1, "when calling newCity in SettingCities, line 67")
+	call newCity(gg_rct_CITY_EE_Syrt, "Bulgar", Forces_kEE, 0, "when calling newCity in SettingCities, line 68")
+	call newCity(gg_rct_CITY_EE_Ryazan, "Ryazan'", Forces_kEE, 0, "when calling newCity in SettingCities, line 69")
+	call newCity(gg_rct_CITY_EE_Sarkel, "Sarkel", Forces_kEE, 0, "when calling newCity in SettingCities, line 70")
+	call newCity(gg_rct_CITY_EE_Smolensk, "Smolensk", Forces_kEE, 1, "when calling newCity in SettingCities, line 71")
+	call newCity(gg_rct_CITY_EE_Sofia, "Sofia", Forces_kEE, 0, "when calling newCity in SettingCities, line 72")
+	call newCity(gg_rct_CITY_EE_Targoviste, "Targovitse", Forces_kEE, 1, "when calling newCity in SettingCities, line 73")
+	call newCity(gg_rct_CITY_EE_Timutarakan, "Tmutarakan'", Forces_kEE, 0, "when calling newCity in SettingCities, line 74")
+	call newCity(gg_rct_CITY_EE_Turku, "Turku", Forces_kEE, 0, "when calling newCity in SettingCities, line 75")
+	call newCity(gg_rct_CITY_EE_Vilnius, "Vilnius", Forces_kEE, 1, "when calling newCity in SettingCities, line 76")
+	call newCity(gg_rct_CITY_EE_Zhytomyr, "Zhytomir", Forces_kEE, 0, "when calling newCity in SettingCities, line 77")
+	call newCity(gg_rct_CITY_ME_Acre, "Acre", Forces_kME, 2, "when calling newCity in SettingCities, line 81")
+	call newCity(gg_rct_CITY_ME_Adana, "Adana", Forces_kME, 0, "when calling newCity in SettingCities, line 82")
+	call newCity(gg_rct_CITY_ME_Alamut, "Alamut", Forces_kME, 0, "when calling newCity in SettingCities, line 83")
+	call newCity(gg_rct_CITY_ME_Al_Aqaba, "Al-Aqaba", Forces_kME, 0, "when calling newCity in SettingCities, line 84")
+	call newCity(gg_rct_CITY_ME_Alexandria, "Alexandria", Forces_kME, 2, "when calling newCity in SettingCities, line 85")
+	call newCity(gg_rct_CITY_ME_Algiers, "Algiers", Forces_kME, 0, "when calling newCity in SettingCities, line 86")
+	call newCity(gg_rct_CITY_ME_Ankara, "Ankara", Forces_kME, 1, "when calling newCity in SettingCities, line 87")
+	call newCity(gg_rct_CITY_ME_Antioch, "Antioch", Forces_kME, 2, "when calling newCity in SettingCities, line 88")
+	call newCity(gg_rct_CITY_ME_Badajoz, "Badajoz", Forces_kME, 0, "when calling newCity in SettingCities, line 89")
+	call newCity(gg_rct_CITY_ME_Baghdad, "Baghdad", Forces_kME, 4, "when calling newCity in SettingCities, line 90")
+	call newCity(gg_rct_CITY_ME_Baku, "Baku", Forces_kME, 0, "when calling newCity in SettingCities, line 91")
+	call newCity(gg_rct_CITY_ME_Benghazi, "Benghazi", Forces_kME, 1, "when calling newCity in SettingCities, line 92")
+	call newCity(gg_rct_CITY_ME_Beleb_el_Anab, "Beleb-el-Anab", Forces_kME, 0, "when calling newCity in SettingCities, line 93")
+	call newCity(gg_rct_CITY_ME_Cairo, "Cairo", Forces_kME, 3, "when calling newCity in SettingCities, line 94")
+	call newCity(gg_rct_CITY_ME_Cordoba, "Cordoba", Forces_kME, 4, "when calling newCity in SettingCities, line 95")
+	call newCity(gg_rct_CITY_ME_Damascus, "Damascus", Forces_kME, 2, "when calling newCity in SettingCities, line 96")
+	call newCity(gg_rct_CITY_ME_Damietta, "Damietta", Forces_kME, 1, "when calling newCity in SettingCities, line 97")
+	call newCity(gg_rct_CITY_ME_Diyarbakir, "Diyarbakir", Forces_kME, 0, "when calling newCity in SettingCities, line 98")
+	call newCity(gg_rct_CITY_ME_Edessa, "Edessa", Forces_kME, 1, "when calling newCity in SettingCities, line 99")
+	call newCity(gg_rct_CITY_ME_Erez, "Erez", Forces_kME, 1, "when calling newCity in SettingCities, line 100")
+	call newCity(gg_rct_CITY_ME_Fes, "Fes", Forces_kME, 3, "when calling newCity in SettingCities, line 101")
+	call newCity(gg_rct_CITY_ME_Gaza, "Gaza", Forces_kME, 0, "when calling newCity in SettingCities, line 102")
+	call newCity(gg_rct_CITY_ME_Granada, "Granada", Forces_kME, 2, "when calling newCity in SettingCities, line 103")
+	call newCity(gg_rct_CITY_ME_Isparta, "Isparta", Forces_kME, 0, "when calling newCity in SettingCities, line 104")
+	call newCity(gg_rct_CITY_ME_JERUSALEM, "Jerusalem", Forces_kME, 3, "when calling newCity in SettingCities, line 105")
+	call newCity(gg_rct_CITY_ME_Kayseri, "Kayseri", Forces_kME, 1, "when calling newCity in SettingCities, line 106")
+	call newCity(gg_rct_CITY_ME_Kerak, "Kerak", Forces_kME, 0, "when calling newCity in SettingCities, line 107")
+	call newCity(gg_rct_CITY_ME_Kermanshah, "Kermanshah", Forces_kME, 0, "when calling newCity in SettingCities, line 108")
+	call newCity(gg_rct_CITY_ME_Konya, "Konya", Forces_kME, 0, "when calling newCity in SettingCities, line 109")
+	call newCity(gg_rct_CITY_ME_Lisbon, "Lisbon", Forces_kME, 0, "when calling newCity in SettingCities, line 110")
+	call newCity(gg_rct_CITY_ME_Luxor, "Luxor", Forces_kME, 0, "when calling newCity in SettingCities, line 111")
+	call newCity(gg_rct_CITY_ME_Madrid, "Madrid", Forces_kME, 0, "when calling newCity in SettingCities, line 112")
+	call newCity(gg_rct_CITY_ME_Mahdya, "Mahdya", Forces_kME, 0, "when calling newCity in SettingCities, line 113")
+	call newCity(gg_rct_CITY_ME_Marakesh, "Marrakesh", Forces_kME, 3, "when calling newCity in SettingCities, line 114")
+	call newCity(gg_rct_CITY_ME_Medina, "Medina", Forces_kME, 2, "when calling newCity in SettingCities, line 115")
+	call newCity(gg_rct_CITY_ME_Melilla, "Melilla", Forces_kME, 0, "when calling newCity in SettingCities, line 116")
+	call newCity(gg_rct_CITY_ME_Mosul, "Mosul", Forces_kME, 1, "when calling newCity in SettingCities, line 117")
+	call newCity(gg_rct_CITY_ME_Murcia, "Murcia", Forces_kME, 1, "when calling newCity in SettingCities, line 118")
+	call newCity(gg_rct_CITY_ME_Oran, "Oran", Forces_kME, 0, "when calling newCity in SettingCities, line 119")
+	call newCity(gg_rct_CITY_ME_Palma, "Palma", Forces_kME, 1, "when calling newCity in SettingCities, line 120")
+	call newCity(gg_rct_CITY_ME_Quarisiya, "Quarisiya", Forces_kME, 1, "when calling newCity in SettingCities, line 121")
+	call newCity(gg_rct_CITY_ME_Silves, "Silves", Forces_kME, 0, "when calling newCity in SettingCities, line 122")
+	call newCity(gg_rct_CITY_ME_Sinop, "Sinop", Forces_kME, 0, "when calling newCity in SettingCities, line 123")
+	call newCity(gg_rct_CITY_ME_Tamiya, "Tamiya", Forces_kME, 0, "when calling newCity in SettingCities, line 124")
+	call newCity(gg_rct_CITY_ME_Tartus, "Tartus", Forces_kME, 0, "when calling newCity in SettingCities, line 125")
+	call newCity(gg_rct_CITY_ME_Tabriz, "Tabriz", Forces_kME, 0, "when calling newCity in SettingCities, line 126")
+	call newCity(gg_rct_CITY_ME_Tripoli, "Tripoli", Forces_kME, 1, "when calling newCity in SettingCities, line 127")
+	call newCity(gg_rct_CITY_ME_Tunis, "Tunis", Forces_kME, 1, "when calling newCity in SettingCities, line 128")
+	call newCity(gg_rct_CITY_ME_Valencia, "Valencia", Forces_kME, 0, "when calling newCity in SettingCities, line 129")
+	call newCity(gg_rct_CITY_ME_Yerevan, "Yerevan", Forces_kME, 0, "when calling newCity in SettingCities, line 130")
+	call newCity(gg_rct_CITY_WE_Aarhus, "Aarhus", Forces_kWE, 1, "when calling newCity in SettingCities, line 134")
+	call newCity(gg_rct_CITY_WE_Aberdeen, "Aberdeen", Forces_kWE, 1, "when calling newCity in SettingCities, line 135")
+	call newCity(gg_rct_CITY_WE_Ajaccio, "Ajaccio", Forces_kWE, 0, "when calling newCity in SettingCities, line 136")
+	call newCity(gg_rct_CITY_WE_Ancona, "Ancona", Forces_kWE, 1, "when calling newCity in SettingCities, line 137")
+	call newCity(gg_rct_CITY_WE_Angers, "Angers", Forces_kWE, 0, "when calling newCity in SettingCities, line 138")
+	call newCity(gg_rct_CITY_WE_Antwerp, "Antwerp", Forces_kWE, 0, "when calling newCity in SettingCities, line 139")
+	call newCity(gg_rct_CITY_WE_Barcelona, "Barcelona", Forces_kWE, 1, "when calling newCity in SettingCities, line 140")
+	call newCity(gg_rct_CITY_WE_Bari, "Bari", Forces_kWE, 0, "when calling newCity in SettingCities, line 141")
+	call newCity(gg_rct_CITY_WE_Belgrade, "Belgrade", Forces_kWE, 1, "when calling newCity in SettingCities, line 142")
+	call newCity(gg_rct_CITY_WE_Bergen, "Bergen", Forces_kWE, 1, "when calling newCity in SettingCities, line 143")
+	call newCity(gg_rct_CITY_WE_Bern, "Bern", Forces_kWE, 0, "when calling newCity in SettingCities, line 144")
+	call newCity(gg_rct_CITY_WE_Bologna, "Bologna", Forces_kWE, 1, "when calling newCity in SettingCities, line 145")
+	call newCity(gg_rct_CITY_WE_Bordeaux, "Bordeaux", Forces_kWE, 1, "when calling newCity in SettingCities, line 146")
+	call newCity(gg_rct_CITY_WE_Brasov, "Brasov", Forces_kWE, 0, "when calling newCity in SettingCities, line 147")
+	call newCity(gg_rct_CITY_WE_Bruges, "Bruges", Forces_kWE, 0, "when calling newCity in SettingCities, line 148")
+	call newCity(gg_rct_CITY_WE_Burgh, "Burgh", Forces_kWE, 0, "when calling newCity in SettingCities, line 149")
+	call newCity(gg_rct_CITY_WE_Burgos, "Burgos", Forces_kWE, 1, "when calling newCity in SettingCities, line 150")
+	call newCity(gg_rct_CITY_WE_Caen, "Caen", Forces_kWE, 0, "when calling newCity in SettingCities, line 151")
+	call newCity(gg_rct_CITY_WE_Caernarfon, "Caenarfon", Forces_kWE, 0, "when calling newCity in SettingCities, line 152")
+	call newCity(gg_rct_CITY_WE_Cagliari, "Cagliari", Forces_kWE, 0, "when calling newCity in SettingCities, line 153")
+	call newCity(gg_rct_CITY_WE_Cardiff, "Cardiff", Forces_kWE, 0, "when calling newCity in SettingCities, line 154")
+	call newCity(gg_rct_CITY_WE_Clermont, "Clermont", Forces_kWE, 1, "when calling newCity in SettingCities, line 155")
+	call newCity(gg_rct_CITY_WE_Cologne, "Cologne", Forces_kWE, 1, "when calling newCity in SettingCities, line 156")
+	call newCity(gg_rct_CITY_WE_Dijon, "Dijon", Forces_kWE, 0, "when calling newCity in SettingCities, line 157")
+	call newCity(gg_rct_CITY_WE_Dublin, "Dublin", Forces_kWE, 0, "when calling newCity in SettingCities, line 158")
+	call newCity(gg_rct_CITY_WE_Edinburgh, "Edinburgh", Forces_kWE, 0, "when calling newCity in SettingCities, line 159")
+	call newCity(gg_rct_CITY_WE_Eikundarsund, "Eikundarsund", Forces_kWE, 0, "when calling newCity in SettingCities, line 160")
+	call newCity(gg_rct_CITY_WE_Esztergom, "Esztergom", Forces_kWE, 1, "when calling newCity in SettingCities, line 161")
+	call newCity(gg_rct_CITY_WE_Exeter, "Exeter", Forces_kWE, 0, "when calling newCity in SettingCities, line 162")
+	call newCity(gg_rct_CITY_WE_Gdansk, "Gdansk", Forces_kWE, 0, "when calling newCity in SettingCities, line 163")
+	call newCity(gg_rct_CITY_WE_Flensburg, "Flensburg", Forces_kWE, 0, "when calling newCity in SettingCities, line 164")
+	call newCity(gg_rct_CITY_WE_Frankfurt, "Frankfurt", Forces_kWE, 1, "when calling newCity in SettingCities, line 165")
+	call newCity(gg_rct_CITY_WE_Galway, "Galway", Forces_kWE, 0, "when calling newCity in SettingCities, line 166")
+	call newCity(gg_rct_CITY_WE_Genoa, "Genoa", Forces_kWE, 2, "when calling newCity in SettingCities, line 167")
+	call newCity(gg_rct_CITY_WE_Groningen, "Groningen", Forces_kWE, 0, "when calling newCity in SettingCities, line 168")
+	call newCity(gg_rct_CITY_WE_Innsbruck, "Innsbruck", Forces_kWE, 0, "when calling newCity in SettingCities, line 169")
+	call newCity(gg_rct_CITY_WE_Inverness, "Inverness", Forces_kWE, 0, "when calling newCity in SettingCities, line 170")
+	call newCity(gg_rct_CITY_WE_Desmond, "Desmond", Forces_kWE, 0, "when calling newCity in SettingCities, line 171")
+	call newCity(gg_rct_CITY_WE_Reggio, "Reggio", Forces_kWE, 0, "when calling newCity in SettingCities, line 173")
+	call newCity(gg_rct_CITY_WE_Kalmar, "Kalmar", Forces_kWE, 0, "when calling newCity in SettingCities, line 174")
+	call newCity(gg_rct_CITY_WE_Kassa, "Kassa", Forces_kWE, 0, "when calling newCity in SettingCities, line 175")
+	call newCity(gg_rct_CITY_WE_Krakow, "Krakow", Forces_kWE, 2, "when calling newCity in SettingCities, line 176")
+	call newCity(gg_rct_CITY_WE_Leon, "Leon", Forces_kWE, 1, "when calling newCity in SettingCities, line 177")
+	call newCity(gg_rct_CITY_WE_London, "London", Forces_kWE, 0, "when calling newCity in SettingCities, line 178")
+	call newCity(gg_rct_CITY_WE_Lund, "Lund", Forces_kWE, 0, "when calling newCity in SettingCities, line 179")
+	call newCity(gg_rct_CITY_WE_Lyon, "Lyon", Forces_kWE, 0, "when calling newCity in SettingCities, line 180")
+	call newCity(gg_rct_CITY_WE_Madgeburg, "Madgeburg", Forces_kWE, 0, "when calling newCity in SettingCities, line 181")
+	call newCity(gg_rct_CITY_WE_Marseille, "Marsellie", Forces_kWE, 1, "when calling newCity in SettingCities, line 182")
+	call newCity(gg_rct_CITY_WE_Metz, "Metz", Forces_kWE, 0, "when calling newCity in SettingCities, line 183")
+	call newCity(gg_rct_CITY_WE_Milan, "Milan", Forces_kWE, 1, "when calling newCity in SettingCities, line 184")
+	call newCity(gg_rct_CITY_WE_Naples, "Naples", Forces_kWE, 1, "when calling newCity in SettingCities, line 185")
+	call newCity(gg_rct_CITY_WE_Nuremburg, "Nuremburg", Forces_kWE, 0, "when calling newCity in SettingCities, line 186")
+	call newCity(gg_rct_CITY_WE_Nykoping, "Nykoping", Forces_kWE, 0, "when calling newCity in SettingCities, line 187")
+	call newCity(gg_rct_CITY_WE_Oporto, "Oporto", Forces_kWE, 0, "when calling newCity in SettingCities, line 188")
+	call newCity(gg_rct_CITY_WE_Oslo, "Oslo", Forces_kWE, 1, "when calling newCity in SettingCities, line 189")
+	call newCity(gg_rct_CITY_WE_Buda, "Buda", Forces_kWE, 1, "when calling newCity in SettingCities, line 190")
+	call newCity(gg_rct_CITY_WE_Palermo, "Palermo", Forces_kWE, 3, "when calling newCity in SettingCities, line 191")
+	call newCity(gg_rct_CITY_WE_Pamplona, "Pamplona", Forces_kWE, 0, "when calling newCity in SettingCities, line 192")
+	call newCity(gg_rct_CITY_WE_Paris, "Paris", Forces_kWE, 1, "when calling newCity in SettingCities, line 193")
+	call newCity(gg_rct_CITY_WE_Pisa, "Pisa", Forces_kWE, 0, "when calling newCity in SettingCities, line 194")
+	call newCity(gg_rct_CITY_WE_Plock, "Plock", Forces_kWE, 0, "when calling newCity in SettingCities, line 195")
+	call newCity(gg_rct_CITY_WE_Poznan, "Poznan", Forces_kWE, 1, "when calling newCity in SettingCities, line 196")
+	call newCity(gg_rct_CITY_WE_Prague, "Prague", Forces_kWE, 0, "when calling newCity in SettingCities, line 197")
+	call newCity(gg_rct_CITY_WE_Zadar, "Zadar", Forces_kWE, 0, "when calling newCity in SettingCities, line 198")
+	call newCity(gg_rct_CITY_WE_Rennes, "Rennes", Forces_kWE, 0, "when calling newCity in SettingCities, line 199")
+	call newCity(gg_rct_CITY_WE_Rheims, "Rheims", Forces_kWE, 0, "when calling newCity in SettingCities, line 200")
+	call newCity(gg_rct_CITY_WE_Rome, "Rome", Forces_kWE, 1, "when calling newCity in SettingCities, line 201")
+	call newCity(gg_rct_CITY_WE_Roskilde, "Roskilde", Forces_kWE, 0, "when calling newCity in SettingCities, line 202")
+	call newCity(gg_rct_CITY_WE_Salamanca, "Salamanca", Forces_kWE, 0, "when calling newCity in SettingCities, line 203")
+	call newCity(gg_rct_CITY_WE_Salzburg, "Salzburg", Forces_kWE, 0, "when calling newCity in SettingCities, line 204")
+	call newCity(gg_rct_CITY_WE_Skara, "Skara", Forces_kWE, 0, "when calling newCity in SettingCities, line 205")
+	call newCity(gg_rct_CITY_WE_Stettin, "Stettin", Forces_kWE, 0, "when calling newCity in SettingCities, line 206")
+	call newCity(gg_rct_CITY_WE_Stockholm, "Stockholm", Forces_kWE, 1, "when calling newCity in SettingCities, line 207")
+	call newCity(gg_rct_CITY_WE_Syracuse, "Syracuse", Forces_kWE, 0, "when calling newCity in SettingCities, line 208")
+	call newCity(gg_rct_CITY_WE_Toulouse, "Toulouse", Forces_kWE, 0, "when calling newCity in SettingCities, line 209")
+	call newCity(gg_rct_CITY_WE_Varad, "Varad", Forces_kWE, 0, "when calling newCity in SettingCities, line 210")
+	call newCity(gg_rct_CITY_WE_Venice, "Venice", Forces_kWE, 2, "when calling newCity in SettingCities, line 211")
+	call newCity(gg_rct_CITY_WE_Vienna, "Vienna", Forces_kWE, 0, "when calling newCity in SettingCities, line 212")
+	call newCity(gg_rct_CITY_WE_Visby, "Visby", Forces_kWE, 0, "when calling newCity in SettingCities, line 213")
+	call newCity(gg_rct_CITY_WE_Warwick, "Warwick", Forces_kWE, 0, "when calling newCity in SettingCities, line 214")
+	call newCity(gg_rct_CITY_WE_Winchester, "Winchester", Forces_kWE, 1, "when calling newCity in SettingCities, line 215")
+	call newCity(gg_rct_CITY_WE_Wroclaw, "Wroclaw", Forces_kWE, 0, "when calling newCity in SettingCities, line 216")
+	call newCity(gg_rct_CITY_WE_York, "York", Forces_kWE, 1, "when calling newCity in SettingCities, line 217")
+	call newCity(gg_rct_CITY_WE_Zagreb, "Zagreb", Forces_kWE, 0, "when calling newCity in SettingCities, line 218")
+	call newCity(gg_rct_CITY_WE_Zaragoza, "Zaragoza", Forces_kWE, 0, "when calling newCity in SettingCities, line 219")
+	call newCity(gg_rct_CITY_WE_Hamburg, "Hamburg", Forces_kWE, 1, "when calling newCity in SettingCities, line 220")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -18560,9 +18562,9 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_EventListener_generalEventCallback = function bridge_EventListener_generalEventCallback
 	set ref_function_bridge_ClosureForGroups_closure_impl = function bridge_ClosureForGroups_closure_impl
 	set ref_function_cond = function cond_2
-	set ref_function_bridge_action = function bridge_action_2
+	set ref_function_bridge_action = function bridge_action
 	set ref_function_bridge_cond = function bridge_cond
-	set ref_function_bridge_action_2 = function bridge_action
+	set ref_function_bridge_action_2 = function bridge_action_2
 	set ref_function_bridge_DelayNode_recycle = function bridge_DelayNode_recycle
 	set ref_function_GameTimer_closure_impl = function GameTimer_closure_impl
 	set ref_function_Group_closure_impl = function Group_closure_impl
@@ -18573,14 +18575,14 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl
 	set ref_function_bridge_Upkeep_closure_impl = function bridge_Upkeep_closure_impl
 	set ref_function_bridge_ClosureEvents_closure_impl_2 = function bridge_ClosureEvents_closure_impl_3
-	set ref_function_bridge_ClosureEvents_closure_impl_3 = function bridge_ClosureEvents_closure_impl_4
-	set ref_function_bridge_ClosureEvents_closure_impl_4 = function bridge_ClosureEvents_closure_impl_2
+	set ref_function_bridge_ClosureEvents_closure_impl_3 = function bridge_ClosureEvents_closure_impl_2
+	set ref_function_bridge_ClosureEvents_closure_impl_4 = function bridge_ClosureEvents_closure_impl_4
 	set ref_function_bridge_ClosureEvents_closure_impl_5 = function bridge_ClosureEvents_closure_impl_5
 	set ref_function_bridge_CallbackPeriodic_staticCallback = function bridge_CallbackPeriodic_staticCallback
 	set ref_function_bridge_CallbackSingle_closure_impl = function bridge_CallbackSingle_closure_impl
-	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_3
-	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl
-	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_3
+	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl
 endfunction
 
 function main takes nothing returns nothing

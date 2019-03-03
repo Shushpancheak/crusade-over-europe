@@ -1,2 +1,30 @@
 package OreCapture
+import Main
+import UnitTools
+import Economy
 
+let kLifePercentToCapture = 80.0
+
+init
+  EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
+    if uMines.has(GetDyingUnit().getTypeId())
+      let u = GetTriggerUnit()
+      CreateUnitAtLoc(u.getOwner(), u.getTypeId(), u.getLoc(), bj_UNIT_FACING)
+
+  EventListener.add(EVENT_PLAYER_UNIT_UPGRADE_FINISH) ->
+    if uMines.has(GetTriggerUnit().getTypeId())
+      let u = GetTriggerUnit()
+
+      // Economy stuff
+      gold_adder[u.getOwner().getId()] += usIncomeOres.get(u.getTypeId())
+
+  EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
+    if uMines.has(GetAttackedUnitBJ().getTypeId())
+      let u = GetAttackedUnitBJ()
+      if u.getLifePercent() <= kLifePercentToCapture
+        u.setOwner(GetAttacker().getOwner(), true)
+        u.setLifePercent(100.0)
+
+        // Economy stuff
+        gold_adder[u.getOwner().getId()] -= usIncomeOres.get(u.getTypeId())
+        gold_adder[GetAttacker().getOwner().getId()] += usIncomeOres.get(u.getTypeId())

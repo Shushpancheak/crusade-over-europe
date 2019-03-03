@@ -39,9 +39,9 @@ init
           u.setLifePercent(kCityLifePercentToCapture)
         else
           let city_id = u.getCityId()
-          cities[city_id].capture(GetAttacker().getOwner())
           let u_id = u.getTypeId()
           if uCapitols.has(u_id)
             attentionToForce(GetAttacker().getOwner().getNameColored() + " has just captured " + GetAttackedUnitBJ().getOwner().getNameColored() + " Capitol!", GetPlayersAll())
+          cities[city_id].capture(GetAttacker().getOwner())
       else if u.getLifePercent() <= kCityLifePercentToCapture
         u.setLifePercent(kCityLifePercentToCapture)

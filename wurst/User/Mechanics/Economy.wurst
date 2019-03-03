@@ -18,16 +18,17 @@ int array gold_change
 int array lumb_change
 
 // Is changed when you build ores, get them, etc.
-int array gold_adder
-int array lumb_adder
+// public -- so use anywhere outtahere!
+public int array gold_adder
+public int array lumb_adder
 
 var income_counting_i = 0
 
 
 public function countIncomeForAll()
   for i = 0 to PLAYER_SLOTS - 1
-    gold_change[i] = 0
-    lumb_change[i] = 0
+    gold_change[i] = gold_adder[i]
+    lumb_change[i] = lumb_adder[i]
 
   let number_of_cities_per_step = (cityCount * kStepTime / kIncomeCountToMultiboardRate).toInt() + 1
   for i = 0 to (kIncomeCountToMultiboardRate / kStepTime).toInt() - 1
@@ -39,12 +40,11 @@ public function countIncomeForAll()
     if min(cityCount - 1, (i + 1) * number_of_cities_per_step - 1) == cityCount - 1
       break
 
-  // Searching for ores
-  forUnitsAll() u ->
-    if usOres.has(u.getTypeId()) and players[u.getOwner().getId()].isIngame()
-      gold_change[u.getOwner().getId()] += usIncomeOres.get(u.getTypeId())
-
 init
+  for i = 0 to PLAYER_SLOTS - 1
+    gold_adder[i] = 0
+    lumb_adder[i] = 0
+
   doPeriodically(kIncomeCountToMultiboardRate / 30) cbUPKEEP_SHOWING ->
     for i = 0 to PLAYER_SLOTS - 1
       if player_stats[i].isInGame()
@@ -71,6 +71,3 @@ init
 
 
     countIncomeForAll()
-
-
-  //EventListener.add()

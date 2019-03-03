@@ -429,10 +429,6 @@ public class City
 
 public City array cities
 
-// Considering that cities shouldn't change their location,
-// this would be an easy way to check if the given unit is city
-public HashMap<location, int> locToCityHashMap = new HashMap<location, int>()
-
 // O(1)
 public function isCity(unit u) returns bool
   return kCityTypes.has(u.getTypeId())
@@ -440,6 +436,7 @@ public function isCity(unit u) returns bool
 // -1 - not a city
 // O(n)
 public function getCityId(unit u) returns int
-  if locToCityHashMap.has(u.getLoc())
-    return locToCityHashMap.get(u.getLoc())
+  for i = 0 to cityCount - 1
+    if cities[i].getCityUnit() == u
+      return i
   return -1

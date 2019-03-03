@@ -115,7 +115,7 @@ public let uCopperMine = 'h03E'
 public let uGoldMine = 'h039'
 public let uIronMine = 'h03D'
 public let uSilverMine = 'h03C'
-public let usOres =       asList(uCopperMine, uGoldMine, uIronMine, uSilverMine)
+public let uMines =       asList(uCopperMine, uGoldMine, uIronMine, uSilverMine)
 public var usIncomeOres = new HashMap<int, int>()
 
 

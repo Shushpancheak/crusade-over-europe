@@ -6,8 +6,6 @@ public function newCity(rect r, string n, int f, int tier)
   let u = g.next()
   // cityCount updates within construct
   cities[cityCount] = new City(u, n, f, tier)
-  // Useful when checking if the partivular unit is a city
-  locToCityHashMap.put(u.getLoc(), cityCount - 1)
 
 public function setupCities()
 

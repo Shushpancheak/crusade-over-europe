@@ -8376,7 +8376,7 @@ import ObjEditingNatives
 	..setInt("ulum", 495)
 	..setInt("udup", 2)
 	..setString("uubs", "")
-	..setString("ures", "R007,R004,R006,Rhac,R008,R00U,R00X")
+	..setString("ures", "R008,R007,R004,R006,Rhac,R00U,R00X")
 	..setString("uhrt", "always")
 	..setString("uabi", "A03Q")
 	..setInt("udef", 3)
