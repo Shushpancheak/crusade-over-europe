@@ -12874,7 +12874,7 @@ import ObjEditingNatives
 	..setString("urac", "commoner")
 	..setInt("ufoo", 0)
 	..setString("udty", "divine")
-	..setString("uico", "ReplaceableTextures\\CommandButtons\\BTNtemp.blp")
+	..setString("uico", "ReplaceableTextures\\CommandButtons\\BTNTemp.blp")
 	..setInt("umvs", 522)
 	..setString("umdl", "dummy.mdl")
 	..setReal("uble", 0.0)

@@ -1,0 +1,9 @@
+package Garissons
+
+import Main
+
+init
+  EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
+    let u = GetAttackedUnitBJ()
+    if (isCity(u) or uCastles.has(u.getTypeId())) and not u.getOwner().isIngame()
+      IssueImmediateOrder(u, oGarrison)
