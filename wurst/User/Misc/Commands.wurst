@@ -88,7 +88,17 @@ function action()
     let num = args[1].toInt()
     SetCameraFieldForPlayer(GetTriggerPlayer(), CAMERA_FIELD_TARGET_DISTANCE, num.toReal(), 0)
   else if args[0] == ksObserve
-    
+    if not player_stats[pl.getId()].isObserver()
+      var has_no_units = true
+      for u in GetUnitsOfPlayerAll(pl)
+        if not u.isHidden()
+          has_no_units = false
+
+      if has_no_units
+        player_stats[pl.getId()].becomeObserver()
+        textToAll(pl.getNameColored() + ksBecomeObserver, 10.0)
+      else
+        noteToPlayer(ksToBecomeObserver, pl)
 
 
 function cond() returns bool

@@ -60,3 +60,5 @@ public let ksTaxLevels = [
 ]
 
 public let ksCannotChangeTaxLevel = "Wait 1 turn to be able to change tax level."
+public let ksBecomeObserver = " has just became an observer."
+public let ksToBecomeObserver = "To become an observer, you should have no units!"
