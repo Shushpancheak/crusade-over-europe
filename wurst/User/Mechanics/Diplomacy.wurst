@@ -36,11 +36,11 @@ function action()
       for i = 0 to PLAYER_SLOTS - 1
         let current_f = GetForceOfPlayer(players[i])
         if players[i] == target
-          goodNewsToPlayer(source_s + " wants to ally you", players[i])
+          goodNewsToPlayer(source_s + " seeks an alliance with you!", players[i])
         else if current_f == f1 or current_f == f2
-          noteToPlayer(source_s + " allied " + target_s, players[i])
+          noteToPlayer(source_s + " has allied " + target_s, players[i])
         else
-          noteToPlayer(source_s + " allied " + target_s, players[i])
+          noteToPlayer(source_s + " has allied " + target_s, players[i])
 
     case aNeutral
       if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_NEUTRAL
@@ -50,11 +50,11 @@ function action()
       for i = 0 to PLAYER_SLOTS - 1
         let current_f = GetForceOfPlayer(players[i])
         if players[i] == target
-          noteToPlayer(source_s + " is now neutral towards you", players[i])
+          noteToPlayer(source_s + " is now neutral towards you!", players[i])
         else if current_f == f1 or current_f == f2
-          noteToPlayer(source_s + " shows " + target_s + " neutrality", players[i])
+          noteToPlayer(source_s + " shows neutrality towards " + target_s, players[i])
         else
-          noteToPlayer(source_s + " shows " + target_s + " neutrality", players[i])
+          noteToPlayer(source_s + " shows neutrality towards " + target_s, players[i])
 
     case aUnally
       if player_stats[source_id].getAllianceState(target) == bj_ALLIANCE_NEUTRAL
@@ -66,9 +66,9 @@ function action()
         if players[i] == target
           noteToPlayer(source_s + " unallies you!", players[i])
         else if current_f == f1 or current_f == f2
-          noteToPlayer(source_s + " unallied " + target_s, players[i])
+          noteToPlayer(source_s + " has unallied " + target_s, players[i])
         else
-          noteToPlayer(source_s + " unallied " + target_s, players[i])
+          noteToPlayer(source_s + " has unallied " + target_s, players[i])
 
     //@TODO fix share!!!!!
     /*
