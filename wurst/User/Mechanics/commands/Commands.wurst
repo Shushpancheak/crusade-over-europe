@@ -19,6 +19,7 @@ public let ksDebug = "непереводимоесочетаниебукв"
 public let ksVoteKick = "votekick"
 public let ksZoom = "zoom"
 public let ksObserve = "observe"
+public let ksLowerPO = "add_po"
 
 // Errs
 public let kseNotYourCity = "The city you wanted to rename so eagerly doesn't belong to you!"
@@ -90,7 +91,7 @@ function action()
     if not player_stats[pl.getId()].isObserver()
       var has_no_units = true
       for u in GetUnitsOfPlayerAll(pl)
-        if not u.isHidden()
+        if not u.isHidden() and u.getTypeId() != uDiplomacy and u.getTypeId() != uEconomy
           has_no_units = false
 
       if has_no_units
@@ -98,6 +99,12 @@ function action()
         textToAll(pl.getNameColored() + ksBecomeObserver, 10.0)
       else
         noteToPlayer(ksToBecomeObserver, pl)
+  else if args[0] == ksLowerPO
+    if not dbg_mode
+      return
+    int city_id = player_stats[pl.getId()].getSelectedCityId()
+    if city_id >= 0 and city_id < cityCount
+      cities[city_id].addPublicOrder(args[1].toReal())
   else
     noteToPlayer("Couldn't find command: '" + args[0] + "'", pl)
 

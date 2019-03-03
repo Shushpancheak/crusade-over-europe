@@ -16,6 +16,11 @@ public let kStepTime = 0.5
 
 int array gold_change
 int array lumb_change
+
+// Is changed when you build ores, get them, etc.
+int array gold_adder
+int array lumb_adder
+
 var income_counting_i = 0
 
 
@@ -66,3 +71,6 @@ init
 
 
     countIncomeForAll()
+
+
+  //EventListener.add()

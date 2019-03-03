@@ -6,7 +6,7 @@ int array mercenary_camps
 
 init
   EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
-    let u =  GetConstructingStructure()
+    let u = GetTriggerUnit()
     if u.getTypeId() == uMercenaryCamp
       mercenary_camps[u.getOwner().getId()]--
   EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->

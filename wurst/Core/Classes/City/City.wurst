@@ -5,6 +5,7 @@ import CityBaseTaxes
 import CityTools
 import Revolts
 import PublicOrderAddByUnits
+import HashMap
 
 //-----------------------------CONSTANTS---------------------------------------
 public let kCityRadius = 1500.0
@@ -195,7 +196,7 @@ public class City
 
   function changeOwner(int pl_id)
     if pl_id == PLAYER_NEUTRAL_AGGRESSIVE
-      city_unit.setOwner(Player(pl_id), true)
+      city_unit.setOwner(Player(PLAYER_NEUTRAL_AGGRESSIVE), true)
 
       // Rebels would set tax to med.
       changeTaxLevelFORCED(0)
@@ -204,7 +205,7 @@ public class City
 
     player_id = pl_id
     // If and only if this is a player!
-    if pl_id >= 0 and pl_id < 24
+    if pl_id >= 0 and pl_id < PLAYER_SLOTS
       force_id = player_stats[pl_id].getForceId()
 
     refreshMultiboardIfPossible()
@@ -232,16 +233,17 @@ public class City
     if getChance(cityModifiers.get(CityModifier.massacred_pop).chance)
       addModifier(CityModifier.massacred_pop)
 
+    // Default is this
     var whoCapturesForceId = force_id
     let whoCapturesId = whoCaptures.getId()
-    if (whoCapturesId >= 0 and whoCapturesId < 24)
+    if (whoCapturesId >= 0 and whoCapturesId < PLAYER_SLOTS)
       whoCapturesForceId = player_stats[whoCapturesId].getForceId()
 
     if uCapitols.has(city_unit.getTypeId())
       replaceCity(getCapitolByFaction(getCapitolTier(city_unit.getTypeId()), whoCapturesForceId))
-      UnitAddAbility(city_unit, aTownHallCapitolAura)
 
     changeOwner(whoCapturesId)
+    UnitAddAbility(city_unit, aTownHallCapitolAura)
 
   function refreshMultiboardIfPossible()
     for i = 0 to PLAYER_SLOTS - 1
@@ -254,7 +256,7 @@ public class City
    ** 1 - Low
    ** 2 - High
    ** 3 - Harsh
-   */
+   **/
   function changeTaxLevel(int lvl)
     if getElapsedTime() - last_time_tax_level_changed >= kCityTaxLevelTimeToChange
       last_time_tax_level_changed = getElapsedTime()
@@ -325,6 +327,9 @@ public class City
 
     return public_order_last
 
+  function addPublicOrder(real amount)
+    public_order_add += amount
+
   function getLastPublicOrder() returns real
     return public_order_last
 
@@ -350,9 +355,6 @@ public class City
     return getStringColoredBasedOnSign(last_pop_growth)
 
   function getPopulationStr() returns string
-    if dbg_msg
-      return population.toString()
-
     string str
     if population < 100000
       str = (population / 1000).toInt().toString() + "," + ((population % 1000) / 100).toInt().toString() + "k"
@@ -427,6 +429,10 @@ public class City
 
 public City array cities
 
+// Considering that cities shouldn't change their location,
+// this would be an easy way to check if the given unit is city
+public HashMap<location, int> locToCityHashMap = new HashMap<location, int>()
+
 // O(1)
 public function isCity(unit u) returns bool
   return kCityTypes.has(u.getTypeId())
@@ -434,7 +440,6 @@ public function isCity(unit u) returns bool
 // -1 - not a city
 // O(n)
 public function getCityId(unit u) returns int
-  for i = 0 to cityCount - 1
-    if cities[i].getCityUnit() == u
-      return i
+  if locToCityHashMap.has(u.getLoc())
+    return locToCityHashMap.get(u.getLoc())
   return -1
