@@ -18,6 +18,7 @@ public let ksAddModifier = "add_mod"
 public let ksDebug = "непереводимоесочетаниебукв"
 public let ksVoteKick = "votekick"
 public let ksZoom = "zoom"
+public let ksObserve = "observe"
 
 // Errs
 
@@ -86,6 +87,8 @@ function action()
   else if args[0] == ksZoom
     let num = args[1].toInt()
     SetCameraFieldForPlayer(GetTriggerPlayer(), CAMERA_FIELD_TARGET_DISTANCE, num.toReal(), 0)
+  else if args[0] == ksObserve
+    
 
 
 function cond() returns bool

@@ -9,7 +9,35 @@ public class PlayerStats
   private int array[PLAYER_SLOTS] alliance_states
   private bool is_in_game = false
   private int selected_city_id
-  private int upkeep // <= 0
+  private int upkeep // <= 0 always!
+  private bool is_observer // command -observe
+
+  // - - - - - - - - - - - CONSTRUCT - - - - - - - - - - - - - - - - - -
+  construct(player which_player)
+    is_observer = false
+    upkeep = 0
+    force_id = -1
+    selected_city_id = -1
+    pl = which_player
+    is_in_game = which_player.isIngame()
+    for i = 0 to PLAYER_SLOTS - 1
+      if players[i] == which_player
+        alliance_states[i] = PLAYER_SELF
+      else
+        alliance_states[i] = bj_ALLIANCE_UNALLIED
+
+  function isObserver() returns bool
+    return is_observer
+
+  function becomeObserver()
+    is_observer = true
+
+    let pl_id = pl.getId()
+    for i = 0 to PLAYER_SLOTS - 1
+      player_stats[i].setAlliance(pl, bj_ALLIANCE_UNALLIED)
+      player_stats[pl_id].setAlliance(players[i], bj_ALLIANCE_UNALLIED)
+
+    CreateFogModifierRadiusLocBJ(true, pl, FOG_OF_WAR_VISIBLE, GetRectCenter(GetPlayableMapRect()), 999999.00)
 
   function isInGame() returns bool
     return is_in_game
@@ -124,20 +152,5 @@ public class PlayerStats
       case kBZ
         SetPlayerUnitAvailableBJ(uPeasantBZ, true, pl)
         SetPlayerUnitAvailableBJ(uWorkerBZ, true, pl)
-
-  // - - - - - - - - - - - CONSTRUCT - - - - - - - - - - - - - - - - - -
-  construct(player which_player)
-    upkeep = 0
-    force_id = -1
-    selected_city_id = -1
-    pl = which_player
-    is_in_game = which_player.isIngame()
-    for i = 0 to PLAYER_SLOTS - 1
-      if players[i] == which_player
-        alliance_states[i] = PLAYER_SELF
-      else
-        alliance_states[i] = bj_ALLIANCE_UNALLIED
-
-
 
 public PlayerStats array player_stats
