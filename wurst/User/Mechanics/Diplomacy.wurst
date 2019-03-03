@@ -104,8 +104,7 @@ function action()
 
 function cond() returns bool
   // Player cannot do diplomacy with himself
-  // and with someone who's absent
-  if GetSpellAbilityUnit().getOwner() == GetSpellTargetUnit().getOwner() or not GetSpellTargetUnit().getOwner().isIngame()
+  if GetSpellAbilityUnit().getOwner() == GetSpellTargetUnit().getOwner()
     return false
 
   var id = GetSpellAbilityId()
