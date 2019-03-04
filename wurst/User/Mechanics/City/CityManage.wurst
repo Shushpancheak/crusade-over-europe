@@ -12,7 +12,9 @@ init
 
   //--------------------------------SETTLE-------------------------------------
   CreateTrigger()
-    ..addCondition(Condition(() -> GetSpellAbilityUnit().getTypeId() == uSettlerReadyToSettle and GetSpellTargetUnit().getTypeId() == uTH and GetSpellTargetUnit().getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE))
+    ..addCondition(Condition(() -> GetSpellAbilityUnit().getTypeId() == uSettlerReadyToSettle
+      and GetSpellTargetUnit().getTypeId() == uTH
+      and GetSpellTargetUnit().getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE))
     ..addAction(() -> begin
       // Adding player who is settling to the force that city is in
       let city_id = getCityId(GetSpellTargetUnit())

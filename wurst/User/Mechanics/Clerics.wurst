@@ -1,0 +1,14 @@
+package Clerics
+
+import Main
+init
+  EventListener.add(EVENT_PLAYER_UNIT_ISSUED_ORDER) ->
+    dbg(GetIssuedOrderId().toString())
+  EventListener.add(EVENT_PLAYER_UNIT_SPELL_CAST) ->
+    if GetSpellAbilityId() == aConversion
+      // not checking the caster cuz only real player can cast this spell
+      if GetSpellTargetUnit().getOwner().getId() < PLAYER_SLOTS
+        //@TODO religion here
+        if player_stats[GetSpellTargetUnit().getOwner().getId()].getForceId() == player_stats[GetSpellAbilityUnit().getOwner().getId()].getForceId()
+          IssueImmediateOrderById(GetSpellAbilityUnit(), 851972)
+          noteToPlayer(ksCannotConvertBelievers, GetSpellAbilityUnit().getOwner())

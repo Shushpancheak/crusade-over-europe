@@ -6,6 +6,9 @@ public let kPOtoRevolt1 = 50.0
 public let kPOtoRevolt2 = 30.0
 public let kPOtoRevolt3 = 15.0
 
+// N pop
+let k100ChanceOfDoubleRevoltComesWithNPop = 150000
+
 public real array last_time_city_revolted
 public let kCityMinTimeToRevolt = TURN_TIME / 2
 
@@ -16,6 +19,7 @@ public function checkForRevolt(int city_id)
   if getElapsedTime() - last_time_city_revolted[city_id] <= kCityMinTimeToRevolt
     return
   let po = cities[city_id].getLastPublicOrder()
+  let pop = cities[city_id].getPopulation()
   let city_u = cities[city_id].getCityUnit()
   if not city_u.getOwner().isIngame()
     return
@@ -27,11 +31,17 @@ public function checkForRevolt(int city_id)
       // Revolt 1 stage
       for u in uRebels[0]
         CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)
+        if getChance(pop / k100ChanceOfDoubleRevoltComesWithNPop)
+          CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)
     else if po >= kPOtoRevolt3
       // Revolt 2 stage
       for u in uRebels[1]
         CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)
+        if getChance(pop / k100ChanceOfDoubleRevoltComesWithNPop)
+          CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)
     else
       // Revol 3 stage
       for u in uRebels[2]
         CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)
+        if getChance(pop / k100ChanceOfDoubleRevoltComesWithNPop)
+          CreateUnit(players[PLAYER_NEUTRAL_AGGRESSIVE], u, city_u.getX(), city_u.getY(), 0)

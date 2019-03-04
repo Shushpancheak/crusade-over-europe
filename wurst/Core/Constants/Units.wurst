@@ -203,9 +203,9 @@ public let kCityTypes =   asList(
 )
 
 public let uRebels = [
-  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uSupplyHorse),
-  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uSupplyHorse),
-  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelRam, uRebelRam, uSupplyHorse)
+  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uSupplyHorse),
+  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelSpreading, uRebelSpreading, uRebelSpreading, uSupplyHorse),
+  asList(uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelSpreading, uRebelKnight, uRebelKnight, uRebelKnight, uRebelKnight, uRebelRam, uRebelRam, uSupplyHorse)
 ]
 
 public let kRiverRects = asList(

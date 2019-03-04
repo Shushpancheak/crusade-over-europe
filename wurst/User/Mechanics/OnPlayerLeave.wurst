@@ -1,6 +1,5 @@
 package OnPlayerLeave
 import Main
-import ClosureForGroups
 
 init
   EventListener.add(EVENT_PLAYER_LEAVE) ->

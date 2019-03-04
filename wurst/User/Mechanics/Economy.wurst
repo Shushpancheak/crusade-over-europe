@@ -2,7 +2,6 @@ package Economy
 // Manages Income, taxes, etc.
 // Updates Multiboard's "Income" and "Upkeep"
 import Main
-import ClosureForGroups
 
 
 // Income is given every:

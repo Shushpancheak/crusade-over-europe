@@ -439,13 +439,9 @@ trigger gg_trg_Settle=null
 trigger gg_trg_Melee_Initialization=null
 trigger gg_trg_F9=null
 trigger gg_trg_Capturing_Ore_15g=null
-trigger gg_trg_Capturing_Mine_15g=null
 trigger gg_trg_Capturing_Ore_25g=null
-trigger gg_trg_Capturing_Mine_25g=null
 trigger gg_trg_Capturing_Ore_40g=null
-trigger gg_trg_Capturing_Mine_40g=null
 trigger gg_trg_Capturing_Ore_50g=null
-trigger gg_trg_Capturing_Mine_50g=null
 trigger gg_trg_Spy_Sabotage_on_buildings=null
 trigger gg_trg_Convert_V2=null
 trigger gg_trg_Gate_Opening=null
@@ -692,6 +688,8 @@ real Economy_kIncomeCountToMultiboardRate=0.
 real Economy_kStepTime=0.
 integer array Economy_gold_change
 integer array Economy_lumb_change
+integer array Economy_gold_adder
+integer array Economy_lumb_adder
 integer Economy_income_counting_i=0
 integer ErrorHandling_MUTE_ERROR_DURATION=0
 integer ErrorHandling_PRIMARY_ERROR_KEY=0
@@ -786,6 +784,7 @@ group OnUnitEnterLeave_preplacedUnits=null
 unit array OnUnitEnterLeave_tempUnits
 integer OnUnitEnterLeave_tempUnitsCount=0
 integer OnUnitEnterLeave_ABILITY_ID=0
+real OreCapture_kLifePercentToCapture=0.
 integer PlayerStats_PLAYER_SELF=0
 integer array PlayerStats_player_stats
 player array Player_players
@@ -809,6 +808,7 @@ integer RegisterEvents_onCastMap=0
 real Revolts_kPOtoRevolt1=0.
 real Revolts_kPOtoRevolt2=0.
 real Revolts_kPOtoRevolt3=0.
+integer Revolts_k100ChanceOfDoubleRevoltComesWithNPop=0
 real array Revolts_last_time_city_revolted
 real Revolts_kCityMinTimeToRevolt=0.
 string array StringUtils_c2s
@@ -849,6 +849,7 @@ string Strings_ksTooCloseInn=null
 string Strings_ksTooCloseCastle=null
 string Strings_ksTooManyEncampments=null
 string Strings_ksTooManyMercenaryCamps=null
+string Strings_ksCannotConvertBelievers=null
 string Strings_ksRevolt=null
 real Strings_kDiscordTime=0.
 string Strings_ksDiscord=null
@@ -942,7 +943,7 @@ integer Units_uCopperMine=0
 integer Units_uGoldMine=0
 integer Units_uIronMine=0
 integer Units_uSilverMine=0
-integer Units_usOres=0
+integer Units_uMines=0
 integer Units_usIncomeOres=0
 integer array Units_kStartingUnits
 integer Units_uPlebs=0
@@ -1160,20 +1161,12 @@ code ref_function_Trig_Melee_Initialization_Actions=null
 code ref_function_Trig_F9_Actions=null
 code ref_function_Trig_Capturing_Ore_15g_Conditions=null
 code ref_function_Trig_Capturing_Ore_15g_Actions=null
-code ref_function_Trig_Capturing_Mine_15g_Conditions=null
-code ref_function_Trig_Capturing_Mine_15g_Actions=null
 code ref_function_Trig_Capturing_Ore_25g_Conditions=null
 code ref_function_Trig_Capturing_Ore_25g_Actions=null
-code ref_function_Trig_Capturing_Mine_25g_Conditions=null
-code ref_function_Trig_Capturing_Mine_25g_Actions=null
 code ref_function_Trig_Capturing_Ore_40g_Conditions=null
 code ref_function_Trig_Capturing_Ore_40g_Actions=null
-code ref_function_Trig_Capturing_Mine_40g_Conditions=null
-code ref_function_Trig_Capturing_Mine_40g_Actions=null
 code ref_function_Trig_Capturing_Ore_50g_Conditions=null
 code ref_function_Trig_Capturing_Ore_50g_Actions=null
-code ref_function_Trig_Capturing_Mine_50g_Conditions=null
-code ref_function_Trig_Capturing_Mine_50g_Actions=null
 code ref_function_Trig_Spy_Sabotage_on_buildings_Conditions=null
 code ref_function_Trig_Spy_Sabotage_on_buildings_Actions=null
 code ref_function_Trig_Convert_V2_Conditions=null
@@ -1501,6 +1494,7 @@ code ref_function_init_Main=null
 code ref_function_bridge_init_CastleCapture=null
 code ref_function_bridge_init_CityBuilded=null
 code ref_function_bridge_init_CityManage=null
+code ref_function_bridge_init_Clerics=null
 code ref_function_init_HashSet=null
 code ref_function_bridge_init_VoteKick=null
 code ref_function_init_Commands=null
@@ -1518,6 +1512,7 @@ code ref_function_bridge_init_MultiboardCityUpdate=null
 code ref_function_bridge_init_NoShipsNearRivers=null
 code ref_function_bridge_init_NoStarvationOnBoat=null
 code ref_function_bridge_init_OnPlayerLeave=null
+code ref_function_bridge_init_OreCapture=null
 code ref_function_bridge_init_RangeChecks=null
 code ref_function_bridge_init_Religion=null
 code ref_function_bridge_init_Taxation=null
@@ -2460,34 +2455,6 @@ function InitTrig_Capitol_Keep_Upg_ME_T2 takes nothing returns nothing
 	call TriggerAddAction(gg_trg_Capitol_Keep_Upg_ME_T2, ref_function_Trig_Capitol_Keep_Upg_ME_T2_Actions)
 endfunction
 
-function InitTrig_Capturing_Mine_15g takes nothing returns nothing
-	set gg_trg_Capturing_Mine_15g = CreateTrigger()
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_Capturing_Mine_15g, EVENT_PLAYER_UNIT_ATTACKED)
-	call TriggerAddCondition(gg_trg_Capturing_Mine_15g, Condition(ref_function_Trig_Capturing_Mine_15g_Conditions))
-	call TriggerAddAction(gg_trg_Capturing_Mine_15g, ref_function_Trig_Capturing_Mine_15g_Actions)
-endfunction
-
-function InitTrig_Capturing_Mine_25g takes nothing returns nothing
-	set gg_trg_Capturing_Mine_25g = CreateTrigger()
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_Capturing_Mine_25g, EVENT_PLAYER_UNIT_ATTACKED)
-	call TriggerAddCondition(gg_trg_Capturing_Mine_25g, Condition(ref_function_Trig_Capturing_Mine_25g_Conditions))
-	call TriggerAddAction(gg_trg_Capturing_Mine_25g, ref_function_Trig_Capturing_Mine_25g_Actions)
-endfunction
-
-function InitTrig_Capturing_Mine_40g takes nothing returns nothing
-	set gg_trg_Capturing_Mine_40g = CreateTrigger()
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_Capturing_Mine_40g, EVENT_PLAYER_UNIT_ATTACKED)
-	call TriggerAddCondition(gg_trg_Capturing_Mine_40g, Condition(ref_function_Trig_Capturing_Mine_40g_Conditions))
-	call TriggerAddAction(gg_trg_Capturing_Mine_40g, ref_function_Trig_Capturing_Mine_40g_Actions)
-endfunction
-
-function InitTrig_Capturing_Mine_50g takes nothing returns nothing
-	set gg_trg_Capturing_Mine_50g = CreateTrigger()
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_Capturing_Mine_50g, EVENT_PLAYER_UNIT_ATTACKED)
-	call TriggerAddCondition(gg_trg_Capturing_Mine_50g, Condition(ref_function_Trig_Capturing_Mine_50g_Conditions))
-	call TriggerAddAction(gg_trg_Capturing_Mine_50g, ref_function_Trig_Capturing_Mine_50g_Actions)
-endfunction
-
 function InitTrig_Capturing_Ore_15g takes nothing returns nothing
 	set gg_trg_Capturing_Ore_15g = CreateTrigger()
 	call TriggerRegisterAnyUnitEventBJ(gg_trg_Capturing_Ore_15g, EVENT_PLAYER_UNIT_ATTACKED)
@@ -3297,13 +3264,9 @@ function InitCustomTriggers takes nothing returns nothing
 	call InitTrig_Melee_Initialization()
 	call InitTrig_F9()
 	call InitTrig_Capturing_Ore_15g()
-	call InitTrig_Capturing_Mine_15g()
 	call InitTrig_Capturing_Ore_25g()
-	call InitTrig_Capturing_Mine_25g()
 	call InitTrig_Capturing_Ore_40g()
-	call InitTrig_Capturing_Mine_40g()
 	call InitTrig_Capturing_Ore_50g()
-	call InitTrig_Capturing_Mine_50g()
 	call InitTrig_Spy_Sabotage_on_buildings()
 	call InitTrig_Convert_V2()
 	call InitTrig_Gate_Opening()
@@ -3700,10 +3663,6 @@ function OnUnitEnterLeave_closure_impl takes nothing returns nothing
 	call prepareUnit(GetEnumUnit())
 endfunction
 
-function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
-	call prepareUnit(GetFilterUnit())
-endfunction
-
 function trigger_execute takes trigger this_7 returns nothing
 	call TriggerExecute(this_7)
 endfunction
@@ -3712,7 +3671,7 @@ function unit_getAbilityLevel takes unit this_7, integer id returns integer
 	return GetUnitAbilityLevel(this_7, id)
 endfunction
 
-function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
+function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
 	local unit leavingUnit = GetTriggerUnit()
 	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
 		call pushUnit(leavingUnit)
@@ -3720,6 +3679,10 @@ function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
 		call popUnit()
 	endif
 	set leavingUnit = null
+endfunction
+
+function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
+	call prepareUnit(GetFilterUnit())
 endfunction
 
 function Trig_Archer_1_Actions takes nothing returns nothing
@@ -4089,106 +4052,6 @@ endfunction
 
 function Trig_Capitol_Keep_Upg_ME_T2_Conditions takes nothing returns boolean
 	if  not Trig_Capitol_Keep_Upg_ME_T2_Func002C() then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Capturing_Mine_15g_Actions takes nothing returns nothing
-	set udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttacker()))] = udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttacker()))] + 1
-	set udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttackedUnitBJ()))] = udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttackedUnitBJ()))] - 1
-	call ReplaceUnitBJ(GetAttackedUnitBJ(), GetUnitTypeId(GetAttackedUnitBJ()), bj_UNIT_STATE_METHOD_DEFAULTS)
-	call SetUnitOwner(GetLastReplacedUnitBJ(), GetOwningPlayer(GetAttacker()), true)
-	call SetUnitLifePercentBJ(GetAttackedUnitBJ(), 100.)
-endfunction
-
-function Trig_Capturing_Mine_15g_Func001C takes nothing returns boolean
-	if  not (GetUnitTypeId(GetAttackedUnitBJ()) == 1747989317) then
-		return false
-	endif
-	if  not (GetUnitLifePercent(GetAttackedUnitBJ()) <= 80.00) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Capturing_Mine_15g_Conditions takes nothing returns boolean
-	if  not Trig_Capturing_Mine_15g_Func001C() then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Capturing_Mine_25g_Actions takes nothing returns nothing
-	set udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttacker()))] = udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttacker()))] + 1
-	set udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttackedUnitBJ()))] = udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttackedUnitBJ()))] - 1
-	call ReplaceUnitBJ(GetAttackedUnitBJ(), GetUnitTypeId(GetAttackedUnitBJ()), bj_UNIT_STATE_METHOD_DEFAULTS)
-	call SetUnitOwner(GetLastReplacedUnitBJ(), GetOwningPlayer(GetAttacker()), true)
-	call SetUnitLifePercentBJ(GetAttackedUnitBJ(), 100.)
-endfunction
-
-function Trig_Capturing_Mine_25g_Func001C takes nothing returns boolean
-	if  not (GetUnitTypeId(GetAttackedUnitBJ()) == 1747989316) then
-		return false
-	endif
-	if  not (GetUnitLifePercent(GetAttackedUnitBJ()) <= 80.00) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Capturing_Mine_25g_Conditions takes nothing returns boolean
-	if  not Trig_Capturing_Mine_25g_Func001C() then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Capturing_Mine_40g_Actions takes nothing returns nothing
-	set udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttacker()))] = udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttacker()))] + 1
-	set udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttackedUnitBJ()))] = udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttackedUnitBJ()))] - 1
-	call ReplaceUnitBJ(GetAttackedUnitBJ(), GetUnitTypeId(GetAttackedUnitBJ()), bj_UNIT_STATE_METHOD_DEFAULTS)
-	call SetUnitOwner(GetLastReplacedUnitBJ(), GetOwningPlayer(GetAttacker()), true)
-	call SetUnitLifePercentBJ(GetAttackedUnitBJ(), 100.)
-endfunction
-
-function Trig_Capturing_Mine_40g_Func001C takes nothing returns boolean
-	if  not (GetUnitTypeId(GetAttackedUnitBJ()) == 1747989315) then
-		return false
-	endif
-	if  not (GetUnitLifePercent(GetAttackedUnitBJ()) <= 80.00) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Capturing_Mine_40g_Conditions takes nothing returns boolean
-	if  not Trig_Capturing_Mine_40g_Func001C() then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Capturing_Mine_50g_Actions takes nothing returns nothing
-	set udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttacker()))] = udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttacker()))] + 1
-	set udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttackedUnitBJ()))] = udg_PlayerRegions[GetConvertedPlayerId(GetOwningPlayer(GetAttackedUnitBJ()))] - 1
-	call ReplaceUnitBJ(GetAttackedUnitBJ(), GetUnitTypeId(GetAttackedUnitBJ()), bj_UNIT_STATE_METHOD_DEFAULTS)
-	call SetUnitOwner(GetLastReplacedUnitBJ(), GetOwningPlayer(GetAttacker()), true)
-	call SetUnitLifePercentBJ(GetAttackedUnitBJ(), 100.)
-endfunction
-
-function Trig_Capturing_Mine_50g_Func001C takes nothing returns boolean
-	if  not (GetUnitTypeId(GetAttackedUnitBJ()) == 1747989305) then
-		return false
-	endif
-	if  not (GetUnitLifePercent(GetAttackedUnitBJ()) <= 80.00) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Capturing_Mine_50g_Conditions takes nothing returns boolean
-	if  not Trig_Capturing_Mine_50g_Func001C() then
 		return false
 	endif
 	return true
@@ -7287,7 +7150,7 @@ function alloc_LLIterator takes string stackPos returns integer
 		if LLIterator_maxIndex < 32768 then
 			set LLIterator_maxIndex = LLIterator_maxIndex + 1
 			set this_7 = LLIterator_maxIndex
-			set LLIterator_typeId[this_7] = 700
+			set LLIterator_typeId[this_7] = 704
 		else
 			call error("Out of memory: Could not create LLIterator.", "when calling error in LinkedList, line 406")
 			set this_7 = 0
@@ -7295,7 +7158,7 @@ function alloc_LLIterator takes string stackPos returns integer
 	else
 		set LLIterator_firstFree = LLIterator_firstFree - 1
 		set this_7 = LLIterator_nextFree[LLIterator_firstFree]
-		set LLIterator_typeId[this_7] = 700
+		set LLIterator_typeId[this_7] = 704
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -7605,7 +7468,7 @@ function alloc_LLEntry takes string stackPos returns integer
 		if LLEntry_maxIndex < 32768 then
 			set LLEntry_maxIndex = LLEntry_maxIndex + 1
 			set this_7 = LLEntry_maxIndex
-			set LLEntry_typeId[this_7] = 699
+			set LLEntry_typeId[this_7] = 703
 		else
 			call error("Out of memory: Could not create LLEntry.", "when calling error in LinkedList, line 396")
 			set this_7 = 0
@@ -7613,7 +7476,7 @@ function alloc_LLEntry takes string stackPos returns integer
 	else
 		set LLEntry_firstFree = LLEntry_firstFree - 1
 		set this_7 = LLEntry_nextFree[LLEntry_firstFree]
-		set LLEntry_typeId[this_7] = 699
+		set LLEntry_typeId[this_7] = 703
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -7986,7 +7849,7 @@ function multiboard_setItem takes multiboard this_7, integer x, integer y, strin
 	set mbi = null
 endfunction
 
-function Economy_call_line48 takes integer this_7, integer cbUPKEEP_SHOWING, string stackPos returns nothing
+function Economy_call_line47 takes integer this_7, integer cbUPKEEP_SHOWING, string stackPos returns nothing
 	local integer i_2
 	local integer temp
 	local multiboard receiver
@@ -7996,9 +7859,9 @@ function Economy_call_line48 takes integer this_7, integer cbUPKEEP_SHOWING, str
 	set temp = Main_PLAYER_SLOTS - 1
 	loop
 		exitwhen i_2 > temp
-		if dispatch_PlayerStats_PlayerStats_PlayerStats_isInGame(PlayerStats_player_stats[i_2], "when calling isInGame in Economy, line 50") then
+		if dispatch_PlayerStats_PlayerStats_PlayerStats_isInGame(PlayerStats_player_stats[i_2], "when calling isInGame in Economy, line 49") then
 			set receiver = Multiboards_multiboards[i_2]
-			call multiboard_setItem(receiver, Multiboards_kMBUpkeep[0], Multiboards_kMBUpkeep[1], getStringColoredBasedOnSign(dispatch_PlayerStats_PlayerStats_PlayerStats_getUpkeep(PlayerStats_player_stats[i_2], "when calling getUpkeep in Economy, line 52")))
+			call multiboard_setItem(receiver, Multiboards_kMBUpkeep[0], Multiboards_kMBUpkeep[1], getStringColoredBasedOnSign(dispatch_PlayerStats_PlayerStats_PlayerStats_getUpkeep(PlayerStats_player_stats[i_2], "when calling getUpkeep in Economy, line 51")))
 		endif
 		set i_2 = i_2 + 1
 	endloop
@@ -8028,92 +7891,6 @@ function alloc_Economy_CallbackSingle_line34 takes string stackPos returns integ
 	return this_7
 endfunction
 
-function alloc_Economy_ForGroupCallback_line43 takes string stackPos returns integer
-	local integer this_7
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if ForGroupCallback_firstFree == 0 then
-		if ForGroupCallback_maxIndex < 32768 then
-			set ForGroupCallback_maxIndex = ForGroupCallback_maxIndex + 1
-			set this_7 = ForGroupCallback_maxIndex
-			set ForGroupCallback_typeId[this_7] = 686
-		else
-			call error("Out of memory: Could not create Economy_ForGroupCallback_line43.", "when calling error in Economy, line 43")
-			set this_7 = 0
-		endif
-	else
-		set ForGroupCallback_firstFree = ForGroupCallback_firstFree - 1
-		set this_7 = ForGroupCallback_nextFree[ForGroupCallback_firstFree]
-		set ForGroupCallback_typeId[this_7] = 686
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return this_7
-endfunction
-
-function dealloc_ForGroupCallback takes integer obj, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if ForGroupCallback_typeId[obj] == 0 then
-		call error("Double free: object of type ForGroupCallback", "when calling error in ClosureForGroups, line 3")
-	else
-		set ForGroupCallback_nextFree[ForGroupCallback_firstFree] = obj
-		set ForGroupCallback_firstFree = ForGroupCallback_firstFree + 1
-		set ForGroupCallback_typeId[obj] = 0
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function destroyForGroupCallback takes integer this_7, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call dealloc_ForGroupCallback(this_7, "when calling dealloc_ForGroupCallback in ClosureForGroups, line 3")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_ForGroupCallback_destroyForGroupCallback takes integer this_7, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if ForGroupCallback_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling ForGroupCallback.ForGroupCallback", "when calling error in ClosureForGroups, line 3")
-		else
-			call error("Called ForGroupCallback.ForGroupCallback on invalid object.", "when calling error in ClosureForGroups, line 3")
-		endif
-	endif
-	call destroyForGroupCallback(this_7, "when calling destroyForGroupCallback in ClosureForGroups, line 3")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function group_clear takes group this_7 returns nothing
-	call GroupClear(this_7)
-endfunction
-
-function pushCallback takes integer c returns nothing
-	set ClosureForGroups_tempCallbacks[ClosureForGroups_tempCallbacksCount] = c
-	set ClosureForGroups_tempCallbacksCount = ClosureForGroups_tempCallbacksCount + 1
-	set ClosureForGroups_iterCount = 0
-	set ClosureForGroups_maxCount = Integer_INT_MAX
-endfunction
-
-function forUnitsAll takes integer c, string stackPos returns nothing
-	local integer i_2
-	local integer temp
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set i_2 = 0
-	set temp = bj_MAX_PLAYER_SLOTS - 1
-	loop
-		exitwhen i_2 > temp
-		call pushCallback(c)
-		call GroupEnumUnitsOfPlayer(ClosureForGroups_DUMMY_GROUP, Player_players[i_2], ClosureForGroups_filter)
-		call group_clear(ClosureForGroups_DUMMY_GROUP)
-		set ClosureForGroups_tempCallbacksCount = ClosureForGroups_tempCallbacksCount - 1
-		set i_2 = i_2 + 1
-	endloop
-	call dispatch_ForGroupCallback_destroyForGroupCallback(c, "when calling dispatch_ForGroupCallback_destroyForGroupCallback in ClosureForGroups, line 78")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
 function min_2 takes integer numbers_0, integer numbers_1 returns integer
 	local integer minNumber = Integer_INT_MAX
 	local integer cond_result
@@ -8139,7 +7916,6 @@ function countIncomeForAll takes string stackPos returns nothing
 	local integer i_3
 	local integer temp_2
 	local integer clVar
-	local integer clVar_2
 	local real temp_3
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -8147,8 +7923,8 @@ function countIncomeForAll takes string stackPos returns nothing
 	set temp = Main_PLAYER_SLOTS - 1
 	loop
 		exitwhen i_2 > temp
-		set Economy_gold_change[i_2] = 0
-		set Economy_lumb_change[i_2] = 0
+		set Economy_gold_change[i_2] = Economy_gold_adder[i_2]
+		set Economy_lumb_change[i_2] = Economy_lumb_adder[i_2]
 		set i_2 = i_2 + 1
 	endloop
 	set number_of_cities_per_step_2 = real_toInt(City_cityCount * Economy_kStepTime / Economy_kIncomeCountToMultiboardRate) + 1
@@ -8167,12 +7943,10 @@ function countIncomeForAll takes string stackPos returns nothing
 		endif
 		set i_3 = i_3 + 1
 	endloop
-	set clVar_2 = alloc_Economy_ForGroupCallback_line43("when calling alloc_Economy_ForGroupCallback_line43 in Economy, line 43")
-	call forUnitsAll(clVar_2, "when calling forUnitsAll in Economy, line 43")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function Economy_call_line55 takes integer this_7, integer cbINCOME_MULTIBOARD, string stackPos returns nothing
+function Economy_call_line54 takes integer this_7, integer cbINCOME_MULTIBOARD, string stackPos returns nothing
 	local integer i_2
 	local integer temp
 	local multiboard receiver
@@ -8188,11 +7962,11 @@ function Economy_call_line55 takes integer this_7, integer cbINCOME_MULTIBOARD, 
 	set temp = Main_PLAYER_SLOTS - 1
 	loop
 		exitwhen i_2 > temp
-		if dispatch_PlayerStats_PlayerStats_PlayerStats_isInGame(PlayerStats_player_stats[i_2], "when calling isInGame in Economy, line 58") then
+		if dispatch_PlayerStats_PlayerStats_PlayerStats_isInGame(PlayerStats_player_stats[i_2], "when calling isInGame in Economy, line 57") then
 			set receiver = Multiboards_multiboards[i_2]
 			call multiboard_setItem(receiver, Multiboards_kMBIncome[0], Multiboards_kMBIncome[1], getStringColoredBasedOnSign(Economy_gold_change[i_2]))
 			set receiver_2 = receiver
-			call multiboard_setItem(receiver_2, Multiboards_kMBUpkeep[0], Multiboards_kMBUpkeep[1], getStringColoredBasedOnSign(dispatch_PlayerStats_PlayerStats_PlayerStats_getUpkeep(PlayerStats_player_stats[i_2], "when calling getUpkeep in Economy, line 61")))
+			call multiboard_setItem(receiver_2, Multiboards_kMBUpkeep[0], Multiboards_kMBUpkeep[1], getStringColoredBasedOnSign(dispatch_PlayerStats_PlayerStats_PlayerStats_getUpkeep(PlayerStats_player_stats[i_2], "when calling getUpkeep in Economy, line 60")))
 		endif
 		set i_2 = i_2 + 1
 	endloop
@@ -8202,16 +7976,16 @@ function Economy_call_line55 takes integer this_7, integer cbINCOME_MULTIBOARD, 
 		set temp_2 = Main_PLAYER_SLOTS - 1
 		loop
 			exitwhen i_3 > temp_2
-			if dispatch_PlayerStats_PlayerStats_PlayerStats_isInGame(PlayerStats_player_stats[i_3], "when calling isInGame in Economy, line 66") then
+			if dispatch_PlayerStats_PlayerStats_PlayerStats_isInGame(PlayerStats_player_stats[i_3], "when calling isInGame in Economy, line 65") then
 				set cur_gold = GetPlayerState(Player_players[i_3], PLAYER_STATE_RESOURCE_GOLD)
 				set cur_lumb = GetPlayerState(Player_players[i_3], PLAYER_STATE_RESOURCE_LUMBER)
-				call SetPlayerState(Player_players[i_3], PLAYER_STATE_RESOURCE_GOLD, cur_gold + Economy_gold_change[i_3] + dispatch_PlayerStats_PlayerStats_PlayerStats_getUpkeep(PlayerStats_player_stats[i_3], "when calling getUpkeep in Economy, line 69"))
+				call SetPlayerState(Player_players[i_3], PLAYER_STATE_RESOURCE_GOLD, cur_gold + Economy_gold_change[i_3] + dispatch_PlayerStats_PlayerStats_PlayerStats_getUpkeep(PlayerStats_player_stats[i_3], "when calling getUpkeep in Economy, line 68"))
 				call SetPlayerState(Player_players[i_3], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + Economy_lumb_change[i_3])
 			endif
 			set i_3 = i_3 + 1
 		endloop
 	endif
-	call countIncomeForAll("when calling countIncomeForAll in Economy, line 73")
+	call countIncomeForAll("when calling countIncomeForAll in Economy, line 72")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
 	set receiver_2 = null
@@ -8225,7 +7999,7 @@ function alloc_City_City_ForGroupCallback_line311 takes string stackPos returns 
 		if ForGroupCallback_maxIndex < 32768 then
 			set ForGroupCallback_maxIndex = ForGroupCallback_maxIndex + 1
 			set this_7 = ForGroupCallback_maxIndex
-			set ForGroupCallback_typeId[this_7] = 684
+			set ForGroupCallback_typeId[this_7] = 689
 		else
 			call error("Out of memory: Could not create City_City_ForGroupCallback_line311.", "when calling error in City, line 311")
 			set this_7 = 0
@@ -8233,7 +8007,7 @@ function alloc_City_City_ForGroupCallback_line311 takes string stackPos returns 
 	else
 		set ForGroupCallback_firstFree = ForGroupCallback_firstFree - 1
 		set this_7 = ForGroupCallback_nextFree[ForGroupCallback_firstFree]
-		set ForGroupCallback_typeId[this_7] = 684
+		set ForGroupCallback_typeId[this_7] = 689
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -8247,7 +8021,7 @@ function alloc_City_City_ForGroupCallback_line315 takes string stackPos returns 
 		if ForGroupCallback_maxIndex < 32768 then
 			set ForGroupCallback_maxIndex = ForGroupCallback_maxIndex + 1
 			set this_7 = ForGroupCallback_maxIndex
-			set ForGroupCallback_typeId[this_7] = 685
+			set ForGroupCallback_typeId[this_7] = 690
 		else
 			call error("Out of memory: Could not create City_City_ForGroupCallback_line315.", "when calling error in City, line 315")
 			set this_7 = 0
@@ -8255,7 +8029,7 @@ function alloc_City_City_ForGroupCallback_line315 takes string stackPos returns 
 	else
 		set ForGroupCallback_firstFree = ForGroupCallback_firstFree - 1
 		set this_7 = ForGroupCallback_nextFree[ForGroupCallback_firstFree]
-		set ForGroupCallback_typeId[this_7] = 685
+		set ForGroupCallback_typeId[this_7] = 690
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -8384,6 +8158,26 @@ function dispatch_City_City_City_getLastPublicOrder takes integer this_7, string
 	return City_City_getLastPublicOrder_result
 endfunction
 
+function City_getPopulation takes integer this_7 returns integer
+	return City_population[this_7]
+endfunction
+
+function dispatch_City_City_City_getPopulation takes integer this_7, string stackPos returns integer
+	local integer City_City_getPopulation_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if City_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling City.getPopulation", "when calling error in City, line 342")
+		else
+			call error("Called City.getPopulation on invalid object.", "when calling error in City, line 342")
+		endif
+	endif
+	set City_City_getPopulation_result = City_getPopulation(this_7)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return City_City_getPopulation_result
+endfunction
+
 function getElapsedTime takes nothing returns real
 	return Main_elapsed_time
 endfunction
@@ -8410,6 +8204,7 @@ endfunction
 
 function checkForRevolt takes integer city_id, string stackPos returns nothing
 	local real po
+	local integer pop
 	local unit city_u
 	local integer iterator
 	local integer u_5
@@ -8429,8 +8224,9 @@ function checkForRevolt takes integer city_id, string stackPos returns nothing
 		set city_u = null
 		return
 	endif
-	set po = dispatch_City_City_City_getLastPublicOrder(City_cities[city_id], "when calling getLastPublicOrder in Revolts, line 18")
-	set city_u = dispatch_City_City_City_getCityUnit(City_cities[city_id], "when calling getCityUnit in Revolts, line 19")
+	set po = dispatch_City_City_City_getLastPublicOrder(City_cities[city_id], "when calling getLastPublicOrder in Revolts, line 21")
+	set pop = dispatch_City_City_City_getPopulation(City_cities[city_id], "when calling getPopulation in Revolts, line 22")
+	set city_u = dispatch_City_City_City_getCityUnit(City_cities[city_id], "when calling getCityUnit in Revolts, line 23")
 	if  not player_isIngame(unit_getOwner(city_u)) then
 		set wurst_stack_depth = wurst_stack_depth - 1
 		set city_u = null
@@ -8438,36 +8234,83 @@ function checkForRevolt takes integer city_id, string stackPos returns nothing
 	endif
 	if po < Revolts_kPOtoRevolt1 then
 		set Revolts_last_time_city_revolted[city_id] = getElapsedTime()
-		call dispatch_City_City_City_addModifier(City_cities[city_id], 1, "when calling addModifier in Revolts, line 24")
-		call attentionToPlayer(Strings_ksRevolt + dispatch_City_City_City_getCityNameColored(City_cities[city_id], "when calling getCityNameColored in Revolts, line 25") + "!", unit_getOwner(city_u), "when calling attentionToPlayer in Revolts, line 25")
+		call dispatch_City_City_City_addModifier(City_cities[city_id], 1, "when calling addModifier in Revolts, line 28")
+		call attentionToPlayer(Strings_ksRevolt + dispatch_City_City_City_getCityNameColored(City_cities[city_id], "when calling getCityNameColored in Revolts, line 29") + "!", unit_getOwner(city_u), "when calling attentionToPlayer in Revolts, line 29")
 		if po >= Revolts_kPOtoRevolt2 then
-			set iterator = LinkedList_iterator(Units_uRebels[0], "when calling iterator in Revolts, line 28")
+			set iterator = LinkedList_iterator(Units_uRebels[0], "when calling iterator in Revolts, line 32")
 			loop
 				exitwhen  not LLIterator_hasNext(iterator)
 				set u_5 = LLIterator_next(iterator)
 				call CreateUnit(Player_players[PLAYER_NEUTRAL_AGGRESSIVE], u_5, unit_getX(city_u), unit_getY(city_u), 0.)
+				if getChance(pop * 1. / Revolts_k100ChanceOfDoubleRevoltComesWithNPop) then
+					call CreateUnit(Player_players[PLAYER_NEUTRAL_AGGRESSIVE], u_5, unit_getX(city_u), unit_getY(city_u), 0.)
+				endif
 			endloop
-			call LLIterator_close(iterator, "when calling close in Revolts, line 28")
+			call LLIterator_close(iterator, "when calling close in Revolts, line 32")
 		elseif po >= Revolts_kPOtoRevolt3 then
-			set iterator_2 = LinkedList_iterator(Units_uRebels[1], "when calling iterator in Revolts, line 32")
+			set iterator_2 = LinkedList_iterator(Units_uRebels[1], "when calling iterator in Revolts, line 38")
 			loop
 				exitwhen  not LLIterator_hasNext(iterator_2)
 				set u_6 = LLIterator_next(iterator_2)
 				call CreateUnit(Player_players[PLAYER_NEUTRAL_AGGRESSIVE], u_6, unit_getX(city_u), unit_getY(city_u), 0.)
+				if getChance(pop * 1. / Revolts_k100ChanceOfDoubleRevoltComesWithNPop) then
+					call CreateUnit(Player_players[PLAYER_NEUTRAL_AGGRESSIVE], u_6, unit_getX(city_u), unit_getY(city_u), 0.)
+				endif
 			endloop
-			call LLIterator_close(iterator_2, "when calling close in Revolts, line 32")
+			call LLIterator_close(iterator_2, "when calling close in Revolts, line 38")
 		else
-			set iterator_3 = LinkedList_iterator(Units_uRebels[2], "when calling iterator in Revolts, line 36")
+			set iterator_3 = LinkedList_iterator(Units_uRebels[2], "when calling iterator in Revolts, line 44")
 			loop
 				exitwhen  not LLIterator_hasNext(iterator_3)
 				set u_7 = LLIterator_next(iterator_3)
 				call CreateUnit(Player_players[PLAYER_NEUTRAL_AGGRESSIVE], u_7, unit_getX(city_u), unit_getY(city_u), 0.)
+				if getChance(pop * 1. / Revolts_k100ChanceOfDoubleRevoltComesWithNPop) then
+					call CreateUnit(Player_players[PLAYER_NEUTRAL_AGGRESSIVE], u_7, unit_getX(city_u), unit_getY(city_u), 0.)
+				endif
 			endloop
-			call LLIterator_close(iterator_3, "when calling close in Revolts, line 36")
+			call LLIterator_close(iterator_3, "when calling close in Revolts, line 44")
 		endif
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set city_u = null
+endfunction
+
+function dealloc_ForGroupCallback takes integer obj, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if ForGroupCallback_typeId[obj] == 0 then
+		call error("Double free: object of type ForGroupCallback", "when calling error in ClosureForGroups, line 3")
+	else
+		set ForGroupCallback_nextFree[ForGroupCallback_firstFree] = obj
+		set ForGroupCallback_firstFree = ForGroupCallback_firstFree + 1
+		set ForGroupCallback_typeId[obj] = 0
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function destroyForGroupCallback takes integer this_7, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call dealloc_ForGroupCallback(this_7, "when calling dealloc_ForGroupCallback in ClosureForGroups, line 3")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_ForGroupCallback_destroyForGroupCallback takes integer this_7, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if ForGroupCallback_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling ForGroupCallback.ForGroupCallback", "when calling error in ClosureForGroups, line 3")
+		else
+			call error("Called ForGroupCallback.ForGroupCallback on invalid object.", "when calling error in ClosureForGroups, line 3")
+		endif
+	endif
+	call destroyForGroupCallback(this_7, "when calling destroyForGroupCallback in ClosureForGroups, line 3")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function group_clear takes group this_7 returns nothing
+	call GroupClear(this_7)
 endfunction
 
 function popCallback takes string stackPos returns nothing
@@ -8477,6 +8320,13 @@ function popCallback takes string stackPos returns nothing
 	set ClosureForGroups_tempCallbacksCount = ClosureForGroups_tempCallbacksCount - 1
 	call dispatch_ForGroupCallback_destroyForGroupCallback(ClosureForGroups_tempCallbacks[ClosureForGroups_tempCallbacksCount], "when calling dispatch_ForGroupCallback_destroyForGroupCallback in ClosureForGroups, line 30")
 	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function pushCallback takes integer c returns nothing
+	set ClosureForGroups_tempCallbacks[ClosureForGroups_tempCallbacksCount] = c
+	set ClosureForGroups_tempCallbacksCount = ClosureForGroups_tempCallbacksCount + 1
+	set ClosureForGroups_iterCount = 0
+	set ClosureForGroups_maxCount = Integer_INT_MAX
 endfunction
 
 function forUnitsInRange takes real pos_x_2, real pos_y_2, real radius, integer c, string stackPos returns nothing
@@ -8893,9 +8743,9 @@ function dispatch_CallbackPeriodic_ClosureTimers_CallbackPeriodic_call takes int
 		endif
 	elseif CallbackPeriodic_typeId[this_7] <= 636 then
 		if CallbackPeriodic_typeId[this_7] <= 635 then
-			call Economy_call_line48(this_7, cb, "when calling Economy_call_line48 in ClosureTimers, line 130")
+			call Economy_call_line47(this_7, cb, "when calling Economy_call_line47 in ClosureTimers, line 130")
 		else
-			call Economy_call_line55(this_7, cb, "when calling Economy_call_line55 in ClosureTimers, line 130")
+			call Economy_call_line54(this_7, cb, "when calling Economy_call_line54 in ClosureTimers, line 130")
 		endif
 	else
 		call MultiboardCityUpdate_call_line25(this_7, cb, "when calling MultiboardCityUpdate_call_line25 in ClosureTimers, line 130")
@@ -9426,7 +9276,7 @@ function alloc_Preloader_ForGroupCallback_line45 takes string stackPos returns i
 		if ForGroupCallback_maxIndex < 32768 then
 			set ForGroupCallback_maxIndex = ForGroupCallback_maxIndex + 1
 			set this_7 = ForGroupCallback_maxIndex
-			set ForGroupCallback_typeId[this_7] = 689
+			set ForGroupCallback_typeId[this_7] = 693
 		else
 			call error("Out of memory: Could not create Preloader_ForGroupCallback_line45.", "when calling error in Preloader, line 45")
 			set this_7 = 0
@@ -9434,7 +9284,7 @@ function alloc_Preloader_ForGroupCallback_line45 takes string stackPos returns i
 	else
 		set ForGroupCallback_firstFree = ForGroupCallback_firstFree - 1
 		set this_7 = ForGroupCallback_nextFree[ForGroupCallback_firstFree]
-		set ForGroupCallback_typeId[this_7] = 689
+		set ForGroupCallback_typeId[this_7] = 693
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -9482,15 +9332,6 @@ function City_City_callback_line315 takes integer this_7, unit u_5 returns nothi
 	endif
 endfunction
 
-function Economy_callback_line43 takes integer this_7, unit u_5, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if dispatch_LinkedList_LinkedList_LinkedList_has(Units_usOres, unit_getTypeId(u_5), "when calling has in Economy, line 44") and player_isIngame(Player_players[player_getId(unit_getOwner(u_5))]) then
-		set Economy_gold_change[player_getId(unit_getOwner(u_5))] = Economy_gold_change[player_getId(unit_getOwner(u_5))] + dispatch_HashMap_HashMap_HashMap_get(Units_usIncomeOres, unit_getTypeId(u_5), "when calling get in Economy, line 45")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
 function unitToIndex takes unit object returns integer
 	return handle_getHandleId(object)
 endfunction
@@ -9529,22 +9370,18 @@ function dispatch_ForGroupCallback_ClosureForGroups_ForGroupCallback_callback ta
 			call error("Called ForGroupCallback.callback on invalid object.", "when calling error in ClosureForGroups, line 4")
 		endif
 	endif
-	if ForGroupCallback_typeId[this_7] <= 686 then
-		if ForGroupCallback_typeId[this_7] <= 685 then
-			if ForGroupCallback_typeId[this_7] <= 684 then
+	if ForGroupCallback_typeId[this_7] <= 691 then
+		if ForGroupCallback_typeId[this_7] <= 690 then
+			if ForGroupCallback_typeId[this_7] <= 689 then
 				call City_City_callback_line311(this_7, u_5, "when calling City_City_callback_line311 in ClosureForGroups, line 4")
 			else
 				call City_City_callback_line315(this_7, u_5)
 			endif
 		else
-			call Economy_callback_line43(this_7, u_5, "when calling Economy_callback_line43 in ClosureForGroups, line 4")
-		endif
-	elseif ForGroupCallback_typeId[this_7] <= 688 then
-		if ForGroupCallback_typeId[this_7] <= 687 then
 			call LinkedList_callback_line514(this_7, u_5, "when calling LinkedList_callback_line514 in ClosureForGroups, line 4")
-		else
-			call MassControl_callback_line27(this_7, u_5, "when calling MassControl_callback_line27 in ClosureForGroups, line 4")
 		endif
+	elseif ForGroupCallback_typeId[this_7] <= 692 then
+		call MassControl_callback_line27(this_7, u_5, "when calling MassControl_callback_line27 in ClosureForGroups, line 4")
 	else
 		call Preloader_callback_line45(this_7, u_5)
 	endif
@@ -10016,659 +9853,25 @@ function CityManage_closure_impl_2 takes string stackPos returns nothing
 	local integer u_5
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set city_id = getCityId(GetSpellTargetUnit(), "when calling getCityId in CityManage, line 18")
-	set force_id = dispatch_City_City_City_getCityForceId(City_cities[city_id], "when calling getCityForceId in CityManage, line 19")
+	set city_id = getCityId(GetSpellTargetUnit(), "when calling getCityId in CityManage, line 20")
+	set force_id = dispatch_City_City_City_getCityForceId(City_cities[city_id], "when calling getCityForceId in CityManage, line 21")
 	set player_id = player_getId(unit_getOwner(GetSpellAbilityUnit()))
-	call dispatch_PlayerStats_PlayerStats_PlayerStats_changeForce(PlayerStats_player_stats[player_id], force_id, "when calling changeForce in CityManage, line 21")
-	set iterator = LinkedList_iterator(Units_kStartingUnits[force_id], "when calling iterator in CityManage, line 24")
+	call dispatch_PlayerStats_PlayerStats_PlayerStats_changeForce(PlayerStats_player_stats[player_id], force_id, "when calling changeForce in CityManage, line 23")
+	set iterator = LinkedList_iterator(Units_kStartingUnits[force_id], "when calling iterator in CityManage, line 26")
 	loop
 		exitwhen  not LLIterator_hasNext(iterator)
 		set u_5 = LLIterator_next(iterator)
 		call CreateNUnitsAtLoc(1, u_5, Player_players[player_id], GetSpellTargetLoc(), 0.)
 	endloop
-	call LLIterator_close(iterator, "when calling close in CityManage, line 24")
-	call dispatch_City_City_City_settleCity(City_cities[city_id], player_id, "when calling settleCity in CityManage, line 27")
+	call LLIterator_close(iterator, "when calling close in CityManage, line 26")
+	call dispatch_City_City_City_settleCity(City_cities[city_id], player_id, "when calling settleCity in CityManage, line 29")
 	call KillUnit(GetSpellAbilityUnit())
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_CityManage_closure_impl takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call CityManage_closure_impl_2("CityManage, line 16")
-endfunction
-
-function Table_hasInt takes integer this_7, integer parentKey returns boolean
-	return hashtable_hasInt(Table_ht, this_7, parentKey)
-endfunction
-
-function dispatch_Table_Table_Table_hasInt takes integer this_7, integer parentKey, string stackPos returns boolean
-	local boolean Table_Table_hasInt_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling Table.hasInt", "when calling error in Table, line 9")
-		else
-			call error("Called Table.hasInt on invalid object.", "when calling error in Table, line 9")
-		endif
-	endif
-	set Table_Table_hasInt_result = Table_hasInt(this_7, parentKey)
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return Table_Table_hasInt_result
-endfunction
-
-function HashMap_has takes integer this_7, integer key, string stackPos returns boolean
-	local boolean stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = dispatch_Table_Table_Table_hasInt(this_7, key, "when calling hasInt in HashMap, line 14")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return stackTrace_tempReturn
-endfunction
-
-function dispatch_HashMap_HashMap_HashMap_has takes integer this_7, integer key, string stackPos returns boolean
-	local boolean HashMap_HashMap_has_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashMap.has", "when calling error in HashMap, line 13")
-		else
-			call error("Called HashMap.has on invalid object.", "when calling error in HashMap, line 13")
-		endif
-	endif
-	set HashMap_HashMap_has_result = HashMap_has(this_7, key, "when calling has in HashMap, line 13")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashMap_HashMap_has_result
-endfunction
-
-function Table_removeInt takes integer this_7, integer parentKey returns nothing
-	call RemoveSavedInteger(Table_ht, this_7, parentKey)
-endfunction
-
-function dispatch_Table_Table_Table_removeInt takes integer this_7, integer parentKey, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling Table.removeInt", "when calling error in Table, line 24")
-		else
-			call error("Called Table.removeInt on invalid object.", "when calling error in Table, line 24")
-		endif
-	endif
-	call Table_removeInt(this_7, parentKey)
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashMap_remove takes integer this_7, integer key, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if dispatch_HashMap_HashMap_HashMap_has(this_7, key, "when calling has in HashMap, line 28") then
-		set HashMap_size[this_7] = HashMap_size[this_7] - 1
-	endif
-	call dispatch_Table_Table_Table_removeInt(this_7, key, "when calling removeInt in HashMap, line 30")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashList_count takes integer this_7, integer elem returns integer
-	return hashtable_loadInt(HashList_occurences, this_7, elem)
-endfunction
-
-function dispatch_HashList_HashList_HashList_count takes integer this_7, integer elem, string stackPos returns integer
-	local integer HashList_HashList_count_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.count", "when calling error in HashList, line 15")
-		else
-			call error("Called HashList.count on invalid object.", "when calling error in HashList, line 15")
-		endif
-	endif
-	set HashList_HashList_count_result = HashList_count(this_7, elem)
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashList_HashList_count_result
-endfunction
-
-function HashList_decrOccurences takes integer this_7, integer elem, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call hashtable_saveInt(HashList_occurences, this_7, elem, dispatch_HashList_HashList_HashList_count(this_7, elem, "when calling count in HashList, line 22") - 1)
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_HashList_HashList_HashList_decrOccurences takes integer this_7, integer elem, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.decrOccurences", "when calling error in HashList, line 21")
-		else
-			call error("Called HashList.decrOccurences on invalid object.", "when calling error in HashList, line 21")
-		endif
-	endif
-	call HashList_decrOccurences(this_7, elem, "when calling decrOccurences in HashList, line 21")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashList_removeAt takes integer this_7, integer index, string stackPos returns nothing
-	local integer i_2
-	local integer temp
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_HashList_HashList_HashList_decrOccurences(this_7, hashtable_loadInt(HashList_ht, this_7, index), "when calling decrOccurences in HashList, line 54")
-	set i_2 = index
-	set temp = HashList_size[this_7]
-	loop
-		exitwhen i_2 > temp
-		call hashtable_saveInt(HashList_ht, this_7, i_2, hashtable_loadInt(HashList_ht, this_7, i_2 + 1))
-		set i_2 = i_2 + 1
-	endloop
-	set HashList_size[this_7] = HashList_size[this_7] - 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashList_get takes integer this_7, integer index returns integer
-	return hashtable_loadInt(HashList_ht, this_7, index)
-endfunction
-
-function dispatch_HashList_HashList_HashList_get takes integer this_7, integer index, string stackPos returns integer
-	local integer HashList_HashList_get_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.get", "when calling error in HashList, line 79")
-		else
-			call error("Called HashList.get on invalid object.", "when calling error in HashList, line 79")
-		endif
-	endif
-	set HashList_HashList_get_result = HashList_get(this_7, index)
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashList_HashList_get_result
-endfunction
-
-function HashList_size_2 takes integer this_7 returns integer
-	return HashList_size[this_7]
-endfunction
-
-function dispatch_HashList_HashList_HashList_size takes integer this_7, string stackPos returns integer
-	local integer HashList_HashList_size_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.size", "when calling error in HashList, line 67")
-		else
-			call error("Called HashList.size on invalid object.", "when calling error in HashList, line 67")
-		endif
-	endif
-	set HashList_HashList_size_result = HashList_size_2(this_7)
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashList_HashList_size_result
-endfunction
-
-function hashtable_removeInt takes hashtable this_7, integer parentKey, integer childKey returns nothing
-	call RemoveSavedInteger(this_7, parentKey, childKey)
-endfunction
-
-function HashSet_removeAt takes integer this_7, integer index, string stackPos returns nothing
-	local integer i_2
-	local integer temp
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call hashtable_removeInt(HashSet_position, this_7, dispatch_HashList_HashList_HashList_get(this_7, index, "when calling get in HashSet, line 22"))
-	set i_2 = index + 1
-	set temp = dispatch_HashList_HashList_HashList_size(this_7, "when calling size in HashSet, line 23")
-	loop
-		exitwhen i_2 > temp
-		call hashtable_saveInt(HashSet_position, this_7, dispatch_HashList_HashList_HashList_get(this_7, i_2, "when calling get in HashSet, line 24"), hashtable_loadInt(HashSet_position, this_7, dispatch_HashList_HashList_HashList_get(this_7, i_2, "when calling get in HashSet, line 24")) - 1)
-		set i_2 = i_2 + 1
-	endloop
-	call HashList_removeAt(this_7, index, "when calling removeAt in HashSet, line 25")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_HashList_HashList_HashList_removeAt takes integer this_7, integer index, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.removeAt", "when calling error in HashList, line 53")
-		else
-			call error("Called HashList.removeAt on invalid object.", "when calling error in HashList, line 53")
-		endif
-	endif
-	if HashList_typeId[this_7] <= 692 then
-		call HashList_removeAt(this_7, index, "when calling removeAt in HashList, line 53")
-	else
-		call HashSet_removeAt(this_7, index, "when calling removeAt in HashList, line 53")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashList_remove takes integer this_7, integer t, string stackPos returns nothing
-	local integer i_2
-	local integer temp
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set i_2 = 0
-	set temp = HashList_size[this_7] - 1
-	loop
-		exitwhen i_2 > temp
-		if t == hashtable_loadInt(HashList_ht, this_7, i_2) then
-			call dispatch_HashList_HashList_HashList_removeAt(this_7, i_2, "when calling removeAt in HashList, line 63")
-			exitwhen true
-		endif
-		set i_2 = i_2 + 1
-	endloop
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_HashSet_HashSet_HashSet_removeAt takes integer this_7, integer index, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashSet.removeAt", "when calling error in HashSet, line 21")
-		else
-			call error("Called HashSet.removeAt on invalid object.", "when calling error in HashSet, line 21")
-		endif
-	endif
-	call HashSet_removeAt(this_7, index, "when calling removeAt in HashSet, line 21")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashSet_remove takes integer this_7, integer elem, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if dispatch_HashList_HashList_HashList_count(this_7, elem, "when calling count in HashSet, line 17") > 0 then
-		call dispatch_HashSet_HashSet_HashSet_removeAt(this_7, hashtable_loadInt(HashSet_position, this_7, elem), "when calling removeAt in HashSet, line 18")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_HashList_HashList_HashList_remove takes integer this_7, integer t, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.remove", "when calling error in HashList, line 60")
-		else
-			call error("Called HashList.remove on invalid object.", "when calling error in HashList, line 60")
-		endif
-	endif
-	if HashList_typeId[this_7] <= 692 then
-		call HashList_remove(this_7, t, "when calling remove in HashList, line 60")
-	else
-		call HashSet_remove(this_7, t, "when calling remove in HashList, line 60")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashList_has takes integer this_7, integer elem, string stackPos returns boolean
-	local boolean stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = dispatch_HashList_HashList_HashList_count(this_7, elem, "when calling count in HashList, line 88") > 0
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return stackTrace_tempReturn
-endfunction
-
-function dispatch_HashList_HashList_HashList_has takes integer this_7, integer elem, string stackPos returns boolean
-	local boolean HashList_HashList_has_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.has", "when calling error in HashList, line 87")
-		else
-			call error("Called HashList.has on invalid object.", "when calling error in HashList, line 87")
-		endif
-	endif
-	set HashList_HashList_has_result = HashList_has(this_7, elem, "when calling has in HashList, line 87")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashList_HashList_has_result
-endfunction
-
-function IterableMap_hasKey takes integer this_7, integer key, string stackPos returns boolean
-	local boolean stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = dispatch_HashList_HashList_HashList_has(IterableMap_keys[this_7], key, "when calling has in HashMap, line 88")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return stackTrace_tempReturn
-endfunction
-
-function dispatch_IterableMap_HashMap_IterableMap_hasKey takes integer this_7, integer key, string stackPos returns boolean
-	local boolean HashMap_IterableMap_hasKey_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling IterableMap.hasKey", "when calling error in HashMap, line 87")
-		else
-			call error("Called IterableMap.hasKey on invalid object.", "when calling error in HashMap, line 87")
-		endif
-	endif
-	set HashMap_IterableMap_hasKey_result = IterableMap_hasKey(this_7, key, "when calling hasKey in HashMap, line 87")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashMap_IterableMap_hasKey_result
-endfunction
-
-function IterableMap_remove takes integer this_7, integer key, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call HashMap_remove(this_7, key, "when calling remove in HashMap, line 66")
-	if dispatch_IterableMap_HashMap_IterableMap_hasKey(this_7, key, "when calling hasKey in HashMap, line 67") then
-		call dispatch_HashList_HashList_HashList_remove(IterableMap_keys[this_7], key, "when calling remove in HashMap, line 68")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_HashMap_HashMap_HashMap_remove takes integer this_7, integer key, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashMap.remove", "when calling error in HashMap, line 27")
-		else
-			call error("Called HashMap.remove on invalid object.", "when calling error in HashMap, line 27")
-		endif
-	endif
-	if Table_typeId[this_7] <= 729 then
-		call HashMap_remove(this_7, key, "when calling remove in HashMap, line 27")
-	else
-		call IterableMap_remove(this_7, key, "when calling remove in HashMap, line 27")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashMap_put takes integer this_7, integer key, integer value, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if  not dispatch_HashMap_HashMap_HashMap_has(this_7, key, "when calling has in HashMap, line 18") then
-		set HashMap_size[this_7] = HashMap_size[this_7] + 1
-	endif
-	call dispatch_Table_Table_Table_saveInt(this_7, key, value, "when calling saveInt in HashMap, line 20")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashList_incrOccurences takes integer this_7, integer elem, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call hashtable_saveInt(HashList_occurences, this_7, elem, dispatch_HashList_HashList_HashList_count(this_7, elem, "when calling count in HashList, line 19") + 1)
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_HashList_HashList_HashList_incrOccurences takes integer this_7, integer elem, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.incrOccurences", "when calling error in HashList, line 18")
-		else
-			call error("Called HashList.incrOccurences on invalid object.", "when calling error in HashList, line 18")
-		endif
-	endif
-	call HashList_incrOccurences(this_7, elem, "when calling incrOccurences in HashList, line 18")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashList_add_1 takes integer this_7, integer elems_0, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call hashtable_saveInt(HashList_ht, this_7, HashList_size[this_7], elems_0)
-	call dispatch_HashList_HashList_HashList_incrOccurences(this_7, elems_0, "when calling incrOccurences in HashList, line 28")
-	set HashList_size[this_7] = HashList_size[this_7] + 1
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashSet_add_1 takes integer this_7, integer elems_0, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if dispatch_HashList_HashList_HashList_count(this_7, elems_0, "when calling count in HashSet, line 11") <= 0 then
-		call hashtable_saveInt(HashSet_position, this_7, elems_0, dispatch_HashList_HashList_HashList_size(this_7, "when calling size in HashSet, line 12"))
-		call HashList_add_1(this_7, elems_0, "when calling add in HashSet, line 13")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_HashList_HashList_HashList_add_1 takes integer this_7, integer elems_0, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashList.add", "when calling error in HashList, line 25")
-		else
-			call error("Called HashList.add on invalid object.", "when calling error in HashList, line 25")
-		endif
-	endif
-	if HashList_typeId[this_7] <= 692 then
-		call HashList_add_1(this_7, elems_0, "when calling add in HashList, line 25")
-	else
-		call HashSet_add_1(this_7, elems_0, "when calling add in HashList, line 25")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function IterableMap_put takes integer this_7, integer key, integer value, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call HashMap_put(this_7, key, value, "when calling put in HashMap, line 60")
-	if  not dispatch_IterableMap_HashMap_IterableMap_hasKey(this_7, key, "when calling hasKey in HashMap, line 61") then
-		call dispatch_HashList_HashList_HashList_add_1(IterableMap_keys[this_7], key, "when calling add in HashMap, line 62")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_HashMap_HashMap_HashMap_put takes integer this_7, integer key, integer value, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling HashMap.put", "when calling error in HashMap, line 17")
-		else
-			call error("Called HashMap.put on invalid object.", "when calling error in HashMap, line 17")
-		endif
-	endif
-	if Table_typeId[this_7] <= 729 then
-		call HashMap_put(this_7, key, value, "when calling put in HashMap, line 17")
-	else
-		call IterableMap_put(this_7, key, value, "when calling put in HashMap, line 17")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function OnCastListener_onDestroy takes integer this_7, string stackPos returns nothing
-	local integer listener
-	local integer listener_2
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if OnCastListener_eventUnit[this_7] != null then
-		set listener = dispatch_HashMap_HashMap_HashMap_get(EventListener_castMapCasters, unitToIndex(OnCastListener_eventUnit[this_7]), "when calling get in ClosureEvents, line 60")
-		if listener == this_7 then
-			call dispatch_HashMap_HashMap_HashMap_put(EventListener_castMapCasters, unitToIndex(OnCastListener_eventUnit[this_7]), OnCastListener_next[this_7], "when calling put in ClosureEvents, line 62")
-		elseif OnCastListener_prev[this_7] != 0 then
-			set OnCastListener_next[OnCastListener_prev[this_7]] = OnCastListener_next[this_7]
-		endif
-	else
-		set listener_2 = dispatch_HashMap_HashMap_HashMap_get(EventListener_castMap, OnCastListener_abilId[this_7], "when calling get in ClosureEvents, line 66")
-		if listener_2 == this_7 then
-			call dispatch_HashMap_HashMap_HashMap_put(EventListener_castMap, OnCastListener_abilId[this_7], OnCastListener_next[this_7], "when calling put in ClosureEvents, line 68")
-		elseif OnCastListener_prev[this_7] != 0 then
-			set OnCastListener_next[OnCastListener_prev[this_7]] = OnCastListener_next[this_7]
-		endif
-	endif
-	set OnCastListener_prev[OnCastListener_next[this_7]] = OnCastListener_prev[this_7]
-	set OnCastListener_next[this_7] = 0
-	set OnCastListener_prev[this_7] = 0
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dealloc_OnCastListener takes integer obj, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if OnCastListener_typeId[obj] == 0 then
-		call error("Double free: object of type OnCastListener", "when calling error in ClosureEvents, line 50")
-	else
-		set OnCastListener_firstFree = OnCastListener_firstFree + 1
-		set OnCastListener_typeId[obj] = 0
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function destroyOnCastListener takes integer this_7, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call OnCastListener_onDestroy(this_7, "when calling OnCastListener_onDestroy in ClosureEvents, line 58")
-	call dealloc_OnCastListener(this_7, "when calling dealloc_OnCastListener in ClosureEvents, line 58")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_OnCastListener_destroyOnCastListener takes integer this_7, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if OnCastListener_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling OnCastListener.OnCastListener", "when calling error in ClosureEvents, line 50")
-		else
-			call error("Called OnCastListener.OnCastListener on invalid object.", "when calling error in ClosureEvents, line 50")
-		endif
-	endif
-	call destroyOnCastListener(this_7, "when calling destroyOnCastListener in ClosureEvents, line 50")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function unit_getUserData takes unit this_7 returns integer
-	return GetUnitUserData(this_7)
-endfunction
-
-function unit_getIndex takes unit this_7 returns integer
-	return unit_getUserData(this_7)
-endfunction
-
-function Log_trace takes string msg returns nothing
-	call printLog(Player_localPlayer, 0, msg)
-endfunction
-
-function EventListener_onDestroy takes integer this_7 returns nothing
-	local integer listener = EventListener_generalListenersFirsts[EventListener_eventId[this_7]]
-	if listener == this_7 then
-		set EventListener_generalListenersFirsts[EventListener_eventId[this_7]] = EventListener_next[this_7]
-	elseif EventListener_prev[this_7] != 0 then
-		set EventListener_next[EventListener_prev[this_7]] = EventListener_next[this_7]
-	endif
-	set EventListener_prev[EventListener_next[this_7]] = EventListener_prev[this_7]
-	set listener = EventListener_unitListenersFirsts[EventListener_eventId[this_7]]
-	if listener == this_7 then
-		set EventListener_unitListenersFirsts[EventListener_eventId[this_7]] = EventListener_next[this_7]
-	elseif EventListener_prev[this_7] != 0 then
-		set EventListener_next[EventListener_prev[this_7]] = EventListener_next[this_7]
-	endif
-	set EventListener_prev[EventListener_next[this_7]] = EventListener_prev[this_7]
-	set EventListener_next[this_7] = 0
-	set EventListener_prev[this_7] = 0
-endfunction
-
-function dealloc_EventListener takes integer obj, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if EventListener_typeId[obj] == 0 then
-		call error("Double free: object of type EventListener", "when calling error in ClosureEvents, line 98")
-	else
-		set EventListener_nextFree[EventListener_firstFree] = obj
-		set EventListener_firstFree = EventListener_firstFree + 1
-		set EventListener_typeId[obj] = 0
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function destroyEventListener takes integer this_7, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call EventListener_onDestroy(this_7)
-	call dealloc_EventListener(this_7, "when calling dealloc_EventListener in ClosureEvents, line 202")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function dispatch_EventListener_destroyEventListener takes integer this_7, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if EventListener_typeId[this_7] == 0 then
-		if this_7 == 0 then
-			call error("Nullpointer exception when calling EventListener.EventListener", "when calling error in ClosureEvents, line 98")
-		else
-			call error("Called EventListener.EventListener on invalid object.", "when calling error in ClosureEvents, line 98")
-		endif
-	endif
-	call destroyEventListener(this_7, "when calling destroyEventListener in ClosureEvents, line 98")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function unregisterEvents takes integer id, string stackPos returns nothing
-	local integer listener
-	local integer t
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if id > 0 then
-		if EventListener_unitListenersFirsts[id] != 0 then
-			call Log_trace("unregister unit has listeners. startid: " + int_toString(id))
-			set listener = EventListener_unitListenersFirsts[id]
-			set EventListener_unitListenersFirsts[id] = 0
-			loop
-				exitwhen  not (listener != 0)
-				set t = listener
-				set listener = EventListener_next[listener]
-				call dispatch_EventListener_destroyEventListener(t, "when calling dispatch_EventListener_destroyEventListener in ClosureEvents, line 282")
-			endloop
-		endif
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function unregisterEventsForUnit takes unit u_5, string stackPos returns nothing
-	local integer listener
-	local integer t
-	local integer listener_2
-	local integer t_2
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if fireEvents(u_5) then
-		call unregisterEvents(unit_getIndex(u_5), "when calling unregisterEvents in ClosureEvents, line 258")
-		if dispatch_HashMap_HashMap_HashMap_has(EventListener_castMapCasters, unitToIndex(u_5), "when calling has in ClosureEvents, line 259") then
-			set listener = dispatch_HashMap_HashMap_HashMap_get(EventListener_castMapCasters, unitToIndex(u_5), "when calling get in ClosureEvents, line 260")
-			call dispatch_HashMap_HashMap_HashMap_remove(EventListener_castMapCasters, unitToIndex(u_5), "when calling remove in ClosureEvents, line 261")
-			loop
-				exitwhen  not (listener != 0)
-				set t = listener
-				set listener = OnCastListener_next[listener]
-				call dispatch_OnCastListener_destroyOnCastListener(t, "when calling dispatch_OnCastListener_destroyOnCastListener in ClosureEvents, line 265")
-			endloop
-		endif
-		if dispatch_HashMap_HashMap_HashMap_has(EventListener_castMapCasters, unitToIndex(u_5), "when calling has in ClosureEvents, line 266") then
-			set listener_2 = dispatch_HashMap_HashMap_HashMap_get(EventListener_castMapCasters, unitToIndex(u_5), "when calling get in ClosureEvents, line 267")
-			loop
-				exitwhen  not (listener_2 != 0)
-				set t_2 = listener_2
-				set listener_2 = OnCastListener_next[listener_2]
-				call dispatch_OnCastListener_destroyOnCastListener(t_2, "when calling dispatch_OnCastListener_destroyOnCastListener in ClosureEvents, line 271")
-			endloop
-		endif
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function ClosureEvents_closure_impl_2 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call unregisterEventsForUnit(getIndexingUnit(), "when calling unregisterEventsForUnit in ClosureEvents, line 288")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_ClosureEvents_closure_impl takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call ClosureEvents_closure_impl_2("ClosureEvents, line 288")
+	call CityManage_closure_impl_2("CityManage, line 18")
 endfunction
 
 function getCastleByFaction takes integer tier, integer force_id returns integer
@@ -11064,7 +10267,7 @@ function alloc_LinkedList takes string stackPos returns integer
 		if LinkedList_maxIndex < 32768 then
 			set LinkedList_maxIndex = LinkedList_maxIndex + 1
 			set this_7 = LinkedList_maxIndex
-			set LinkedList_typeId[this_7] = 703
+			set LinkedList_typeId[this_7] = 707
 		else
 			call error("Out of memory: Could not create LinkedList.", "when calling error in LinkedList, line 17")
 			set this_7 = 0
@@ -11072,7 +10275,7 @@ function alloc_LinkedList takes string stackPos returns integer
 	else
 		set LinkedList_firstFree = LinkedList_firstFree - 1
 		set this_7 = LinkedList_nextFree[LinkedList_firstFree]
-		set LinkedList_typeId[this_7] = 703
+		set LinkedList_typeId[this_7] = 707
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -11410,24 +10613,24 @@ function unit_getCityId takes unit this_7, string stackPos returns integer
 	return stackTrace_tempReturn
 endfunction
 
-function CityManage_onEvent_line33 takes integer this_7, string stackPos returns nothing
+function CityManage_onEvent_line35 takes integer this_7, string stackPos returns nothing
 	local unit u_5
 	local integer city_id
 	local integer u_id
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set u_5 = GetAttackedUnitBJ()
-	if unit_isCity(u_5, "when calling isCity in CityManage, line 36") then
+	if unit_isCity(u_5, "when calling isCity in CityManage, line 38") then
 		if unit_getLifePercent(u_5) <= City_kCityLifePercentToCapture and unit_getOwner(u_5) != unit_getOwner(GetAttacker()) then
 			if vec2_length(vec2_op_minus(unit_getPos(u_5), unit_getPos_return_y, unit_getPos(GetAttacker()), unit_getPos_return_y), vec2_op_minus_return_y) > 300.0 then
 				call unit_setLifePercent(u_5, City_kCityLifePercentToCapture)
 			else
-				set city_id = unit_getCityId(u_5, "when calling getCityId in CityManage, line 41")
-				call dispatch_City_City_City_capture(City_cities[city_id], unit_getOwner(GetAttacker()), "when calling capture in CityManage, line 42")
+				set city_id = unit_getCityId(u_5, "when calling getCityId in CityManage, line 43")
 				set u_id = unit_getTypeId(u_5)
-				if dispatch_LinkedList_LinkedList_LinkedList_has(Units_uCapitols, u_id, "when calling has in CityManage, line 44") then
-					call attentionToForce(player_getNameColored(unit_getOwner(GetAttacker())) + " has just captured " + player_getNameColored(unit_getOwner(GetAttackedUnitBJ())) + " Capitol!", GetPlayersAll(), "when calling attentionToForce in CityManage, line 45")
+				if dispatch_LinkedList_LinkedList_LinkedList_has(Units_uCapitols, u_id, "when calling has in CityManage, line 45") then
+					call attentionToForce(player_getNameColored(unit_getOwner(GetAttacker())) + " has just captured " + player_getNameColored(unit_getOwner(GetAttackedUnitBJ())) + " Capitol!", GetPlayersAll(), "when calling attentionToForce in CityManage, line 46")
 				endif
+				call dispatch_City_City_City_capture(City_cities[city_id], unit_getOwner(GetAttacker()), "when calling capture in CityManage, line 47")
 			endif
 		elseif unit_getLifePercent(u_5) <= City_kCityLifePercentToCapture then
 			call unit_setLifePercent(u_5, City_kCityLifePercentToCapture)
@@ -11500,12 +10703,67 @@ function City_City_onEvent_line121 takes integer this_7 returns nothing
 	set dying_u = null
 endfunction
 
-function Garissons_onEvent_line6 takes integer this_7, string stackPos returns nothing
+function dbg takes string msg returns nothing
+	if ( not Main_dbg_msg) and ( not Main_dbg_mode) then
+		return
+	endif
+	call DisplayTimedTextToPlayer(Player_players[Main_dbg_player], 0., 0., 60., msg)
+endfunction
+
+function Clerics_onEvent_line5 takes integer this_7 returns nothing
+	call dbg(int_toString(GetIssuedOrderId()))
+endfunction
+
+function getNoteStringForPlayer takes player pl, string stackPos returns string
+	local integer f
+	local integer r
+	local string s
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set f = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(pl)], "when calling getForceId in Messages, line 21")
+	set r = GetRandomInt(0, Strings_ksMsgCount - 1)
+	if f == Forces_kWE then
+		set s = Strings_ksNoteWE[r]
+	elseif f == Forces_kEE then
+		set s = Strings_ksNoteEE[r]
+	elseif f == Forces_kME then
+		set s = Strings_ksNoteME[r]
+	elseif f == Forces_kBZ then
+		set s = Strings_ksNoteBZ[r]
+	else
+		set s = Strings_ksNote[0]
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return "|cff00ccff" + s + "|r"
+endfunction
+
+function noteToPlayer takes string msg, player pl, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kNoteDur, getNoteStringForPlayer(pl, "when calling getNoteStringForPlayer in Messages, line 82"))
+	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kNoteDur, msg)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function Clerics_onEvent_line7 takes integer this_7, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if GetSpellAbilityId() == Abilities_aConversion then
+		if player_getId(unit_getOwner(GetSpellTargetUnit())) < Main_PLAYER_SLOTS then
+			if dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(unit_getOwner(GetSpellTargetUnit()))], "when calling getForceId in Clerics, line 12") == dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(unit_getOwner(GetSpellAbilityUnit()))], "when calling getForceId in Clerics, line 12") then
+				call noteToPlayer(Strings_ksCannotConvertBelievers, unit_getOwner(GetSpellAbilityUnit()), "when calling noteToPlayer in Clerics, line 14")
+			endif
+		endif
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function Garissons_onEvent_line7 takes integer this_7, string stackPos returns nothing
 	local unit u_5
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set u_5 = GetAttackedUnitBJ()
-	if isCity(u_5, "when calling isCity in Garissons, line 8") or dispatch_LinkedList_LinkedList_LinkedList_has(Units_uCastles, unit_getTypeId(u_5), "when calling has in Garissons, line 8") and ( not player_isIngame(unit_getOwner(u_5))) then
+	if unit_isCity(u_5, "when calling isCity in Garissons, line 9") or dispatch_LinkedList_LinkedList_LinkedList_has(Units_uCastles, unit_getTypeId(u_5), "when calling has in Garissons, line 9") and ( not player_isIngame(unit_getOwner(u_5))) then
 		call IssueImmediateOrder(u_5, Abilities_oGarrison)
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -11622,7 +10880,7 @@ function alloc_MassControl_ForGroupCallback_line27 takes string stackPos returns
 		if ForGroupCallback_maxIndex < 32768 then
 			set ForGroupCallback_maxIndex = ForGroupCallback_maxIndex + 1
 			set this_7 = ForGroupCallback_maxIndex
-			set ForGroupCallback_typeId[this_7] = 688
+			set ForGroupCallback_typeId[this_7] = 692
 		else
 			call error("Out of memory: Could not create MassControl_ForGroupCallback_line27.", "when calling error in MassControl, line 27")
 			set this_7 = 0
@@ -11630,10 +10888,241 @@ function alloc_MassControl_ForGroupCallback_line27 takes string stackPos returns
 	else
 		set ForGroupCallback_firstFree = ForGroupCallback_firstFree - 1
 		set this_7 = ForGroupCallback_nextFree[ForGroupCallback_firstFree]
-		set ForGroupCallback_typeId[this_7] = 688
+		set ForGroupCallback_typeId[this_7] = 692
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
+endfunction
+
+function Table_hasInt takes integer this_7, integer parentKey returns boolean
+	return hashtable_hasInt(Table_ht, this_7, parentKey)
+endfunction
+
+function dispatch_Table_Table_Table_hasInt takes integer this_7, integer parentKey, string stackPos returns boolean
+	local boolean Table_Table_hasInt_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling Table.hasInt", "when calling error in Table, line 9")
+		else
+			call error("Called Table.hasInt on invalid object.", "when calling error in Table, line 9")
+		endif
+	endif
+	set Table_Table_hasInt_result = Table_hasInt(this_7, parentKey)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return Table_Table_hasInt_result
+endfunction
+
+function HashMap_has takes integer this_7, integer key, string stackPos returns boolean
+	local boolean stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = dispatch_Table_Table_Table_hasInt(this_7, key, "when calling hasInt in HashMap, line 14")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return stackTrace_tempReturn
+endfunction
+
+function dispatch_HashMap_HashMap_HashMap_has takes integer this_7, integer key, string stackPos returns boolean
+	local boolean HashMap_HashMap_has_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashMap.has", "when calling error in HashMap, line 13")
+		else
+			call error("Called HashMap.has on invalid object.", "when calling error in HashMap, line 13")
+		endif
+	endif
+	set HashMap_HashMap_has_result = HashMap_has(this_7, key, "when calling has in HashMap, line 13")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashMap_HashMap_has_result
+endfunction
+
+function HashMap_put takes integer this_7, integer key, integer value, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if  not dispatch_HashMap_HashMap_HashMap_has(this_7, key, "when calling has in HashMap, line 18") then
+		set HashMap_size[this_7] = HashMap_size[this_7] + 1
+	endif
+	call dispatch_Table_Table_Table_saveInt(this_7, key, value, "when calling saveInt in HashMap, line 20")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_count takes integer this_7, integer elem returns integer
+	return hashtable_loadInt(HashList_occurences, this_7, elem)
+endfunction
+
+function dispatch_HashList_HashList_HashList_count takes integer this_7, integer elem, string stackPos returns integer
+	local integer HashList_HashList_count_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.count", "when calling error in HashList, line 15")
+		else
+			call error("Called HashList.count on invalid object.", "when calling error in HashList, line 15")
+		endif
+	endif
+	set HashList_HashList_count_result = HashList_count(this_7, elem)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashList_HashList_count_result
+endfunction
+
+function HashList_incrOccurences takes integer this_7, integer elem, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call hashtable_saveInt(HashList_occurences, this_7, elem, dispatch_HashList_HashList_HashList_count(this_7, elem, "when calling count in HashList, line 19") + 1)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashList_HashList_HashList_incrOccurences takes integer this_7, integer elem, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.incrOccurences", "when calling error in HashList, line 18")
+		else
+			call error("Called HashList.incrOccurences on invalid object.", "when calling error in HashList, line 18")
+		endif
+	endif
+	call HashList_incrOccurences(this_7, elem, "when calling incrOccurences in HashList, line 18")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_add_1 takes integer this_7, integer elems_0, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call hashtable_saveInt(HashList_ht, this_7, HashList_size[this_7], elems_0)
+	call dispatch_HashList_HashList_HashList_incrOccurences(this_7, elems_0, "when calling incrOccurences in HashList, line 28")
+	set HashList_size[this_7] = HashList_size[this_7] + 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_size_2 takes integer this_7 returns integer
+	return HashList_size[this_7]
+endfunction
+
+function dispatch_HashList_HashList_HashList_size takes integer this_7, string stackPos returns integer
+	local integer HashList_HashList_size_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.size", "when calling error in HashList, line 67")
+		else
+			call error("Called HashList.size on invalid object.", "when calling error in HashList, line 67")
+		endif
+	endif
+	set HashList_HashList_size_result = HashList_size_2(this_7)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashList_HashList_size_result
+endfunction
+
+function HashSet_add_1 takes integer this_7, integer elems_0, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if dispatch_HashList_HashList_HashList_count(this_7, elems_0, "when calling count in HashSet, line 11") <= 0 then
+		call hashtable_saveInt(HashSet_position, this_7, elems_0, dispatch_HashList_HashList_HashList_size(this_7, "when calling size in HashSet, line 12"))
+		call HashList_add_1(this_7, elems_0, "when calling add in HashSet, line 13")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashList_HashList_HashList_add_1 takes integer this_7, integer elems_0, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.add", "when calling error in HashList, line 25")
+		else
+			call error("Called HashList.add on invalid object.", "when calling error in HashList, line 25")
+		endif
+	endif
+	if HashList_typeId[this_7] <= 696 then
+		call HashList_add_1(this_7, elems_0, "when calling add in HashList, line 25")
+	else
+		call HashSet_add_1(this_7, elems_0, "when calling add in HashList, line 25")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_has takes integer this_7, integer elem, string stackPos returns boolean
+	local boolean stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = dispatch_HashList_HashList_HashList_count(this_7, elem, "when calling count in HashList, line 88") > 0
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return stackTrace_tempReturn
+endfunction
+
+function dispatch_HashList_HashList_HashList_has takes integer this_7, integer elem, string stackPos returns boolean
+	local boolean HashList_HashList_has_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.has", "when calling error in HashList, line 87")
+		else
+			call error("Called HashList.has on invalid object.", "when calling error in HashList, line 87")
+		endif
+	endif
+	set HashList_HashList_has_result = HashList_has(this_7, elem, "when calling has in HashList, line 87")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashList_HashList_has_result
+endfunction
+
+function IterableMap_hasKey takes integer this_7, integer key, string stackPos returns boolean
+	local boolean stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = dispatch_HashList_HashList_HashList_has(IterableMap_keys[this_7], key, "when calling has in HashMap, line 88")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return stackTrace_tempReturn
+endfunction
+
+function dispatch_IterableMap_HashMap_IterableMap_hasKey takes integer this_7, integer key, string stackPos returns boolean
+	local boolean HashMap_IterableMap_hasKey_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling IterableMap.hasKey", "when calling error in HashMap, line 87")
+		else
+			call error("Called IterableMap.hasKey on invalid object.", "when calling error in HashMap, line 87")
+		endif
+	endif
+	set HashMap_IterableMap_hasKey_result = IterableMap_hasKey(this_7, key, "when calling hasKey in HashMap, line 87")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashMap_IterableMap_hasKey_result
+endfunction
+
+function IterableMap_put takes integer this_7, integer key, integer value, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call HashMap_put(this_7, key, value, "when calling put in HashMap, line 60")
+	if  not dispatch_IterableMap_HashMap_IterableMap_hasKey(this_7, key, "when calling hasKey in HashMap, line 61") then
+		call dispatch_HashList_HashList_HashList_add_1(IterableMap_keys[this_7], key, "when calling add in HashMap, line 62")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashMap_HashMap_HashMap_put takes integer this_7, integer key, integer value, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashMap.put", "when calling error in HashMap, line 17")
+		else
+			call error("Called HashMap.put on invalid object.", "when calling error in HashMap, line 17")
+		endif
+	endif
+	if Table_typeId[this_7] <= 733 then
+		call HashMap_put(this_7, key, value, "when calling put in HashMap, line 17")
+	else
+		call IterableMap_put(this_7, key, value, "when calling put in HashMap, line 17")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function getSpellTargetPos takes nothing returns real
@@ -11695,6 +11184,218 @@ function alloc_MassControl_CallbackSingle_line39 takes string stackPos returns i
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
+endfunction
+
+function Table_removeInt takes integer this_7, integer parentKey returns nothing
+	call RemoveSavedInteger(Table_ht, this_7, parentKey)
+endfunction
+
+function dispatch_Table_Table_Table_removeInt takes integer this_7, integer parentKey, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling Table.removeInt", "when calling error in Table, line 24")
+		else
+			call error("Called Table.removeInt on invalid object.", "when calling error in Table, line 24")
+		endif
+	endif
+	call Table_removeInt(this_7, parentKey)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashMap_remove takes integer this_7, integer key, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if dispatch_HashMap_HashMap_HashMap_has(this_7, key, "when calling has in HashMap, line 28") then
+		set HashMap_size[this_7] = HashMap_size[this_7] - 1
+	endif
+	call dispatch_Table_Table_Table_removeInt(this_7, key, "when calling removeInt in HashMap, line 30")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_decrOccurences takes integer this_7, integer elem, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call hashtable_saveInt(HashList_occurences, this_7, elem, dispatch_HashList_HashList_HashList_count(this_7, elem, "when calling count in HashList, line 22") - 1)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashList_HashList_HashList_decrOccurences takes integer this_7, integer elem, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.decrOccurences", "when calling error in HashList, line 21")
+		else
+			call error("Called HashList.decrOccurences on invalid object.", "when calling error in HashList, line 21")
+		endif
+	endif
+	call HashList_decrOccurences(this_7, elem, "when calling decrOccurences in HashList, line 21")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_removeAt takes integer this_7, integer index, string stackPos returns nothing
+	local integer i_2
+	local integer temp
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call dispatch_HashList_HashList_HashList_decrOccurences(this_7, hashtable_loadInt(HashList_ht, this_7, index), "when calling decrOccurences in HashList, line 54")
+	set i_2 = index
+	set temp = HashList_size[this_7]
+	loop
+		exitwhen i_2 > temp
+		call hashtable_saveInt(HashList_ht, this_7, i_2, hashtable_loadInt(HashList_ht, this_7, i_2 + 1))
+		set i_2 = i_2 + 1
+	endloop
+	set HashList_size[this_7] = HashList_size[this_7] - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_get takes integer this_7, integer index returns integer
+	return hashtable_loadInt(HashList_ht, this_7, index)
+endfunction
+
+function dispatch_HashList_HashList_HashList_get takes integer this_7, integer index, string stackPos returns integer
+	local integer HashList_HashList_get_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.get", "when calling error in HashList, line 79")
+		else
+			call error("Called HashList.get on invalid object.", "when calling error in HashList, line 79")
+		endif
+	endif
+	set HashList_HashList_get_result = HashList_get(this_7, index)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashList_HashList_get_result
+endfunction
+
+function hashtable_removeInt takes hashtable this_7, integer parentKey, integer childKey returns nothing
+	call RemoveSavedInteger(this_7, parentKey, childKey)
+endfunction
+
+function HashSet_removeAt takes integer this_7, integer index, string stackPos returns nothing
+	local integer i_2
+	local integer temp
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call hashtable_removeInt(HashSet_position, this_7, dispatch_HashList_HashList_HashList_get(this_7, index, "when calling get in HashSet, line 22"))
+	set i_2 = index + 1
+	set temp = dispatch_HashList_HashList_HashList_size(this_7, "when calling size in HashSet, line 23")
+	loop
+		exitwhen i_2 > temp
+		call hashtable_saveInt(HashSet_position, this_7, dispatch_HashList_HashList_HashList_get(this_7, i_2, "when calling get in HashSet, line 24"), hashtable_loadInt(HashSet_position, this_7, dispatch_HashList_HashList_HashList_get(this_7, i_2, "when calling get in HashSet, line 24")) - 1)
+		set i_2 = i_2 + 1
+	endloop
+	call HashList_removeAt(this_7, index, "when calling removeAt in HashSet, line 25")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashList_HashList_HashList_removeAt takes integer this_7, integer index, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.removeAt", "when calling error in HashList, line 53")
+		else
+			call error("Called HashList.removeAt on invalid object.", "when calling error in HashList, line 53")
+		endif
+	endif
+	if HashList_typeId[this_7] <= 696 then
+		call HashList_removeAt(this_7, index, "when calling removeAt in HashList, line 53")
+	else
+		call HashSet_removeAt(this_7, index, "when calling removeAt in HashList, line 53")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_remove takes integer this_7, integer t, string stackPos returns nothing
+	local integer i_2
+	local integer temp
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set i_2 = 0
+	set temp = HashList_size[this_7] - 1
+	loop
+		exitwhen i_2 > temp
+		if t == hashtable_loadInt(HashList_ht, this_7, i_2) then
+			call dispatch_HashList_HashList_HashList_removeAt(this_7, i_2, "when calling removeAt in HashList, line 63")
+			exitwhen true
+		endif
+		set i_2 = i_2 + 1
+	endloop
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashSet_HashSet_HashSet_removeAt takes integer this_7, integer index, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashSet.removeAt", "when calling error in HashSet, line 21")
+		else
+			call error("Called HashSet.removeAt on invalid object.", "when calling error in HashSet, line 21")
+		endif
+	endif
+	call HashSet_removeAt(this_7, index, "when calling removeAt in HashSet, line 21")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashSet_remove takes integer this_7, integer elem, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if dispatch_HashList_HashList_HashList_count(this_7, elem, "when calling count in HashSet, line 17") > 0 then
+		call dispatch_HashSet_HashSet_HashSet_removeAt(this_7, hashtable_loadInt(HashSet_position, this_7, elem), "when calling removeAt in HashSet, line 18")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashList_HashList_HashList_remove takes integer this_7, integer t, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashList.remove", "when calling error in HashList, line 60")
+		else
+			call error("Called HashList.remove on invalid object.", "when calling error in HashList, line 60")
+		endif
+	endif
+	if HashList_typeId[this_7] <= 696 then
+		call HashList_remove(this_7, t, "when calling remove in HashList, line 60")
+	else
+		call HashSet_remove(this_7, t, "when calling remove in HashList, line 60")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function IterableMap_remove takes integer this_7, integer key, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call HashMap_remove(this_7, key, "when calling remove in HashMap, line 66")
+	if dispatch_IterableMap_HashMap_IterableMap_hasKey(this_7, key, "when calling hasKey in HashMap, line 67") then
+		call dispatch_HashList_HashList_HashList_remove(IterableMap_keys[this_7], key, "when calling remove in HashMap, line 68")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashMap_HashMap_HashMap_remove takes integer this_7, integer key, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling HashMap.remove", "when calling error in HashMap, line 27")
+		else
+			call error("Called HashMap.remove on invalid object.", "when calling error in HashMap, line 27")
+		endif
+	endif
+	if Table_typeId[this_7] <= 733 then
+		call HashMap_remove(this_7, key, "when calling remove in HashMap, line 27")
+	else
+		call IterableMap_remove(this_7, key, "when calling remove in HashMap, line 27")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function getOrderPos takes nothing returns real
@@ -11962,13 +11663,54 @@ function player_setName takes player this_7, string name returns nothing
 	call SetPlayerName(this_7, name)
 endfunction
 
-function OnPlayerLeave_onEvent_line6 takes integer this_7, string stackPos returns nothing
+function OnPlayerLeave_onEvent_line5 takes integer this_7, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call textToAll(player_getNameColored(GetTriggerPlayer()) + " has left the game!", 5.0)
-	call dispatch_PlayerStats_PlayerStats_PlayerStats_setInGame(PlayerStats_player_stats[GetPlayerId(GetTriggerPlayer())], false, "when calling setInGame in OnPlayerLeave, line 8")
+	call dispatch_PlayerStats_PlayerStats_PlayerStats_setInGame(PlayerStats_player_stats[GetPlayerId(GetTriggerPlayer())], false, "when calling setInGame in OnPlayerLeave, line 7")
 	call player_setName(GetTriggerPlayer(), player_getName(GetTriggerPlayer()) + " [LEFT]")
 	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function OreCapture_onEvent_line14 takes integer this_7, string stackPos returns nothing
+	local unit u_5
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if dispatch_LinkedList_LinkedList_LinkedList_has(Units_uMines, unit_getTypeId(GetTriggerUnit()), "when calling has in OreCapture, line 15") then
+		set u_5 = GetTriggerUnit()
+		set Economy_gold_adder[player_getId(unit_getOwner(u_5))] = Economy_gold_adder[player_getId(unit_getOwner(u_5))] + dispatch_HashMap_HashMap_HashMap_get(Units_usIncomeOres, unit_getTypeId(u_5), "when calling get in OreCapture, line 19")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set u_5 = null
+endfunction
+
+function OreCapture_onEvent_line21 takes integer this_7, string stackPos returns nothing
+	local unit u_5
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if dispatch_LinkedList_LinkedList_LinkedList_has(Units_uMines, unit_getTypeId(GetAttackedUnitBJ()), "when calling has in OreCapture, line 22") then
+		set u_5 = GetAttackedUnitBJ()
+		if unit_getLifePercent(u_5) <= OreCapture_kLifePercentToCapture then
+			call unit_setOwner(u_5, unit_getOwner(GetAttacker()), true)
+			call unit_setLifePercent(u_5, 100.0)
+			set Economy_gold_adder[player_getId(unit_getOwner(u_5))] = Economy_gold_adder[player_getId(unit_getOwner(u_5))] - dispatch_HashMap_HashMap_HashMap_get(Units_usIncomeOres, unit_getTypeId(u_5), "when calling get in OreCapture, line 29")
+			set Economy_gold_adder[player_getId(unit_getOwner(GetAttacker()))] = Economy_gold_adder[player_getId(unit_getOwner(GetAttacker()))] + dispatch_HashMap_HashMap_HashMap_get(Units_usIncomeOres, unit_getTypeId(u_5), "when calling get in OreCapture, line 30")
+		endif
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set u_5 = null
+endfunction
+
+function OreCapture_onEvent_line9 takes integer this_7, string stackPos returns nothing
+	local unit u_5
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if dispatch_LinkedList_LinkedList_LinkedList_has(Units_uMines, unit_getTypeId(GetDyingUnit()), "when calling has in OreCapture, line 10") then
+		set u_5 = GetTriggerUnit()
+		call CreateUnitAtLoc(unit_getOwner(u_5), unit_getTypeId(u_5), unit_getLoc(u_5), bj_UNIT_FACING)
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set u_5 = null
 endfunction
 
 function alloc_RangeChecks_CallbackSingle_line23 takes string stackPos returns integer
@@ -12072,37 +11814,6 @@ function RangeChecks_onEvent_line11 takes integer this_7, string stackPos return
 	set g_2 = null
 	set iterator = null
 	set u_5 = null
-endfunction
-
-function getNoteStringForPlayer takes player pl, string stackPos returns string
-	local integer f
-	local integer r
-	local string s
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set f = dispatch_PlayerStats_PlayerStats_PlayerStats_getForceId(PlayerStats_player_stats[player_getId(pl)], "when calling getForceId in Messages, line 21")
-	set r = GetRandomInt(0, Strings_ksMsgCount - 1)
-	if f == Forces_kWE then
-		set s = Strings_ksNoteWE[r]
-	elseif f == Forces_kEE then
-		set s = Strings_ksNoteEE[r]
-	elseif f == Forces_kME then
-		set s = Strings_ksNoteME[r]
-	elseif f == Forces_kBZ then
-		set s = Strings_ksNoteBZ[r]
-	else
-		set s = Strings_ksNote[0]
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return "|cff00ccff" + s + "|r"
-endfunction
-
-function noteToPlayer takes string msg, player pl, string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kNoteDur, getNoteStringForPlayer(pl, "when calling getNoteStringForPlayer in Messages, line 82"))
-	call DisplayTimedTextToPlayer(pl, 0., 0., Strings_kNoteDur, msg)
-	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function City_changeTaxLevel takes integer this_7, integer lvl, string stackPos returns nothing
@@ -12225,8 +11936,8 @@ function dispatch_EventListener_ClosureEvents_EventListener_onEvent takes intege
 			call error("Called EventListener.onEvent on invalid object.", "when calling error in ClosureEvents, line 109")
 		endif
 	endif
-	if EventListener_typeId[this_7] <= 671 then
-		if EventListener_typeId[this_7] <= 666 then
+	if EventListener_typeId[this_7] <= 673 then
+		if EventListener_typeId[this_7] <= 667 then
 			if EventListener_typeId[this_7] <= 664 then
 				if EventListener_typeId[this_7] <= 663 then
 					if EventListener_typeId[this_7] <= 662 then
@@ -12235,32 +11946,40 @@ function dispatch_EventListener_ClosureEvents_EventListener_onEvent takes intege
 						call CityBuilded_onEvent_line9(this_7, "when calling CityBuilded_onEvent_line9 in ClosureEvents, line 109")
 					endif
 				else
-					call CityManage_onEvent_line33(this_7, "when calling CityManage_onEvent_line33 in ClosureEvents, line 109")
+					call CityManage_onEvent_line35(this_7, "when calling CityManage_onEvent_line35 in ClosureEvents, line 109")
 				endif
-			elseif EventListener_typeId[this_7] <= 665 then
-				call CityManage_onEvent_line9(this_7, "when calling CityManage_onEvent_line9 in ClosureEvents, line 109")
-			else
-				call City_City_onEvent_line121(this_7)
-			endif
-		elseif EventListener_typeId[this_7] <= 669 then
-			if EventListener_typeId[this_7] <= 668 then
-				if EventListener_typeId[this_7] <= 667 then
-					call Garissons_onEvent_line6(this_7, "when calling Garissons_onEvent_line6 in ClosureEvents, line 109")
+			elseif EventListener_typeId[this_7] <= 666 then
+				if EventListener_typeId[this_7] <= 665 then
+					call CityManage_onEvent_line9(this_7, "when calling CityManage_onEvent_line9 in ClosureEvents, line 109")
 				else
-					call LimitEncampments_onEvent_line12(this_7, "when calling LimitEncampments_onEvent_line12 in ClosureEvents, line 109")
+					call City_City_onEvent_line121(this_7)
 				endif
 			else
-				call LimitEncampments_onEvent_line8(this_7)
+				call Clerics_onEvent_line5(this_7)
 			endif
 		elseif EventListener_typeId[this_7] <= 670 then
-			call LimitMercenaryCamps_onEvent_line12(this_7, "when calling LimitMercenaryCamps_onEvent_line12 in ClosureEvents, line 109")
+			if EventListener_typeId[this_7] <= 669 then
+				if EventListener_typeId[this_7] <= 668 then
+					call Clerics_onEvent_line7(this_7, "when calling Clerics_onEvent_line7 in ClosureEvents, line 109")
+				else
+					call Garissons_onEvent_line7(this_7, "when calling Garissons_onEvent_line7 in ClosureEvents, line 109")
+				endif
+			else
+				call LimitEncampments_onEvent_line12(this_7, "when calling LimitEncampments_onEvent_line12 in ClosureEvents, line 109")
+			endif
+		elseif EventListener_typeId[this_7] <= 672 then
+			if EventListener_typeId[this_7] <= 671 then
+				call LimitEncampments_onEvent_line8(this_7)
+			else
+				call LimitMercenaryCamps_onEvent_line12(this_7, "when calling LimitMercenaryCamps_onEvent_line12 in ClosureEvents, line 109")
+			endif
 		else
 			call LimitMercenaryCamps_onEvent_line8(this_7)
 		endif
-	elseif EventListener_typeId[this_7] <= 676 then
-		if EventListener_typeId[this_7] <= 674 then
-			if EventListener_typeId[this_7] <= 673 then
-				if EventListener_typeId[this_7] <= 672 then
+	elseif EventListener_typeId[this_7] <= 679 then
+		if EventListener_typeId[this_7] <= 676 then
+			if EventListener_typeId[this_7] <= 675 then
+				if EventListener_typeId[this_7] <= 674 then
 					call MassControl_onEvent_line22(this_7, "when calling MassControl_onEvent_line22 in ClosureEvents, line 109")
 				else
 					call MassControl_onEvent_line32(this_7, "when calling MassControl_onEvent_line32 in ClosureEvents, line 109")
@@ -12268,23 +11987,43 @@ function dispatch_EventListener_ClosureEvents_EventListener_onEvent takes intege
 			else
 				call NoShipsNearRivers_onEvent_line7(this_7, "when calling NoShipsNearRivers_onEvent_line7 in ClosureEvents, line 109")
 			endif
-		elseif EventListener_typeId[this_7] <= 675 then
-			call NoStarvationOnBoat_onEvent_line6(this_7)
+		elseif EventListener_typeId[this_7] <= 678 then
+			if EventListener_typeId[this_7] <= 677 then
+				call NoStarvationOnBoat_onEvent_line6(this_7)
+			else
+				call OnPlayerLeave_onEvent_line5(this_7, "when calling OnPlayerLeave_onEvent_line5 in ClosureEvents, line 109")
+			endif
 		else
-			call OnPlayerLeave_onEvent_line6(this_7, "when calling OnPlayerLeave_onEvent_line6 in ClosureEvents, line 109")
+			call OreCapture_onEvent_line14(this_7, "when calling OreCapture_onEvent_line14 in ClosureEvents, line 109")
 		endif
-	elseif EventListener_typeId[this_7] <= 678 then
-		if EventListener_typeId[this_7] <= 677 then
+	elseif EventListener_typeId[this_7] <= 682 then
+		if EventListener_typeId[this_7] <= 681 then
+			if EventListener_typeId[this_7] <= 680 then
+				call OreCapture_onEvent_line21(this_7, "when calling OreCapture_onEvent_line21 in ClosureEvents, line 109")
+			else
+				call OreCapture_onEvent_line9(this_7, "when calling OreCapture_onEvent_line9 in ClosureEvents, line 109")
+			endif
+		else
 			call RangeChecks_onEvent_line11(this_7, "when calling RangeChecks_onEvent_line11 in ClosureEvents, line 109")
-		else
-			call Taxation_onEvent_line6(this_7, "when calling Taxation_onEvent_line6 in ClosureEvents, line 109")
 		endif
-	elseif EventListener_typeId[this_7] <= 679 then
-		call Upkeep_onEvent_line28(this_7, "when calling Upkeep_onEvent_line28 in ClosureEvents, line 109")
+	elseif EventListener_typeId[this_7] <= 684 then
+		if EventListener_typeId[this_7] <= 683 then
+			call Taxation_onEvent_line6(this_7, "when calling Taxation_onEvent_line6 in ClosureEvents, line 109")
+		else
+			call Upkeep_onEvent_line28(this_7, "when calling Upkeep_onEvent_line28 in ClosureEvents, line 109")
+		endif
 	else
 		call Upkeep_onEvent_line6(this_7, "when calling Upkeep_onEvent_line6 in ClosureEvents, line 109")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function unit_getUserData takes unit this_7 returns integer
+	return GetUnitUserData(this_7)
+endfunction
+
+function unit_getIndex takes unit this_7 returns integer
+	return unit_getUserData(this_7)
 endfunction
 
 function EventListener_generalEventCallback takes string stackPos returns nothing
@@ -12320,40 +12059,223 @@ function EventListener_generalEventCallback takes string stackPos returns nothin
 	set trigUnit = null
 endfunction
 
-function ClosureEvents_closure_impl_3 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 292")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_ClosureEvents_closure_impl_2 takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call ClosureEvents_closure_impl_3("ClosureEvents, line 292")
-endfunction
-
-function ClosureEvents_closure_impl_4 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 291")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_ClosureEvents_closure_impl_3 takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call ClosureEvents_closure_impl_4("ClosureEvents, line 291")
-endfunction
-
-function ClosureEvents_closure_impl_5 takes string stackPos returns nothing
+function ClosureEvents_closure_impl_2 takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 293")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
+function bridge_ClosureEvents_closure_impl takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call ClosureEvents_closure_impl_2("ClosureEvents, line 293")
+endfunction
+
+function ClosureEvents_closure_impl_3 takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 291")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_ClosureEvents_closure_impl_2 takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call ClosureEvents_closure_impl_3("ClosureEvents, line 291")
+endfunction
+
+function ClosureEvents_closure_impl_4 takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call EventListener_generalEventCallback("when calling generalEventCallback in ClosureEvents, line 292")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_ClosureEvents_closure_impl_3 takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call ClosureEvents_closure_impl_4("ClosureEvents, line 292")
+endfunction
+
+function OnCastListener_onDestroy takes integer this_7, string stackPos returns nothing
+	local integer listener
+	local integer listener_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if OnCastListener_eventUnit[this_7] != null then
+		set listener = dispatch_HashMap_HashMap_HashMap_get(EventListener_castMapCasters, unitToIndex(OnCastListener_eventUnit[this_7]), "when calling get in ClosureEvents, line 60")
+		if listener == this_7 then
+			call dispatch_HashMap_HashMap_HashMap_put(EventListener_castMapCasters, unitToIndex(OnCastListener_eventUnit[this_7]), OnCastListener_next[this_7], "when calling put in ClosureEvents, line 62")
+		elseif OnCastListener_prev[this_7] != 0 then
+			set OnCastListener_next[OnCastListener_prev[this_7]] = OnCastListener_next[this_7]
+		endif
+	else
+		set listener_2 = dispatch_HashMap_HashMap_HashMap_get(EventListener_castMap, OnCastListener_abilId[this_7], "when calling get in ClosureEvents, line 66")
+		if listener_2 == this_7 then
+			call dispatch_HashMap_HashMap_HashMap_put(EventListener_castMap, OnCastListener_abilId[this_7], OnCastListener_next[this_7], "when calling put in ClosureEvents, line 68")
+		elseif OnCastListener_prev[this_7] != 0 then
+			set OnCastListener_next[OnCastListener_prev[this_7]] = OnCastListener_next[this_7]
+		endif
+	endif
+	set OnCastListener_prev[OnCastListener_next[this_7]] = OnCastListener_prev[this_7]
+	set OnCastListener_next[this_7] = 0
+	set OnCastListener_prev[this_7] = 0
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dealloc_OnCastListener takes integer obj, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if OnCastListener_typeId[obj] == 0 then
+		call error("Double free: object of type OnCastListener", "when calling error in ClosureEvents, line 50")
+	else
+		set OnCastListener_firstFree = OnCastListener_firstFree + 1
+		set OnCastListener_typeId[obj] = 0
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function destroyOnCastListener takes integer this_7, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call OnCastListener_onDestroy(this_7, "when calling OnCastListener_onDestroy in ClosureEvents, line 58")
+	call dealloc_OnCastListener(this_7, "when calling dealloc_OnCastListener in ClosureEvents, line 58")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_OnCastListener_destroyOnCastListener takes integer this_7, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if OnCastListener_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling OnCastListener.OnCastListener", "when calling error in ClosureEvents, line 50")
+		else
+			call error("Called OnCastListener.OnCastListener on invalid object.", "when calling error in ClosureEvents, line 50")
+		endif
+	endif
+	call destroyOnCastListener(this_7, "when calling destroyOnCastListener in ClosureEvents, line 50")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function Log_trace takes string msg returns nothing
+	call printLog(Player_localPlayer, 0, msg)
+endfunction
+
+function EventListener_onDestroy takes integer this_7 returns nothing
+	local integer listener = EventListener_generalListenersFirsts[EventListener_eventId[this_7]]
+	if listener == this_7 then
+		set EventListener_generalListenersFirsts[EventListener_eventId[this_7]] = EventListener_next[this_7]
+	elseif EventListener_prev[this_7] != 0 then
+		set EventListener_next[EventListener_prev[this_7]] = EventListener_next[this_7]
+	endif
+	set EventListener_prev[EventListener_next[this_7]] = EventListener_prev[this_7]
+	set listener = EventListener_unitListenersFirsts[EventListener_eventId[this_7]]
+	if listener == this_7 then
+		set EventListener_unitListenersFirsts[EventListener_eventId[this_7]] = EventListener_next[this_7]
+	elseif EventListener_prev[this_7] != 0 then
+		set EventListener_next[EventListener_prev[this_7]] = EventListener_next[this_7]
+	endif
+	set EventListener_prev[EventListener_next[this_7]] = EventListener_prev[this_7]
+	set EventListener_next[this_7] = 0
+	set EventListener_prev[this_7] = 0
+endfunction
+
+function dealloc_EventListener takes integer obj, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if EventListener_typeId[obj] == 0 then
+		call error("Double free: object of type EventListener", "when calling error in ClosureEvents, line 98")
+	else
+		set EventListener_nextFree[EventListener_firstFree] = obj
+		set EventListener_firstFree = EventListener_firstFree + 1
+		set EventListener_typeId[obj] = 0
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function destroyEventListener takes integer this_7, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call EventListener_onDestroy(this_7)
+	call dealloc_EventListener(this_7, "when calling dealloc_EventListener in ClosureEvents, line 202")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_EventListener_destroyEventListener takes integer this_7, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if EventListener_typeId[this_7] == 0 then
+		if this_7 == 0 then
+			call error("Nullpointer exception when calling EventListener.EventListener", "when calling error in ClosureEvents, line 98")
+		else
+			call error("Called EventListener.EventListener on invalid object.", "when calling error in ClosureEvents, line 98")
+		endif
+	endif
+	call destroyEventListener(this_7, "when calling destroyEventListener in ClosureEvents, line 98")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function unregisterEvents takes integer id, string stackPos returns nothing
+	local integer listener
+	local integer t
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if id > 0 then
+		if EventListener_unitListenersFirsts[id] != 0 then
+			call Log_trace("unregister unit has listeners. startid: " + int_toString(id))
+			set listener = EventListener_unitListenersFirsts[id]
+			set EventListener_unitListenersFirsts[id] = 0
+			loop
+				exitwhen  not (listener != 0)
+				set t = listener
+				set listener = EventListener_next[listener]
+				call dispatch_EventListener_destroyEventListener(t, "when calling dispatch_EventListener_destroyEventListener in ClosureEvents, line 282")
+			endloop
+		endif
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function unregisterEventsForUnit takes unit u_5, string stackPos returns nothing
+	local integer listener
+	local integer t
+	local integer listener_2
+	local integer t_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if fireEvents(u_5) then
+		call unregisterEvents(unit_getIndex(u_5), "when calling unregisterEvents in ClosureEvents, line 258")
+		if dispatch_HashMap_HashMap_HashMap_has(EventListener_castMapCasters, unitToIndex(u_5), "when calling has in ClosureEvents, line 259") then
+			set listener = dispatch_HashMap_HashMap_HashMap_get(EventListener_castMapCasters, unitToIndex(u_5), "when calling get in ClosureEvents, line 260")
+			call dispatch_HashMap_HashMap_HashMap_remove(EventListener_castMapCasters, unitToIndex(u_5), "when calling remove in ClosureEvents, line 261")
+			loop
+				exitwhen  not (listener != 0)
+				set t = listener
+				set listener = OnCastListener_next[listener]
+				call dispatch_OnCastListener_destroyOnCastListener(t, "when calling dispatch_OnCastListener_destroyOnCastListener in ClosureEvents, line 265")
+			endloop
+		endif
+		if dispatch_HashMap_HashMap_HashMap_has(EventListener_castMapCasters, unitToIndex(u_5), "when calling has in ClosureEvents, line 266") then
+			set listener_2 = dispatch_HashMap_HashMap_HashMap_get(EventListener_castMapCasters, unitToIndex(u_5), "when calling get in ClosureEvents, line 267")
+			loop
+				exitwhen  not (listener_2 != 0)
+				set t_2 = listener_2
+				set listener_2 = OnCastListener_next[listener_2]
+				call dispatch_OnCastListener_destroyOnCastListener(t_2, "when calling dispatch_OnCastListener_destroyOnCastListener in ClosureEvents, line 271")
+			endloop
+		endif
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function ClosureEvents_closure_impl_5 takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call unregisterEventsForUnit(getIndexingUnit(), "when calling unregisterEventsForUnit in ClosureEvents, line 288")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
 function bridge_ClosureEvents_closure_impl_4 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call ClosureEvents_closure_impl_5("ClosureEvents, line 293")
+	call ClosureEvents_closure_impl_5("ClosureEvents, line 288")
 endfunction
 
 function dispatch_OnCast_ClosureEvents_OnCast_fireEx takes integer this_7, integer id returns nothing
@@ -12387,8 +12309,8 @@ function dispatch_OnCastListener_ClosureEvents_OnCastListener_fire takes integer
 			call error("Called OnCastListener.fire on invalid object.", "when calling error in ClosureEvents, line 56")
 		endif
 	endif
-	if OnCastListener_typeId[this_7] <= 712 then
-		if OnCastListener_typeId[this_7] <= 711 then
+	if OnCastListener_typeId[this_7] <= 716 then
+		if OnCastListener_typeId[this_7] <= 715 then
 			call OnCast_fire(this_7, caster_2)
 		else
 			call OnPointCast_fire(this_7, caster_2)
@@ -12729,6 +12651,28 @@ function shouldIndex takes unit w_u returns boolean
 	return true
 endfunction
 
+function alloc_UnitIndex takes string stackPos returns integer
+	local integer this_7
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if UnitIndex_firstFree == 0 then
+		if UnitIndex_maxIndex < 32768 then
+			set UnitIndex_maxIndex = UnitIndex_maxIndex + 1
+			set this_7 = UnitIndex_maxIndex
+			set UnitIndex_typeId[this_7] = 742
+		else
+			call error("Out of memory: Could not create UnitIndex.", "when calling error in UnitIndexer, line 172")
+			set this_7 = 0
+		endif
+	else
+		set UnitIndex_firstFree = UnitIndex_firstFree - 1
+		set this_7 = UnitIndex_nextFree[UnitIndex_firstFree]
+		set UnitIndex_typeId[this_7] = 742
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this_7
+endfunction
+
 function popUnit_2 takes nothing returns nothing
 	set UnitIndexer_tempUnitsCount = UnitIndexer_tempUnitsCount - 1
 endfunction
@@ -12740,6 +12684,50 @@ endfunction
 
 function unit_setUserData takes unit this_7, integer data returns nothing
 	call SetUnitUserData(this_7, data)
+endfunction
+
+function construct_UnitIndex takes integer this_7, unit whichUnit returns nothing
+	set UnitIndex__unit[this_7] = whichUnit
+	call unit_setUserData(UnitIndex__unit[this_7], this_7)
+	call pushUnit_2(whichUnit)
+	call trigger_evaluate(UnitIndexer_onIndexTrigger)
+	call popUnit_2()
+endfunction
+
+function new_UnitIndex takes unit whichUnit, string stackPos returns integer
+	local integer this_7
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this_7 = alloc_UnitIndex("when calling alloc_UnitIndex in UnitIndexer, line 181")
+	call construct_UnitIndex(this_7, whichUnit)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this_7
+endfunction
+
+function unit_toUnitIndex takes unit this_7, string stackPos returns integer
+	local integer instance
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set instance = unit_getUserData(this_7)
+	if instance == 0 then
+		set instance = new_UnitIndex(this_7, "when calling new_UnitIndex in UnitIndexer, line 135")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return instance
+endfunction
+
+function UnitIndexer_closure_impl takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if shouldIndex(getEnterLeaveUnit()) then
+		call unit_toUnitIndex(getEnterLeaveUnit(), "when calling toUnitIndex in UnitIndexer, line 196")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_UnitIndexer_closure_impl takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call UnitIndexer_closure_impl("UnitIndexer, line 196")
 endfunction
 
 function UnitIndex_onDestroy takes integer this_7 returns nothing
@@ -12784,58 +12772,6 @@ function dispatch_UnitIndex_destroyUnitIndex takes integer this_7, string stackP
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function alloc_UnitIndex takes string stackPos returns integer
-	local integer this_7
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if UnitIndex_firstFree == 0 then
-		if UnitIndex_maxIndex < 32768 then
-			set UnitIndex_maxIndex = UnitIndex_maxIndex + 1
-			set this_7 = UnitIndex_maxIndex
-			set UnitIndex_typeId[this_7] = 738
-		else
-			call error("Out of memory: Could not create UnitIndex.", "when calling error in UnitIndexer, line 172")
-			set this_7 = 0
-		endif
-	else
-		set UnitIndex_firstFree = UnitIndex_firstFree - 1
-		set this_7 = UnitIndex_nextFree[UnitIndex_firstFree]
-		set UnitIndex_typeId[this_7] = 738
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return this_7
-endfunction
-
-function construct_UnitIndex takes integer this_7, unit whichUnit returns nothing
-	set UnitIndex__unit[this_7] = whichUnit
-	call unit_setUserData(UnitIndex__unit[this_7], this_7)
-	call pushUnit_2(whichUnit)
-	call trigger_evaluate(UnitIndexer_onIndexTrigger)
-	call popUnit_2()
-endfunction
-
-function new_UnitIndex takes unit whichUnit, string stackPos returns integer
-	local integer this_7
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set this_7 = alloc_UnitIndex("when calling alloc_UnitIndex in UnitIndexer, line 181")
-	call construct_UnitIndex(this_7, whichUnit)
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return this_7
-endfunction
-
-function unit_toUnitIndex takes unit this_7, string stackPos returns integer
-	local integer instance
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set instance = unit_getUserData(this_7)
-	if instance == 0 then
-		set instance = new_UnitIndex(this_7, "when calling new_UnitIndex in UnitIndexer, line 135")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return instance
-endfunction
-
 function unit_deindex takes unit this_7, string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -12849,7 +12785,7 @@ function unit_deindex takes unit this_7, string stackPos returns boolean
 	endif
 endfunction
 
-function UnitIndexer_closure_impl takes string stackPos returns nothing
+function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if shouldIndex(getEnterLeaveUnit()) then
@@ -12858,23 +12794,9 @@ function UnitIndexer_closure_impl takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function bridge_UnitIndexer_closure_impl takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl("UnitIndexer, line 197")
-endfunction
-
-function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if shouldIndex(getEnterLeaveUnit()) then
-		call unit_toUnitIndex(getEnterLeaveUnit(), "when calling toUnitIndex in UnitIndexer, line 196")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
 function bridge_UnitIndexer_closure_impl_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl_2("UnitIndexer, line 196")
+	call UnitIndexer_closure_impl_2("UnitIndexer, line 197")
 endfunction
 
 function Upkeep_closure_impl takes string stackPos returns nothing
@@ -13371,7 +13293,6 @@ function voteKick takes player who_votes, string who_kick, string stackPos retur
 	local integer kick_id
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set kick_id = Main_PLAYER_SLOTS - 1
 	if string_length(who_kick) <= 2 and string_toInt(who_kick) > 0 and string_toInt(who_kick) < 24 then
 		set kick_id = string_toInt(who_kick)
 	elseif dispatch_LinkedList_LinkedList_LinkedList_has(VoteKick_playerstr, stringToIndex(who_kick, "when calling stringToIndex in VoteKick, line 77"), "when calling has in VoteKick, line 77") then
@@ -13990,7 +13911,7 @@ function alloc_HashMap takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this_7 = Table_maxIndex
-			set Table_typeId[this_7] = 729
+			set Table_typeId[this_7] = 733
 		else
 			call error("Out of memory: Could not create HashMap.", "when calling error in HashMap, line 8")
 			set this_7 = 0
@@ -13998,7 +13919,7 @@ function alloc_HashMap takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this_7 = Table_nextFree[Table_firstFree]
-		set Table_typeId[this_7] = 729
+		set Table_typeId[this_7] = 733
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -14121,7 +14042,7 @@ function bridge_init_CityBuilded takes nothing returns boolean
 	return init_CityBuilded("CityBuilded, line 1")
 endfunction
 
-function alloc_CityManage_EventListener_line33 takes string stackPos returns integer
+function alloc_CityManage_EventListener_line35 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -14131,7 +14052,7 @@ function alloc_CityManage_EventListener_line33 takes string stackPos returns int
 			set this_7 = EventListener_maxIndex
 			set EventListener_typeId[this_7] = 664
 		else
-			call error("Out of memory: Could not create CityManage_EventListener_line33.", "when calling error in CityManage, line 33")
+			call error("Out of memory: Could not create CityManage_EventListener_line35.", "when calling error in CityManage, line 35")
 			set this_7 = 0
 		endif
 	else
@@ -14193,9 +14114,9 @@ function init_CityManage takes string stackPos returns boolean
 	set receiver_3 = receiver_2
 	call trigger_registerAnyUnitEvent(receiver_3, EVENT_PLAYER_UNIT_SPELL_CAST)
 	set temp_2 = EVENT_PLAYER_UNIT_ATTACKED
-	set clVar_2 = alloc_CityManage_EventListener_line33("when calling alloc_CityManage_EventListener_line33 in CityManage, line 33")
+	set clVar_2 = alloc_CityManage_EventListener_line35("when calling alloc_CityManage_EventListener_line35 in CityManage, line 35")
 	call construct_EventListener(clVar_2)
-	call EventListener_add(temp_2, clVar_2, "when calling add in CityManage, line 33")
+	call EventListener_add(temp_2, clVar_2, "when calling add in CityManage, line 35")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
 	set receiver_2 = null
@@ -14309,6 +14230,76 @@ function bridge_init_CityModifiers takes nothing returns boolean
 	return init_CityModifiers("CityModifiers, line 1")
 endfunction
 
+function alloc_Clerics_EventListener_line5 takes string stackPos returns integer
+	local integer this_7
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if EventListener_firstFree == 0 then
+		if EventListener_maxIndex < 32768 then
+			set EventListener_maxIndex = EventListener_maxIndex + 1
+			set this_7 = EventListener_maxIndex
+			set EventListener_typeId[this_7] = 667
+		else
+			call error("Out of memory: Could not create Clerics_EventListener_line5.", "when calling error in Clerics, line 5")
+			set this_7 = 0
+		endif
+	else
+		set EventListener_firstFree = EventListener_firstFree - 1
+		set this_7 = EventListener_nextFree[EventListener_firstFree]
+		set EventListener_typeId[this_7] = 667
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this_7
+endfunction
+
+function alloc_Clerics_EventListener_line7 takes string stackPos returns integer
+	local integer this_7
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if EventListener_firstFree == 0 then
+		if EventListener_maxIndex < 32768 then
+			set EventListener_maxIndex = EventListener_maxIndex + 1
+			set this_7 = EventListener_maxIndex
+			set EventListener_typeId[this_7] = 668
+		else
+			call error("Out of memory: Could not create Clerics_EventListener_line7.", "when calling error in Clerics, line 7")
+			set this_7 = 0
+		endif
+	else
+		set EventListener_firstFree = EventListener_firstFree - 1
+		set this_7 = EventListener_nextFree[EventListener_firstFree]
+		set EventListener_typeId[this_7] = 668
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this_7
+endfunction
+
+function init_Clerics takes string stackPos returns boolean
+	local integer clVar
+	local integer clVar_2
+	local playerunitevent temp
+	local playerunitevent temp_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set temp = EVENT_PLAYER_UNIT_ISSUED_ORDER
+	set clVar = alloc_Clerics_EventListener_line5("when calling alloc_Clerics_EventListener_line5 in Clerics, line 5")
+	call construct_EventListener(clVar)
+	call EventListener_add(temp, clVar, "when calling add in Clerics, line 5")
+	set temp_2 = EVENT_PLAYER_UNIT_SPELL_CAST
+	set clVar_2 = alloc_Clerics_EventListener_line7("when calling alloc_Clerics_EventListener_line7 in Clerics, line 7")
+	call construct_EventListener(clVar_2)
+	call EventListener_add(temp_2, clVar_2, "when calling add in Clerics, line 7")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set temp = null
+	set temp_2 = null
+	return true
+endfunction
+
+function bridge_init_Clerics takes nothing returns boolean
+	set wurst_stack_depth = 0
+	return init_Clerics("Clerics, line 1")
+endfunction
+
 function alloc_ClosureEvents_CallbackSingle_line290 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
@@ -14395,7 +14386,7 @@ function alloc_Table takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this_7 = Table_maxIndex
-			set Table_typeId[this_7] = 728
+			set Table_typeId[this_7] = 732
 		else
 			call error("Out of memory: Could not create Table.", "when calling error in Table, line 6")
 			set this_7 = 0
@@ -14403,7 +14394,7 @@ function alloc_Table takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this_7 = Table_nextFree[Table_firstFree]
-		set Table_typeId[this_7] = 728
+		set Table_typeId[this_7] = 732
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -15026,7 +15017,7 @@ function bridge_init_DummyRecycler takes nothing returns boolean
 	return init_DummyRecycler("DummyRecycler, line 1")
 endfunction
 
-function alloc_Economy_CallbackPeriodic_line48 takes string stackPos returns integer
+function alloc_Economy_CallbackPeriodic_line47 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -15036,7 +15027,7 @@ function alloc_Economy_CallbackPeriodic_line48 takes string stackPos returns int
 			set this_7 = CallbackPeriodic_maxIndex
 			set CallbackPeriodic_typeId[this_7] = 635
 		else
-			call error("Out of memory: Could not create Economy_CallbackPeriodic_line48.", "when calling error in Economy, line 48")
+			call error("Out of memory: Could not create Economy_CallbackPeriodic_line47.", "when calling error in Economy, line 47")
 			set this_7 = 0
 		endif
 	else
@@ -15048,7 +15039,7 @@ function alloc_Economy_CallbackPeriodic_line48 takes string stackPos returns int
 	return this_7
 endfunction
 
-function alloc_Economy_CallbackPeriodic_line55 takes string stackPos returns integer
+function alloc_Economy_CallbackPeriodic_line54 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -15058,7 +15049,7 @@ function alloc_Economy_CallbackPeriodic_line55 takes string stackPos returns int
 			set this_7 = CallbackPeriodic_maxIndex
 			set CallbackPeriodic_typeId[this_7] = 636
 		else
-			call error("Out of memory: Could not create Economy_CallbackPeriodic_line55.", "when calling error in Economy, line 55")
+			call error("Out of memory: Could not create Economy_CallbackPeriodic_line54.", "when calling error in Economy, line 54")
 			set this_7 = 0
 		endif
 	else
@@ -15071,24 +15062,34 @@ function alloc_Economy_CallbackPeriodic_line55 takes string stackPos returns int
 endfunction
 
 function init_Economy takes string stackPos returns boolean
+	local integer i_2
+	local integer temp
 	local integer clVar
 	local integer clVar_2
-	local real temp
 	local real temp_2
+	local real temp_3
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set Economy_kIncomeCountRate = 120.0
 	set Economy_kIncomeCountToMultiboardRate = 10.0
 	set Economy_kStepTime = 0.5
 	set Economy_income_counting_i = 0
-	set temp = Economy_kIncomeCountToMultiboardRate / 30.
-	set clVar = alloc_Economy_CallbackPeriodic_line48("when calling alloc_Economy_CallbackPeriodic_line48 in Economy, line 48")
+	set i_2 = 0
+	set temp = Main_PLAYER_SLOTS - 1
+	loop
+		exitwhen i_2 > temp
+		set Economy_gold_adder[i_2] = 0
+		set Economy_lumb_adder[i_2] = 0
+		set i_2 = i_2 + 1
+	endloop
+	set temp_2 = Economy_kIncomeCountToMultiboardRate / 30.
+	set clVar = alloc_Economy_CallbackPeriodic_line47("when calling alloc_Economy_CallbackPeriodic_line47 in Economy, line 47")
 	call construct_CallbackPeriodic(clVar)
-	call doPeriodically(temp, clVar, "when calling doPeriodically in Economy, line 48")
-	set temp_2 = Economy_kIncomeCountToMultiboardRate
-	set clVar_2 = alloc_Economy_CallbackPeriodic_line55("when calling alloc_Economy_CallbackPeriodic_line55 in Economy, line 55")
+	call doPeriodically(temp_2, clVar, "when calling doPeriodically in Economy, line 47")
+	set temp_3 = Economy_kIncomeCountToMultiboardRate
+	set clVar_2 = alloc_Economy_CallbackPeriodic_line54("when calling alloc_Economy_CallbackPeriodic_line54 in Economy, line 54")
 	call construct_CallbackPeriodic(clVar_2)
-	call doPeriodically(temp_2, clVar_2, "when calling doPeriodically in Economy, line 55")
+	call doPeriodically(temp_3, clVar_2, "when calling doPeriodically in Economy, line 54")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return true
 endfunction
@@ -15113,7 +15114,7 @@ function bridge_init_EventHelper takes nothing returns boolean
 	return init_EventHelper("EventHelper, line 1")
 endfunction
 
-function alloc_Garissons_EventListener_line6 takes string stackPos returns integer
+function alloc_Garissons_EventListener_line7 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -15121,15 +15122,15 @@ function alloc_Garissons_EventListener_line6 takes string stackPos returns integ
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 667
+			set EventListener_typeId[this_7] = 669
 		else
-			call error("Out of memory: Could not create Garissons_EventListener_line6.", "when calling error in Garissons, line 6")
+			call error("Out of memory: Could not create Garissons_EventListener_line7.", "when calling error in Garissons, line 7")
 			set this_7 = 0
 		endif
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 667
+		set EventListener_typeId[this_7] = 669
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -15141,9 +15142,9 @@ function init_Garissons takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set temp = EVENT_PLAYER_UNIT_ATTACKED
-	set clVar = alloc_Garissons_EventListener_line6("when calling alloc_Garissons_EventListener_line6 in Garissons, line 6")
+	set clVar = alloc_Garissons_EventListener_line7("when calling alloc_Garissons_EventListener_line7 in Garissons, line 7")
 	call construct_EventListener(clVar)
-	call EventListener_add(temp, clVar, "when calling add in Garissons, line 6")
+	call EventListener_add(temp, clVar, "when calling add in Garissons, line 7")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set temp = null
 	return true
@@ -15162,7 +15163,7 @@ function alloc_LimitEncampments_EventListener_line12 takes string stackPos retur
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 668
+			set EventListener_typeId[this_7] = 670
 		else
 			call error("Out of memory: Could not create LimitEncampments_EventListener_line12.", "when calling error in LimitEncampments, line 12")
 			set this_7 = 0
@@ -15170,7 +15171,7 @@ function alloc_LimitEncampments_EventListener_line12 takes string stackPos retur
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 668
+		set EventListener_typeId[this_7] = 670
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -15184,7 +15185,7 @@ function alloc_LimitEncampments_EventListener_line8 takes string stackPos return
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 669
+			set EventListener_typeId[this_7] = 671
 		else
 			call error("Out of memory: Could not create LimitEncampments_EventListener_line8.", "when calling error in LimitEncampments, line 8")
 			set this_7 = 0
@@ -15192,7 +15193,7 @@ function alloc_LimitEncampments_EventListener_line8 takes string stackPos return
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 669
+		set EventListener_typeId[this_7] = 671
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -15232,7 +15233,7 @@ function alloc_LimitMercenaryCamps_EventListener_line12 takes string stackPos re
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 670
+			set EventListener_typeId[this_7] = 672
 		else
 			call error("Out of memory: Could not create LimitMercenaryCamps_EventListener_line12.", "when calling error in LimitMercenaryCamps, line 12")
 			set this_7 = 0
@@ -15240,7 +15241,7 @@ function alloc_LimitMercenaryCamps_EventListener_line12 takes string stackPos re
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 670
+		set EventListener_typeId[this_7] = 672
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -15254,7 +15255,7 @@ function alloc_LimitMercenaryCamps_EventListener_line8 takes string stackPos ret
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 671
+			set EventListener_typeId[this_7] = 673
 		else
 			call error("Out of memory: Could not create LimitMercenaryCamps_EventListener_line8.", "when calling error in LimitMercenaryCamps, line 8")
 			set this_7 = 0
@@ -15262,7 +15263,7 @@ function alloc_LimitMercenaryCamps_EventListener_line8 takes string stackPos ret
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 671
+		set EventListener_typeId[this_7] = 673
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -15375,13 +15376,6 @@ function countActivePlayers takes nothing returns integer
 	return c
 endfunction
 
-function dbg takes string msg returns nothing
-	if ( not Main_dbg_msg) and ( not Main_dbg_mode) then
-		return
-	endif
-	call DisplayTimedTextToPlayer(Player_players[Main_dbg_player], 0., 0., 60., msg)
-endfunction
-
 function alloc_PlayerStats takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
@@ -15390,7 +15384,7 @@ function alloc_PlayerStats takes string stackPos returns integer
 		if PlayerStats_maxIndex < 32768 then
 			set PlayerStats_maxIndex = PlayerStats_maxIndex + 1
 			set this_7 = PlayerStats_maxIndex
-			set PlayerStats_typeId[this_7] = 714
+			set PlayerStats_typeId[this_7] = 718
 		else
 			call error("Out of memory: Could not create PlayerStats.", "when calling error in PlayerStats, line 6")
 			set this_7 = 0
@@ -15398,7 +15392,7 @@ function alloc_PlayerStats takes string stackPos returns integer
 	else
 		set PlayerStats_firstFree = PlayerStats_firstFree - 1
 		set this_7 = PlayerStats_nextFree[PlayerStats_firstFree]
-		set PlayerStats_typeId[this_7] = 714
+		set PlayerStats_typeId[this_7] = 718
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -15792,7 +15786,7 @@ function alloc_MassControl_EventListener_line22 takes string stackPos returns in
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 672
+			set EventListener_typeId[this_7] = 674
 		else
 			call error("Out of memory: Could not create MassControl_EventListener_line22.", "when calling error in MassControl, line 22")
 			set this_7 = 0
@@ -15800,7 +15794,7 @@ function alloc_MassControl_EventListener_line22 takes string stackPos returns in
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 672
+		set EventListener_typeId[this_7] = 674
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -15814,7 +15808,7 @@ function alloc_MassControl_EventListener_line32 takes string stackPos returns in
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 673
+			set EventListener_typeId[this_7] = 675
 		else
 			call error("Out of memory: Could not create MassControl_EventListener_line32.", "when calling error in MassControl, line 32")
 			set this_7 = 0
@@ -15822,7 +15816,7 @@ function alloc_MassControl_EventListener_line32 takes string stackPos returns in
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 673
+		set EventListener_typeId[this_7] = 675
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -16015,7 +16009,7 @@ function alloc_NoShipsNearRivers_EventListener_line7 takes string stackPos retur
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 674
+			set EventListener_typeId[this_7] = 676
 		else
 			call error("Out of memory: Could not create NoShipsNearRivers_EventListener_line7.", "when calling error in NoShipsNearRivers, line 7")
 			set this_7 = 0
@@ -16023,7 +16017,7 @@ function alloc_NoShipsNearRivers_EventListener_line7 takes string stackPos retur
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 674
+		set EventListener_typeId[this_7] = 676
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -16056,7 +16050,7 @@ function alloc_NoStarvationOnBoat_EventListener_line6 takes string stackPos retu
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 675
+			set EventListener_typeId[this_7] = 677
 		else
 			call error("Out of memory: Could not create NoStarvationOnBoat_EventListener_line6.", "when calling error in NoStarvationOnBoat, line 6")
 			set this_7 = 0
@@ -16064,7 +16058,7 @@ function alloc_NoStarvationOnBoat_EventListener_line6 takes string stackPos retu
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 675
+		set EventListener_typeId[this_7] = 677
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -16140,7 +16134,7 @@ function bridge_init_ObjectIdGenerator takes nothing returns boolean
 	return init_ObjectIdGenerator("ObjectIdGenerator, line 1")
 endfunction
 
-function alloc_OnPlayerLeave_EventListener_line6 takes string stackPos returns integer
+function alloc_OnPlayerLeave_EventListener_line5 takes string stackPos returns integer
 	local integer this_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -16148,15 +16142,15 @@ function alloc_OnPlayerLeave_EventListener_line6 takes string stackPos returns i
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 676
+			set EventListener_typeId[this_7] = 678
 		else
-			call error("Out of memory: Could not create OnPlayerLeave_EventListener_line6.", "when calling error in OnPlayerLeave, line 6")
+			call error("Out of memory: Could not create OnPlayerLeave_EventListener_line5.", "when calling error in OnPlayerLeave, line 5")
 			set this_7 = 0
 		endif
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 676
+		set EventListener_typeId[this_7] = 678
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -16168,9 +16162,9 @@ function init_OnPlayerLeave takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set temp = EVENT_PLAYER_LEAVE
-	set clVar = alloc_OnPlayerLeave_EventListener_line6("when calling alloc_OnPlayerLeave_EventListener_line6 in OnPlayerLeave, line 6")
+	set clVar = alloc_OnPlayerLeave_EventListener_line5("when calling alloc_OnPlayerLeave_EventListener_line5 in OnPlayerLeave, line 5")
 	call construct_EventListener(clVar)
-	call EventListener_add(temp, clVar, "when calling add in OnPlayerLeave, line 6")
+	call EventListener_add(temp, clVar, "when calling add in OnPlayerLeave, line 5")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set temp = null
 	return true
@@ -16234,6 +16228,106 @@ endfunction
 function bridge_init_OnUnitEnterLeave takes nothing returns boolean
 	set wurst_stack_depth = 0
 	return init_OnUnitEnterLeave("OnUnitEnterLeave, line 1")
+endfunction
+
+function alloc_OreCapture_EventListener_line14 takes string stackPos returns integer
+	local integer this_7
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if EventListener_firstFree == 0 then
+		if EventListener_maxIndex < 32768 then
+			set EventListener_maxIndex = EventListener_maxIndex + 1
+			set this_7 = EventListener_maxIndex
+			set EventListener_typeId[this_7] = 679
+		else
+			call error("Out of memory: Could not create OreCapture_EventListener_line14.", "when calling error in OreCapture, line 14")
+			set this_7 = 0
+		endif
+	else
+		set EventListener_firstFree = EventListener_firstFree - 1
+		set this_7 = EventListener_nextFree[EventListener_firstFree]
+		set EventListener_typeId[this_7] = 679
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this_7
+endfunction
+
+function alloc_OreCapture_EventListener_line21 takes string stackPos returns integer
+	local integer this_7
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if EventListener_firstFree == 0 then
+		if EventListener_maxIndex < 32768 then
+			set EventListener_maxIndex = EventListener_maxIndex + 1
+			set this_7 = EventListener_maxIndex
+			set EventListener_typeId[this_7] = 680
+		else
+			call error("Out of memory: Could not create OreCapture_EventListener_line21.", "when calling error in OreCapture, line 21")
+			set this_7 = 0
+		endif
+	else
+		set EventListener_firstFree = EventListener_firstFree - 1
+		set this_7 = EventListener_nextFree[EventListener_firstFree]
+		set EventListener_typeId[this_7] = 680
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this_7
+endfunction
+
+function alloc_OreCapture_EventListener_line9 takes string stackPos returns integer
+	local integer this_7
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if EventListener_firstFree == 0 then
+		if EventListener_maxIndex < 32768 then
+			set EventListener_maxIndex = EventListener_maxIndex + 1
+			set this_7 = EventListener_maxIndex
+			set EventListener_typeId[this_7] = 681
+		else
+			call error("Out of memory: Could not create OreCapture_EventListener_line9.", "when calling error in OreCapture, line 9")
+			set this_7 = 0
+		endif
+	else
+		set EventListener_firstFree = EventListener_firstFree - 1
+		set this_7 = EventListener_nextFree[EventListener_firstFree]
+		set EventListener_typeId[this_7] = 681
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this_7
+endfunction
+
+function init_OreCapture takes string stackPos returns boolean
+	local integer clVar
+	local integer clVar_2
+	local integer clVar_3
+	local playerunitevent temp
+	local playerunitevent temp_2
+	local playerunitevent temp_3
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set OreCapture_kLifePercentToCapture = 80.0
+	set temp = EVENT_PLAYER_UNIT_DEATH
+	set clVar = alloc_OreCapture_EventListener_line9("when calling alloc_OreCapture_EventListener_line9 in OreCapture, line 9")
+	call construct_EventListener(clVar)
+	call EventListener_add(temp, clVar, "when calling add in OreCapture, line 9")
+	set temp_2 = EVENT_PLAYER_UNIT_UPGRADE_FINISH
+	set clVar_2 = alloc_OreCapture_EventListener_line14("when calling alloc_OreCapture_EventListener_line14 in OreCapture, line 14")
+	call construct_EventListener(clVar_2)
+	call EventListener_add(temp_2, clVar_2, "when calling add in OreCapture, line 14")
+	set temp_3 = EVENT_PLAYER_UNIT_ATTACKED
+	set clVar_3 = alloc_OreCapture_EventListener_line21("when calling alloc_OreCapture_EventListener_line21 in OreCapture, line 21")
+	call construct_EventListener(clVar_3)
+	call EventListener_add(temp_3, clVar_3, "when calling add in OreCapture, line 21")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set temp = null
+	set temp_2 = null
+	set temp_3 = null
+	return true
+endfunction
+
+function bridge_init_OreCapture takes nothing returns boolean
+	set wurst_stack_depth = 0
+	return init_OreCapture("OreCapture, line 1")
 endfunction
 
 function alloc_Preloader_CallbackSingle_line54 takes string stackPos returns integer
@@ -16313,7 +16407,7 @@ function alloc_RangeChecks_EventListener_line11 takes string stackPos returns in
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 677
+			set EventListener_typeId[this_7] = 682
 		else
 			call error("Out of memory: Could not create RangeChecks_EventListener_line11.", "when calling error in RangeChecks, line 11")
 			set this_7 = 0
@@ -16321,7 +16415,7 @@ function alloc_RangeChecks_EventListener_line11 takes string stackPos returns in
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 677
+		set EventListener_typeId[this_7] = 682
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -16625,7 +16719,7 @@ function alloc_Taxation_EventListener_line6 takes string stackPos returns intege
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 678
+			set EventListener_typeId[this_7] = 683
 		else
 			call error("Out of memory: Could not create Taxation_EventListener_line6.", "when calling error in Taxation, line 6")
 			set this_7 = 0
@@ -16633,7 +16727,7 @@ function alloc_Taxation_EventListener_line6 takes string stackPos returns intege
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 678
+		set EventListener_typeId[this_7] = 683
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -16738,28 +16832,6 @@ function asList_12 takes integer ts_0, integer ts_1, integer ts_2, integer ts_3,
 	return ll
 endfunction
 
-function asList_13 takes integer ts_0, integer ts_1, integer ts_2, integer ts_3, integer ts_4, integer ts_5, integer ts_6, integer ts_7, integer ts_8, integer ts_9, integer ts_10, integer ts_11, integer ts_12, string stackPos returns integer
-	local integer ll
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set ll = new_LinkedList("when calling new_LinkedList in LinkedList, line 391")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_0, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_1, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_2, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_3, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_4, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_5, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_6, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_7, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_8, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_9, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_10, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_11, "when calling add in LinkedList, line 393")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_12, "when calling add in LinkedList, line 393")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return ll
-endfunction
-
 function asList_15 takes integer ts_0, integer ts_1, integer ts_2, integer ts_3, integer ts_4, integer ts_5, integer ts_6, integer ts_7, integer ts_8, integer ts_9, integer ts_10, integer ts_11, integer ts_12, integer ts_13, integer ts_14, string stackPos returns integer
 	local integer ll
 	set wurst_stack[wurst_stack_depth] = stackPos
@@ -16838,6 +16910,22 @@ function asList_22 takes integer ts_0, integer ts_1, integer ts_2, integer ts_3,
 	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_19, "when calling add in LinkedList, line 393")
 	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_20, "when calling add in LinkedList, line 393")
 	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_21, "when calling add in LinkedList, line 393")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return ll
+endfunction
+
+function asList_7 takes integer ts_0, integer ts_1, integer ts_2, integer ts_3, integer ts_4, integer ts_5, integer ts_6, string stackPos returns integer
+	local integer ll
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set ll = new_LinkedList("when calling new_LinkedList in LinkedList, line 391")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_0, "when calling add in LinkedList, line 393")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_1, "when calling add in LinkedList, line 393")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_2, "when calling add in LinkedList, line 393")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_3, "when calling add in LinkedList, line 393")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_4, "when calling add in LinkedList, line 393")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_5, "when calling add in LinkedList, line 393")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(ll, ts_6, "when calling add in LinkedList, line 393")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return ll
 endfunction
@@ -16963,7 +17051,7 @@ function init_Units takes string stackPos returns boolean
 	set Units_uGoldMine = 1747989305
 	set Units_uIronMine = 1747989316
 	set Units_uSilverMine = 1747989315
-	set Units_usOres = asList_4(Units_uCopperMine, Units_uGoldMine, Units_uIronMine, Units_uSilverMine, "when calling asList in Units, line 118")
+	set Units_uMines = asList_4(Units_uCopperMine, Units_uGoldMine, Units_uIronMine, Units_uSilverMine, "when calling asList in Units, line 118")
 	set Units_usIncomeOres = new_HashMap("when calling new_HashMap in Units, line 119")
 	set Units_kStartingUnits[0] = asList_18(Units_uPeasantWE, Units_uPeasantWE, Units_uPeasantWE, Units_uPeasantWE, Units_uPeasantWE, Units_uPeasantWE, Units_uWorkerWE, Units_uWorkerWE, Units_uWorkerWE, Units_uWorkerWE, Units_uGeneralWE, Units_uSpearmanWE, Units_uSpearmanWE, Units_uSpearmanWE, Units_uSpearmanWE, Units_uSpearmanWE, Units_uSpearmanWE, Units_uSupplyHorse, "when calling asList in Units, line 126")
 	set Units_kStartingUnits[1] = asList_18(Units_uPeasantEE, Units_uPeasantEE, Units_uPeasantEE, Units_uPeasantEE, Units_uPeasantEE, Units_uPeasantEE, Units_uWorkerEE, Units_uWorkerEE, Units_uWorkerEE, Units_uWorkerEE, Units_uGeneralEE, Units_uSpearmanEE, Units_uSpearmanEE, Units_uSpearmanEE, Units_uSpearmanEE, Units_uSpearmanEE, Units_uSpearmanEE, Units_uSupplyHorse, "when calling asList in Units, line 132")
@@ -16973,9 +17061,9 @@ function init_Units takes string stackPos returns boolean
 	set Units_uCapitols = asList_12(Units_uCapitolWE1, Units_uCapitolWE2, Units_uCapitolWE3, Units_uCapitolEE1, Units_uCapitolEE2, Units_uCapitolEE3, Units_uCapitolME1, Units_uCapitolME2, Units_uCapitolME3, Units_uCapitolBZ1, Units_uCapitolBZ2, Units_uCapitolBZ3, "when calling asList in Units, line 167")
 	set Units_uCastles = asList_12(Units_uCastleWE1, Units_uCastleWE2, Units_uCastleWE3, Units_uCastleEE1, Units_uCastleEE2, Units_uCastleEE3, Units_uCastleME1, Units_uCastleME2, Units_uCastleME3, Units_uCastleBZ1, Units_uCastleBZ2, Units_uCastleBZ3, "when calling asList in Units, line 182")
 	set Units_kCityTypes = asList_15(Units_uCapitolWE1, Units_uCapitolWE2, Units_uCapitolWE3, Units_uCapitolEE1, Units_uCapitolEE2, Units_uCapitolEE3, Units_uCapitolME1, Units_uCapitolME2, Units_uCapitolME3, Units_uCapitolBZ1, Units_uCapitolBZ2, Units_uCapitolBZ3, Units_uAutonomousTH, Units_uTH, Units_uCH, "when calling asList in Units, line 197")
-	set Units_uRebels[0] = asList_9(Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uSupplyHorse, "when calling asList in Units, line 206")
-	set Units_uRebels[1] = asList_11(Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uSupplyHorse, "when calling asList in Units, line 207")
-	set Units_uRebels[2] = asList_13(Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelRam, Units_uRebelRam, Units_uSupplyHorse, "when calling asList in Units, line 208")
+	set Units_uRebels[0] = asList_7(Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uSupplyHorse, "when calling asList in Units, line 206")
+	set Units_uRebels[1] = asList_9(Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uSupplyHorse, "when calling asList in Units, line 207")
+	set Units_uRebels[2] = asList_11(Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelSpreading, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelKnight, Units_uRebelRam, Units_uRebelRam, Units_uSupplyHorse, "when calling asList in Units, line 208")
 	set Units_kRiverRects = asList_22(rectToIndex(gg_rct_SHIP_Ankara_Lake), rectToIndex(gg_rct_SHIP_Caspian_Sea_and_Mesapotamia), rectToIndex(gg_rct_SHIP_Danube_1), rectToIndex(gg_rct_SHIP_Danube_2), rectToIndex(gg_rct_SHIP_French_River), rectToIndex(gg_rct_SHIP_Italy), rectToIndex(gg_rct_SHIP_Lake_Africa), rectToIndex(gg_rct_SHIP_Lake_Egypt), rectToIndex(gg_rct_SHIP_Lower_Nile), rectToIndex(gg_rct_SHIP_Mesapotamia), rectToIndex(gg_rct_SHIP_Nile_2), rectToIndex(gg_rct_SHIP_Region_Giant), rectToIndex(gg_rct_SHIP_River), rectToIndex(gg_rct_SHIP_River_GIANT), rectToIndex(gg_rct_SHIP_Seine_River), rectToIndex(gg_rct_SHIP_Spannish_River), rectToIndex(gg_rct_SHIP_Spannish_River_2), rectToIndex(gg_rct_SHIP_Spannish_River_3), rectToIndex(gg_rct_SHIP_Spannish_River_4), rectToIndex(gg_rct_SHIP_Swedish_Lake), rectToIndex(gg_rct_SHIP_Thames), rectToIndex(gg_rct_SHIP_Upper_Nile), "when calling asList in Units, line 211")
 	set receiver = Units_usIncomeOres
 	call dispatch_HashMap_HashMap_HashMap_put(receiver, Units_uCopperMine, 15, "when calling put in Units, line 238")
@@ -17002,7 +17090,7 @@ function alloc_Upkeep_EventListener_line28 takes string stackPos returns integer
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 679
+			set EventListener_typeId[this_7] = 684
 		else
 			call error("Out of memory: Could not create Upkeep_EventListener_line28.", "when calling error in Upkeep, line 28")
 			set this_7 = 0
@@ -17010,7 +17098,7 @@ function alloc_Upkeep_EventListener_line28 takes string stackPos returns integer
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 679
+		set EventListener_typeId[this_7] = 684
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -17024,7 +17112,7 @@ function alloc_Upkeep_EventListener_line6 takes string stackPos returns integer
 		if EventListener_maxIndex < 32768 then
 			set EventListener_maxIndex = EventListener_maxIndex + 1
 			set this_7 = EventListener_maxIndex
-			set EventListener_typeId[this_7] = 680
+			set EventListener_typeId[this_7] = 685
 		else
 			call error("Out of memory: Could not create Upkeep_EventListener_line6.", "when calling error in Upkeep, line 6")
 			set this_7 = 0
@@ -17032,7 +17120,7 @@ function alloc_Upkeep_EventListener_line6 takes string stackPos returns integer
 	else
 		set EventListener_firstFree = EventListener_firstFree - 1
 		set this_7 = EventListener_nextFree[EventListener_firstFree]
-		set EventListener_typeId[this_7] = 680
+		set EventListener_typeId[this_7] = 685
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -17110,7 +17198,7 @@ function alloc_HashSet takes string stackPos returns integer
 		if HashList_maxIndex < 32768 then
 			set HashList_maxIndex = HashList_maxIndex + 1
 			set this_7 = HashList_maxIndex
-			set HashList_typeId[this_7] = 693
+			set HashList_typeId[this_7] = 697
 		else
 			call error("Out of memory: Could not create HashSet.", "when calling error in HashSet, line 5")
 			set this_7 = 0
@@ -17118,7 +17206,7 @@ function alloc_HashSet takes string stackPos returns integer
 	else
 		set HashList_firstFree = HashList_firstFree - 1
 		set this_7 = HashList_nextFree[HashList_firstFree]
-		set HashList_typeId[this_7] = 693
+		set HashList_typeId[this_7] = 697
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this_7
@@ -17394,8 +17482,8 @@ function init_MagicFunctions takes nothing returns boolean
 endfunction
 
 function init_Main takes nothing returns boolean
-	set Main_dbg_msg = false
-	set Main_dbg_mode = false
+	set Main_dbg_msg = true
+	set Main_dbg_mode = true
 	set Main_dbg_player = 0
 	set Main_PLAYER_SLOTS = 24
 	set Main_kStartGold = 200
@@ -17618,6 +17706,7 @@ function init_Revolts takes nothing returns boolean
 	set Revolts_kPOtoRevolt1 = 50.0
 	set Revolts_kPOtoRevolt2 = 30.0
 	set Revolts_kPOtoRevolt3 = 15.0
+	set Revolts_k100ChanceOfDoubleRevoltComesWithNPop = 150000
 	set Revolts_kCityMinTimeToRevolt = Main_TURN_TIME / 2.
 	return true
 endfunction
@@ -17705,6 +17794,7 @@ function init_Strings takes nothing returns boolean
 	set Strings_ksTooCloseCastle = "You cannot build castles too close to each other."
 	set Strings_ksTooManyEncampments = "You cannot build more than 3 encampments."
 	set Strings_ksTooManyMercenaryCamps = "You cannot build more than 3 mercenary camps."
+	set Strings_ksCannotConvertBelievers = "Clerics cannot convert someone who professes same religion as you."
 	set Strings_ksRevolt = "A violent mob has appeared near the gates of "
 	set Strings_kDiscordTime = 20.0
 	set Strings_ksDiscord = "Enjoying the map? Join the |cffe100ffofficial CoE discord channel|r! Link: |cffffff00discord.gg/V6kmxsy|r"
@@ -18015,13 +18105,9 @@ function initGlobals takes nothing returns nothing
 	set gg_trg_Melee_Initialization = null
 	set gg_trg_F9 = null
 	set gg_trg_Capturing_Ore_15g = null
-	set gg_trg_Capturing_Mine_15g = null
 	set gg_trg_Capturing_Ore_25g = null
-	set gg_trg_Capturing_Mine_25g = null
 	set gg_trg_Capturing_Ore_40g = null
-	set gg_trg_Capturing_Mine_40g = null
 	set gg_trg_Capturing_Ore_50g = null
-	set gg_trg_Capturing_Mine_50g = null
 	set gg_trg_Spy_Sabotage_on_buildings = null
 	set gg_trg_Convert_V2 = null
 	set gg_trg_Gate_Opening = null
@@ -18193,20 +18279,12 @@ function initGlobals takes nothing returns nothing
 	set ref_function_Trig_F9_Actions = function Trig_F9_Actions
 	set ref_function_Trig_Capturing_Ore_15g_Conditions = function Trig_Capturing_Ore_15g_Conditions
 	set ref_function_Trig_Capturing_Ore_15g_Actions = function Trig_Capturing_Ore_15g_Actions
-	set ref_function_Trig_Capturing_Mine_15g_Conditions = function Trig_Capturing_Mine_15g_Conditions
-	set ref_function_Trig_Capturing_Mine_15g_Actions = function Trig_Capturing_Mine_15g_Actions
 	set ref_function_Trig_Capturing_Ore_25g_Conditions = function Trig_Capturing_Ore_25g_Conditions
 	set ref_function_Trig_Capturing_Ore_25g_Actions = function Trig_Capturing_Ore_25g_Actions
-	set ref_function_Trig_Capturing_Mine_25g_Conditions = function Trig_Capturing_Mine_25g_Conditions
-	set ref_function_Trig_Capturing_Mine_25g_Actions = function Trig_Capturing_Mine_25g_Actions
 	set ref_function_Trig_Capturing_Ore_40g_Conditions = function Trig_Capturing_Ore_40g_Conditions
 	set ref_function_Trig_Capturing_Ore_40g_Actions = function Trig_Capturing_Ore_40g_Actions
-	set ref_function_Trig_Capturing_Mine_40g_Conditions = function Trig_Capturing_Mine_40g_Conditions
-	set ref_function_Trig_Capturing_Mine_40g_Actions = function Trig_Capturing_Mine_40g_Actions
 	set ref_function_Trig_Capturing_Ore_50g_Conditions = function Trig_Capturing_Ore_50g_Conditions
 	set ref_function_Trig_Capturing_Ore_50g_Actions = function Trig_Capturing_Ore_50g_Actions
-	set ref_function_Trig_Capturing_Mine_50g_Conditions = function Trig_Capturing_Mine_50g_Conditions
-	set ref_function_Trig_Capturing_Mine_50g_Actions = function Trig_Capturing_Mine_50g_Actions
 	set ref_function_Trig_Spy_Sabotage_on_buildings_Conditions = function Trig_Spy_Sabotage_on_buildings_Conditions
 	set ref_function_Trig_Spy_Sabotage_on_buildings_Actions = function Trig_Spy_Sabotage_on_buildings_Actions
 	set ref_function_Trig_Convert_V2_Conditions = function Trig_Convert_V2_Conditions
@@ -18534,6 +18612,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_init_CastleCapture = function bridge_init_CastleCapture
 	set ref_function_bridge_init_CityBuilded = function bridge_init_CityBuilded
 	set ref_function_bridge_init_CityManage = function bridge_init_CityManage
+	set ref_function_bridge_init_Clerics = function bridge_init_Clerics
 	set ref_function_init_HashSet = function init_HashSet
 	set ref_function_bridge_init_VoteKick = function bridge_init_VoteKick
 	set ref_function_init_Commands = function init_Commands
@@ -18551,6 +18630,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_init_NoShipsNearRivers = function bridge_init_NoShipsNearRivers
 	set ref_function_bridge_init_NoStarvationOnBoat = function bridge_init_NoStarvationOnBoat
 	set ref_function_bridge_init_OnPlayerLeave = function bridge_init_OnPlayerLeave
+	set ref_function_bridge_init_OreCapture = function bridge_init_OreCapture
 	set ref_function_bridge_init_RangeChecks = function bridge_init_RangeChecks
 	set ref_function_bridge_init_Religion = function bridge_init_Religion
 	set ref_function_bridge_init_Taxation = function bridge_init_Taxation
@@ -18558,7 +18638,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_CityManage_closure_impl = function CityManage_closure_impl
 	set ref_function_bridge_CityManage_closure_impl = function bridge_CityManage_closure_impl
 	set ref_function_ClosureEvents_closure_impl = function ClosureEvents_closure_impl
-	set ref_function_bridge_ClosureEvents_closure_impl = function bridge_ClosureEvents_closure_impl
+	set ref_function_bridge_ClosureEvents_closure_impl = function bridge_ClosureEvents_closure_impl_4
 	set ref_function_bridge_EventListener_generalEventCallback = function bridge_EventListener_generalEventCallback
 	set ref_function_bridge_ClosureForGroups_closure_impl = function bridge_ClosureForGroups_closure_impl
 	set ref_function_cond = function cond_2
@@ -18571,17 +18651,17 @@ function initGlobals takes nothing returns nothing
 	set ref_function_Main_closure_impl = function Main_closure_impl
 	set ref_function_bridge_cinematicTutorial = function bridge_cinematicTutorial
 	set ref_function_bridge_RegisterEvents_closure_impl = function bridge_RegisterEvents_closure_impl
-	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl_2
-	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl
+	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl
+	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl_2
 	set ref_function_bridge_Upkeep_closure_impl = function bridge_Upkeep_closure_impl
-	set ref_function_bridge_ClosureEvents_closure_impl_2 = function bridge_ClosureEvents_closure_impl_3
-	set ref_function_bridge_ClosureEvents_closure_impl_3 = function bridge_ClosureEvents_closure_impl_2
-	set ref_function_bridge_ClosureEvents_closure_impl_4 = function bridge_ClosureEvents_closure_impl_4
+	set ref_function_bridge_ClosureEvents_closure_impl_2 = function bridge_ClosureEvents_closure_impl_2
+	set ref_function_bridge_ClosureEvents_closure_impl_3 = function bridge_ClosureEvents_closure_impl_3
+	set ref_function_bridge_ClosureEvents_closure_impl_4 = function bridge_ClosureEvents_closure_impl
 	set ref_function_bridge_ClosureEvents_closure_impl_5 = function bridge_ClosureEvents_closure_impl_5
 	set ref_function_bridge_CallbackPeriodic_staticCallback = function bridge_CallbackPeriodic_staticCallback
 	set ref_function_bridge_CallbackSingle_closure_impl = function bridge_CallbackSingle_closure_impl
-	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_2
-	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_3
+	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_3
+	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_2
 	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl
 endfunction
 
@@ -18927,6 +19007,11 @@ function main takes nothing returns nothing
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package CityManage.")
 	endif
 	call TriggerClearConditions(initTrig)
+	call TriggerAddCondition(initTrig, Condition(ref_function_bridge_init_Clerics))
+	if  not TriggerEvaluate(initTrig) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package Clerics.")
+	endif
+	call TriggerClearConditions(initTrig)
 	call TriggerAddCondition(initTrig, Condition(ref_function_init_HashSet))
 	if  not TriggerEvaluate(initTrig) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package HashSet.")
@@ -19010,6 +19095,11 @@ function main takes nothing returns nothing
 	call TriggerAddCondition(initTrig, Condition(ref_function_bridge_init_OnPlayerLeave))
 	if  not TriggerEvaluate(initTrig) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package OnPlayerLeave.")
+	endif
+	call TriggerClearConditions(initTrig)
+	call TriggerAddCondition(initTrig, Condition(ref_function_bridge_init_OreCapture))
+	if  not TriggerEvaluate(initTrig) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package OreCapture.")
 	endif
 	call TriggerClearConditions(initTrig)
 	call TriggerAddCondition(initTrig, Condition(ref_function_bridge_init_RangeChecks))

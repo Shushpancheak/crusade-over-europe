@@ -69,7 +69,7 @@ public function addVote(int kick_id, player who_votes)
     kick_count[kick_id]++
 
 public function voteKick(player who_votes, string who_kick)
-  int kick_id = PLAYER_SLOTS - 1
+  int kick_id
 
   // Number
   if who_kick.length() <= 2 and who_kick.toInt() > 0 and who_kick.toInt() < 24

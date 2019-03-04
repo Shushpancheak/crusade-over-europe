@@ -1,9 +1,10 @@
 package Garissons
 
 import Main
+import UnitTools
 
 init
   EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
     let u = GetAttackedUnitBJ()
-    if (isCity(u) or uCastles.has(u.getTypeId())) and not u.getOwner().isIngame()
+    if (u.isCity() or uCastles.has(u.getTypeId())) and not u.getOwner().isIngame()
       IssueImmediateOrder(u, oGarrison)
