@@ -122,7 +122,7 @@ public class City
       let dying_u = GetDyingUnit()
       if dying_u == city_unit
         city_unit = CreateUnitAtLoc(players[player_id], dying_u.getTypeId(), dying_u.getLoc(), bj_UNIT_FACING)
-        SetUnitState(city_unit, UNIT_STATE_LIFE, 
+        SetUnitState(city_unit, UNIT_STATE_LIFE,
           GetUnitState(city_unit, UNIT_STATE_MAX_LIFE) * max(0, kCityLifePercentToCapture) * 0.01)
 
         city_unit.setMana(dying_u.getMana())
@@ -370,7 +370,7 @@ public class City
       return false
     modifiers.add(cm)
     this.getCityModifierOnAdd(cm)
-
+    dbg("Added a modifier " + cityModifiers.get(cm).name + " | " + cityModifiers.get(cm).time.toString(3))
     doAfter(cityModifiers.get(cm).time) ->
       removeModifier(cm)
     return true
@@ -379,7 +379,7 @@ public class City
     if not modifiers.has(cm)
       return false
     modifiers.remove(cm)
-
+    dbg("Removed a modifier " + cityModifiers.get(cm).name)
     this.getCityModifierOnRemove(cm)
     return true
 
@@ -389,6 +389,7 @@ public class City
     return modifiers.get(i)
 
   function getModifiers() returns LinkedList<CityModifier>
+    dbg(modifiers.toString())
     return modifiers
 
   /** Adds the following portion of pop to the total pop count every 5 secs

@@ -1,5 +1,5 @@
 package CityModifiers
-import initlater Main
+import Main
 import HashMap
 
 // Used as tiers in addPop function, which adds this portion of pop to the total pop

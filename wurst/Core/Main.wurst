@@ -14,10 +14,10 @@ import public Multiboards
 import public PlayerStats
 import public Messages
 import public AbilityObjEditing
-import public CityModifiers
+import public initlater CityModifiers
 
-public var dbg_msg = true
-public var dbg_mode = true
+public var dbg_msg = false
+public var dbg_mode = false
 
 public let dbg_player = 0
 
