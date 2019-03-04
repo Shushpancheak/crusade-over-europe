@@ -2,8 +2,6 @@ package CityModifiers
 import initlater Main
 import HashMap
 
-//@TODO get rid of enum if you think that would decrease lag
-
 // Used as tiers in addPop function, which adds this portion of pop to the total pop
 public let mPortions = [
   asList(0.0005, 0.001),

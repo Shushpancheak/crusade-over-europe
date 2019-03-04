@@ -30,6 +30,6 @@ public function multiboard.setItemCentered(int x, int y, string val, real width)
 
   centered = spaces_chars + centered
 
-  // @TODO Optimize this thing by creating an array of items of each mb, and checking if the 
+  // @TODO Optimize this thing by creating an array of items of each mb, and checking if the
   // string is equal to the one we are going to set
   MultiboardSetItemValue(mbi, centered)

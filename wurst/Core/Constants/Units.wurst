@@ -89,12 +89,6 @@ public let uAutonomousTH = 'h043'
 public let uTH = 'h031'
 public let uCH = 'h03M'
 
-//@TODO Remove this shit:
-public let uDummyMotteBailey = 'h051'
-public let uDummyCH = 'h04U'
-public let uDummyCH2Castle = 'h00K'
-public let uDummyTH = 'h00L'
-
 public let uUniversity = 'h015'
 public let uShipyard = 'h00Y'
 public let uSettlement = 'h00M'
