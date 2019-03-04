@@ -1,12 +1,18 @@
 package NoStarvationOnBoat
 
 import Main
+import HashSet
+
+HashSet<unit> unitsRemovedHunger = new HashSet<unit>()
 
 init
   EventListener.add(EVENT_PLAYER_UNIT_ISSUED_ORDER) ->
+    let u = GetOrderedUnit()
     // Load
-    if GetIssuedOrderId() == 852056 and GetOrderedUnit().getTypeId() != uTransportShipWE
-      GetOrderedUnit().removeAbility(aUnitHunger)
+    if GetIssuedOrderId() == 852056 and u.hasAbility(aUnitHunger)
+      u.removeAbility(aUnitHunger)
+      unitsRemovedHunger.add(u)
     // Unload
-    if GetIssuedOrderId() == 851972 and GetOrderedUnit().getTypeId() != uTransportShipWE
+    if GetIssuedOrderId() == 851972 and unitsRemovedHunger.has(u)
       GetOrderedUnit().addAbility(aUnitHunger)
+      unitsRemovedHunger.remove(u)

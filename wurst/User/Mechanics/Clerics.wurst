@@ -2,8 +2,6 @@ package Clerics
 
 import Main
 init
-  EventListener.add(EVENT_PLAYER_UNIT_ISSUED_ORDER) ->
-    dbg(GetIssuedOrderId().toString())
   EventListener.add(EVENT_PLAYER_UNIT_SPELL_CAST) ->
     if GetSpellAbilityId() == aConversion
       // not checking the caster cuz only real player can cast this spell

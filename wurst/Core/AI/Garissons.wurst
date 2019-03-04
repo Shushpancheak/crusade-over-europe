@@ -5,6 +5,6 @@ import UnitTools
 
 init
   EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
-    let u = GetAttackedUnitBJ()
+    let u = GetTriggerUnit()
     if (u.isCity() or uCastles.has(u.getTypeId())) and not u.getOwner().isIngame()
       IssueImmediateOrder(u, oGarrison)

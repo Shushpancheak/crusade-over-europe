@@ -27,5 +27,7 @@ public let aConversion = 'A024'
 
 public let aTownHallCapitolAura = 'A02B'
 public let aCastleAura = 'A03H'
+public let aLoadOnShip = 'Slo3'
+public let aUnloadFromShip = 'Sdro'
 
 public let oGarrison = "spiritwolf"

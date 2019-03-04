@@ -3760,7 +3760,7 @@ function ReplaceUnitBJ takes unit whichUnit, integer newUnitId, integer unitStat
     endif
 
     // Set the unit's life and mana according to the requested method.
-    if (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+    if (unitStateMethod == bj_UNIT_STATE_METHOD_RELAT2IVE) then
         // Set the replacement's current/max life ratio to that of the old unit.
         // If both units have mana, do the same for mana.
         if (GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE) > 0) then
