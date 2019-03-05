@@ -16,7 +16,6 @@ init
       and GetSpellTargetUnit().getTypeId() == uTH
       and GetSpellTargetUnit().getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE))
     ..addAction(() -> begin
-      // Adding player who is settling to the force that city is in
       let city_id = getCityId(GetSpellTargetUnit())
       let force_id = cities[city_id].getCityForceId()
       let player_id = GetSpellAbilityUnit().getOwner().getId()

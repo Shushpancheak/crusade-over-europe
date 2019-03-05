@@ -42,7 +42,7 @@ function setPlayersAtStart()
   var pl_left = PLAYER_SLOTS
   var pl_in_ring = kSpawnPlayersInFirstRing
   var rad = kSpawnFirstRingRadius
-  var pos = vec2()
+  vec2 pos
   player curpl
   angle ang
 
