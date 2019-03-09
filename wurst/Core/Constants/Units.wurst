@@ -1,13 +1,14 @@
 package Units
 import LinkedList
 import HashMap
+import HashList
+
 // Unit constants and something related to them closely
 // Also contets some regions
 
 // prefixes:
 // u - unit type id
 // c - cost (g, l)
-
 
 
 public let uSettler = 'h00J'
@@ -146,7 +147,8 @@ public let kStartingUnits = [
   uSupplyHorse
 )]
 
-public let uPlebs = asList(
+public let uPlebs = new HashList<int>()
+  ..add(
   uPeasantBZ,
   uPeasantEE,
   uPeasantME,
@@ -158,7 +160,8 @@ public let uPlebs = asList(
   uWorkerWE
 )
 
-public let uCapitols = asList(
+public let uCapitols = new HashList<int>()
+  ..add(
   uCapitolWE1,
   uCapitolWE2,
   uCapitolWE3,
@@ -173,7 +176,8 @@ public let uCapitols = asList(
   uCapitolBZ3
 )
 
-public let uCastles = asList(
+public let uCastles = new HashList<int>()
+  ..add(
   uCastleWE1,
   uCastleWE2,
   uCastleWE3,
@@ -188,7 +192,8 @@ public let uCastles = asList(
   uCastleBZ3
 )
 
-public let kCityTypes =   asList(
+public let kCityTypes = new HashList<int>()
+  ..add(
   uCapitolWE1, uCapitolWE2, uCapitolWE3,
   uCapitolEE1, uCapitolEE2, uCapitolEE3,
   uCapitolME1, uCapitolME2, uCapitolME3,
