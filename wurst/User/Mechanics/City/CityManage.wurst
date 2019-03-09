@@ -32,7 +32,7 @@ init
 
   //-------------------------------CONQUER-------------------------------------
   EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
-    unit u = GetAttackedUnitBJ()
+    unit u = GetTriggerUnit()
 
     if u.isCity()
       if u.getLifePercent() <= kCityLifePercentToCapture and u.getOwner() != GetAttacker().getOwner()

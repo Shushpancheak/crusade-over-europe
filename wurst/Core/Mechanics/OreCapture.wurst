@@ -19,8 +19,8 @@ init
       gold_adder[u.getOwner().getId()] += usIncomeOres.get(u.getTypeId())
 
   EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
-    if uMines.has(GetAttackedUnitBJ().getTypeId())
-      let u = GetAttackedUnitBJ()
+    let u = GetTriggerUnit()
+    if uMines.has(u.getTypeId())
       if u.getLifePercent() <= kLifePercentToCapture
         u.setOwner(GetAttacker().getOwner(), true)
         u.setLifePercent(100.0)

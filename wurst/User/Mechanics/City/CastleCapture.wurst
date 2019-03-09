@@ -6,7 +6,7 @@ import CityTools
 
 init
   EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
-    unit u = GetAttackedUnitBJ()
+    unit u = GetTriggerUnit()
 
     if uCastles.has(u.getTypeId())
       if u.getLifePercent() <= kCityLifePercentToCapture and u.getOwner() != GetAttacker().getOwner() and (u.getPos() - GetAttacker().getPos()).length() <= 300.0
