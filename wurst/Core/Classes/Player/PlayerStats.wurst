@@ -16,8 +16,8 @@ public class PlayerStats
   construct(player which_player)
     is_observer = false
     upkeep = 0
-    force_id = -1
-    selected_city_id = -1
+    force_id = 0
+    selected_city_id = 0
     pl = which_player
     is_in_game = which_player.isIngame()
     for i = 0 to PLAYER_SLOTS - 1

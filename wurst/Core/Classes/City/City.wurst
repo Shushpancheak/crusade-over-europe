@@ -149,19 +149,20 @@ public class City
       for m in modifiers
         this.getCityModifierOnFastCount(m)
 
-    //@TODO make sure it would not cause much lags (that is, accesing to HashMap)
+    // TODO make sure it would not cause much lags
 
     doPeriodically(kCityLongCount / 2 + GetRandomReal(kCityLongCount / 2, kCityLongCount)) cbLONG ->
-      if getChance(cityModifiers.get(CityModifier.population_boom).chance)
-        addModifier(CityModifier.population_boom)
-      if getChance(cityModifiers.get(CityModifier.more_trade_estabilished).chance)
-        addModifier(CityModifier.more_trade_estabilished)
-      if getChance(cityModifiers.get(CityModifier.prospering).chance)
-        addModifier(CityModifier.prospering)
-      if getChance(cityModifiers.get(CityModifier.plague_outburst).chance)
-        addModifier(CityModifier.plague_outburst)
-      if getChance(cityModifiers.get(CityModifier.on_fire).chance)
-        addModifier(CityModifier.on_fire)
+      let modif_count = kCityModifiersOnLongCount.size()
+      let modif = kCityModifiersOnLongCount.get(GetRandomInt(0, modif_count - 1))
+
+      // Normalize chance by multiplying by modif_count
+      if getChance(cityModifiers.get(modif).chance * modif_count)
+        addModifier(modif)
+
+
+      // Poverty
+      if getChance(population / 500000 - public_order_last / 100 - 0.1)
+        addModifier(CityModifier.poverty)
 
       for m in modifiers
         this.getCityModifierOnLongCount(m)
@@ -237,6 +238,12 @@ public class City
     addModifier(CityModifier.recently_conquered)
     if getChance(cityModifiers.get(CityModifier.massacred_pop).chance)
       addModifier(CityModifier.massacred_pop)
+    if getChance(cityModifiers.get(CityModifier.sacked).chance)
+      let gld = (kSackCityGoldModifier * countTax()).toInt()
+
+      addModifier(CityModifier.sacked)
+      attentionToPlayer("Your warriors have just sacked the city of " + getCityNameColored() + ", giving you " + gld.toString() + " florins!", whoCaptures)
+      whoCaptures.addGold(gld)
 
     // Default is this
     var whoCapturesForceId = force_id

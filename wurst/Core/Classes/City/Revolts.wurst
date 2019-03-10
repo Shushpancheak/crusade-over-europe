@@ -18,11 +18,12 @@ public function checkForRevolt(int city_id)
     return
   if getElapsedTime() - last_time_city_revolted[city_id] <= kCityMinTimeToRevolt
     return
-  let po = cities[city_id].getLastPublicOrder()
-  let pop = cities[city_id].getPopulation()
   let city_u = cities[city_id].getCityUnit()
   if not city_u.getOwner().isIngame()
     return
+
+  let po = cities[city_id].getLastPublicOrder()
+  let pop = cities[city_id].getPopulation()
   if po < kPOtoRevolt1
     last_time_city_revolted[city_id] = getElapsedTime()
     cities[city_id].addModifier(CityModifier.recently_revolted)

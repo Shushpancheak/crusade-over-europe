@@ -42,7 +42,7 @@ init
           let city_id = u.getCityId()
           let u_id = u.getTypeId()
           if uCapitols.has(u_id)
-            attentionToForce(GetAttacker().getOwner().getNameColored() + " has just captured " + u.getOwner().getNameColored() + " Capitol!", GetPlayersAll())
+            attentionToForce(GetAttacker().getOwner().getNameColored() + " has just captured " + u.getOwner().getNameColored() + "'s Capitol!", GetPlayersAll())
           if ksCitiesToNotice.has(cities[city_id].getCityName())
             attentionToForce(GetAttacker().getOwner().getNameColored() + " has just captured the great city of " + cities[city_id].getCityNameColored() + "!", GetPlayersAll())
           cities[city_id].capture(GetAttacker().getOwner())

@@ -20,6 +20,10 @@ public enum CityModifier
   massacred_pop
   prospering
   sieged
+  corruption
+  sacked
+  religious_unrest
+  poverty
 
   NULL
 
@@ -137,10 +141,52 @@ CityModifierClass cm_sieged = new CityModifierClass(
   0,
   0, -1,
   -10.0, true)
+CityModifierClass cm_corruption = new CityModifierClass(
+  "|cffff0000Corruption|r",
+  "|cffff0000---tax|r",
+  TURN_TIME,
+  0.01,
+  -0.6,
+  0, 0,
+  0, true)
+CityModifierClass cm_sacked = new CityModifierClass(
+  "|cffff0000Sacked|r",
+  "|cffff0000--tax|r |cffb60000-pop|r",
+  TURN_TIME,
+  0.1,
+  -0.4,
+  0, -1,
+  0, true)
+public let kSackCityGoldModifier = 0.8
+CityModifierClass cm_religious_unrest = new CityModifierClass(
+  "|cffff0000Religious Unrest|r",
+  "|cffff0000--PO|r |cfff80000-tax|r",
+  TURN_TIME * 2,
+  0.03,
+  -0.15,
+  0, 0,
+  -20.0, true)
+CityModifierClass cm_poverty = new CityModifierClass(
+  "|cffff0000Poverty|r",
+  "|cffff0000--PO --pop --tax|r",
+  TURN_TIME * 2,
+  0.005, // initial
+  -0.15,
+  2, -1.5,
+  -30.0, true)
 
 
 public var cityModifiers = new HashMap<CityModifier, CityModifierClass>()
 
+// Those that are added to a city every 2 minutes (if condition is met).
+public let kCityModifiersOnLongCount = asList(
+  CityModifier.population_boom,
+  CityModifier.more_trade_estabilished,
+  CityModifier.prospering,
+  CityModifier.plague_outburst,
+  CityModifier.on_fire,
+  CityModifier.corruption,
+  CityModifier.poverty)
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -155,3 +201,7 @@ init
     ..put(CityModifier.massacred_pop, cm_massacred_pop)
     ..put(CityModifier.prospering, cm_prospering)
     ..put(CityModifier.sieged, cm_sieged)
+    ..put(CityModifier.corruption, cm_corruption)
+    ..put(CityModifier.sacked, cm_sacked)
+    ..put(CityModifier.religious_unrest, cm_religious_unrest)
+    ..put(CityModifier.poverty, cm_poverty)

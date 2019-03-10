@@ -125,7 +125,6 @@ init
       enableDebugForPlayer(players[i])
 
     player_stats[i] = new PlayerStats(players[i])
-    player_stats[i].setInGame(players[i].isIngame())
 
   setPlayersAtStart()
 

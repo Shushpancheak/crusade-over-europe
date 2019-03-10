@@ -102,10 +102,10 @@ function action()
 
 
 function cond() returns bool
+  if not GetSpellTargetUnit().getOwner().isIngame()
+    return false
   // Player cannot do diplomacy with himself
-  if GetSpellAbilityUnit().getOwner() == GetSpellTargetUnit().getOwner()
-      or player_stats[GetSpellAbilityUnit().getOwner().getId()].isObserver()
-      or player_stats[GetSpellTargetUnit().getOwner().getId()].isObserver()
+  if GetSpellAbilityUnit().getOwner() == GetSpellTargetUnit().getOwner() or player_stats[GetSpellAbilityUnit().getOwner().getId()].isObserver() or player_stats[GetSpellTargetUnit().getOwner().getId()].isObserver()
     return false
 
   var id = GetSpellAbilityId()
