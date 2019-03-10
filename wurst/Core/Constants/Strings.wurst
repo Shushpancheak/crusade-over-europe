@@ -1,4 +1,5 @@
 package Strings
+import HashList
 
 // - - - - - - - - - - - - - - - - MESSAGES - - - - - - - - - - - - - - - - - -
 
@@ -33,6 +34,17 @@ public constant string array ksAttentionEE = ["By the Saints! Great Prince, you 
 public constant string array ksAttentionME = ["Great one, urgent news must be brought to your attention!", "My Sultan, there is something you need to know!", "My Great Sultan, there is something you must know!"]
 public constant string array ksAttentionBZ = ["My Basileus, there is something you need to know!", "My Basileus, we can not delay this news!", "My Basileus, you should be aware of this!"]
 
+public let ksCitiesToNotice = new HashList<string>()..add(
+  "Jerusalem",
+  "Constantinople",
+  "Rome",
+  "Cairo",
+  "Cordoba",
+  "Baghdad",
+  "Alexandria",
+  "New York",
+  "Moscow"
+)
 
 public let ksShipyardNearRiver  = "You cannot build shipyards near rivers"
 public let ksTooCloseChurchWE   = "You cannot build churches too close to each other."

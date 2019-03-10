@@ -188,6 +188,9 @@ public class City
   function getCityUnit() returns unit
     return city_unit
 
+  function getCityName() returns string
+    return city_name
+
   function getCityForceId() returns int
     return force_id
 

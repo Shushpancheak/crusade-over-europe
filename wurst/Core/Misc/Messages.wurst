@@ -93,25 +93,25 @@ public function somethingToPlayer(string msg1, string msg2, player pl, real dur)
 
 public function warningToForce(string msg, force f)
   for i = 0 to PLAYER_SLOTS - 1
-    if GetForceOfPlayer(players[i]) == f
+    if f.containsPlayer(players[i])
       let pl = players[i]
       DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, getWarningStringForPlayer(pl))
       DisplayTimedTextToPlayer(pl, 0, 0, kWarningDur, msg)
 public function noteToForce(string msg, force f)
   for i = 0 to PLAYER_SLOTS - 1
-    if GetForceOfPlayer(players[i]) == f
+    if f.containsPlayer(players[i])
       let pl = players[i]
       DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, getNoteStringForPlayer(pl))
       DisplayTimedTextToPlayer(pl, 0, 0, kNoteDur, msg)
 public function goodNewsToForce(string msg, force f)
   for i = 0 to PLAYER_SLOTS - 1
-    if GetForceOfPlayer(players[i]) == f
+    if f.containsPlayer(players[i])
       let pl = players[i]
       DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, getGoodNewsStringForPlayer(pl))
       DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
 public function attentionToForce(string msg, force f)
   for i = 0 to PLAYER_SLOTS - 1
-    if GetForceOfPlayer(players[i]) == f
+    if f.containsPlayer(players[i])
       let pl = players[i]
       DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, getAttentionStringForPlayer(pl))
       DisplayTimedTextToPlayer(pl, 0, 0, kGoodNewsDur, msg)
