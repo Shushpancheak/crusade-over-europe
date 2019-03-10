@@ -1,8 +1,9 @@
 package RangeChecks
 import Main
 import UnitTools
+import HashList
 
-public let kUnitsToCheck = asList(uSettlement, uChurchBZ, uChurchEE, uChurchWE, uMosque, uSettlementAnc1, uSettlementAnc2, uSettlementBZ, uSettlementEE, uCastleWE1, uCastleWE2, uCastleWE3, uCastleEE1, uCastleEE2, uCastleEE3, uCastleME1, uCastleME2, uCastleME3, uCastleBZ1, uCastleBZ2, uCastleBZ3, uInn, uInnEE)
+public let kUnitsToCheck = new HashList<int>()..add(uSettlement, uMercenaryCamp, uUniversityWE, uUniversityME, uUniversityEE, uUniversityBZ, uChurchBZ, uChurchEE, uChurchWE, uMosque, uSettlementAnc1, uSettlementAnc2, uSettlementBZ, uSettlementEE, uCastleWE1, uCastleWE2, uCastleWE3, uCastleEE1, uCastleEE2, uCastleEE3, uCastleME1, uCastleME2, uCastleME3, uCastleBZ1, uCastleBZ2, uCastleBZ3, uInn, uInnEE)
 
 // Maily for castles, everything else should be 1500.
 public let kBuildingCheckRange = 2000.0
@@ -17,7 +18,6 @@ init
       let g = GetUnitsInRangeOfLocAll(kBuildingCheckRange, un.getLoc())
 
       for u in g
-        //@TODO may be laggy
         if u.getOwner() == pl and u != un and (u.getTypeId() == un_id and u.getDistance(un) <= kBuildingCheckRange * 0.75 or uCastles.has(un_id) and uCastles.has(u.getTypeId()))
           // cancel construction id
           doAfter(0.01) ->
@@ -48,6 +48,9 @@ init
             case uInn
               attentionToPlayer(ksTooCloseInn, pl)
             case uInnEE
+              attentionToPlayer(ksTooCloseInn, pl)
+
+            default
               attentionToPlayer(ksTooCloseInn, pl)
 
           break

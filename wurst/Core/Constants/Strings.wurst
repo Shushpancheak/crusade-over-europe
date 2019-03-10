@@ -44,8 +44,9 @@ public let ksTooCloseInn = "You cannot build inns too close to each other."
 
 public let ksTooCloseCastle = "You cannot build castles too close to each other."
 public let ksTooManyEncampments = "You cannot build more than 3 encampments."
-public let ksTooManyMercenaryCamps = "You cannot build more than 3 mercenary camps."
 public let ksCannotConvertBelievers = "Clerics cannot convert someone who professes same religion as you."
+public let ksTooclose = "You cannot build this structure too close to your structure of the same type."
+
 
 public let ksRevolt = "A violent mob has appeared near the gates of "
 

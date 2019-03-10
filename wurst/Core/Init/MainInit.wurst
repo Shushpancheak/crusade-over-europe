@@ -123,8 +123,6 @@ init
     SetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER, kStartLumber)
     if dbg_mode
       enableDebugForPlayer(players[i])
-    // Uni limit
-    SetPlayerTechMaxAllowedSwap(uUniversity, 1, players[i])
 
     player_stats[i] = new PlayerStats(players[i])
     player_stats[i].setInGame(players[i].isIngame())

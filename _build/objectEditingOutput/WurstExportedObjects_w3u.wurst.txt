@@ -663,7 +663,6 @@ import ObjEditingNatives
 	..setInt("udef", 3)
 	..setInt("ugor", 50)
 	..setInt("ulur", 275)
-	..setUnreal("uhpr", -9.0)
 
 
 @compiletime function create_w3u_h00N()
@@ -4958,7 +4957,6 @@ import ObjEditingNatives
 	..setInt("ugol", 190)
 	..setInt("ulum", 275)
 	..setString("utyp", "mechanical,townhall")
-	..setUnreal("uhpr", -9.0)
 	..setString("uhrt", "always")
 	..setString("unsf", "(Ancient)")
 	..setInt("uspe", 1)
@@ -9339,7 +9337,6 @@ import ObjEditingNatives
 	..setInt("ugol", 190)
 	..setInt("ulum", 275)
 	..setString("utyp", "mechanical,townhall")
-	..setUnreal("uhpr", -9.0)
 	..setString("uhrt", "always")
 	..setString("unsf", "(Ancient)")
 	..setInt("uspe", 1)

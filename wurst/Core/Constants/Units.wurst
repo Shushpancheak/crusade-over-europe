@@ -84,13 +84,14 @@ public let uCastleBZ3 = 'h07S'
 public let uMercenaryCamp = 'h08V'
 public let uUniversityBZ = 'h060'
 
+public let uGenerals = asList(uGeneralBZ, uGeneralEE, uGeneralME, uGeneralWE)
+
 // AUTO
 public let uAutonomousTH = 'h043'
 // HALLS
 public let uTH = 'h031'
 public let uCH = 'h03M'
 
-public let uUniversity = 'h015'
 public let uShipyard = 'h00Y'
 public let uSettlement = 'h00M'
 public let uSettlementAnc1 = 'h06U'
@@ -229,7 +230,8 @@ public let kRiverRects = asList(
   gg_rct_SHIP_Spannish_River_4,
   gg_rct_SHIP_Swedish_Lake,
   gg_rct_SHIP_Thames,
-  gg_rct_SHIP_Upper_Nile
+  gg_rct_SHIP_Upper_Nile,
+  gg_rct_smol_river_in_morocco
 )
 
 init

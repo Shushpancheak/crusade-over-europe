@@ -68,5 +68,4 @@ init
           SetPlayerState(players[i], PLAYER_STATE_RESOURCE_GOLD, cur_gold + gold_change[i] + player_stats[i].getUpkeep())
           SetPlayerState(players[i], PLAYER_STATE_RESOURCE_LUMBER, cur_lumb + lumb_change[i])
 
-
     countIncomeForAll()
