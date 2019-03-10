@@ -6,7 +6,7 @@ int array encampments
 
 init
   EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
-    let u =  GetConstructingStructure()
+    let u =  GetDyingUnit()
     if u.getTypeId() == uEncampment
       encampments[u.getOwner().getId()]--
   EventListener.add(EVENT_PLAYER_UNIT_CONSTRUCT_START) ->

@@ -1,6 +1,7 @@
 package VoteKick
 import Main
 import HashSet
+import CommandTools
 
 public int array kick_count
 public HashSet<player> array who_voted_for_player
@@ -9,32 +10,7 @@ init
   for i = 0 to PLAYER_SLOTS - 1
     who_voted_for_player[i] = new HashSet<player>()
 
-public let playerstr = asList(
-  "red",
-  "blue",
-  "teal",
-  "purple",
-  "yellow",
-  "orange",
-  "green",
-  "pink",
-  "grey",
-  "light blue",
-  "dark green",
-  "brown",
-  "maroon",
-  "navy",
-  "turquoise",
-  "violet",
-  "wheat",
-  "peach",
-  "mint",
-  "lavender",
-  "coal",
-  "snow",
-  "emerald",
-  "peanut"
-)
+
 
 function countVotesNeeded() returns int
   // How many active players.
@@ -45,7 +21,7 @@ function countVotesNeeded() returns int
 
   return ((c - 1) / 2).toInt() + 1
 
-function tryToKickOrHowMuchLeft(int kick_id)
+function tryToKickOrHowManyLeft(int kick_id)
   if kick_id < 0
     return
 
@@ -67,6 +43,7 @@ public function addVote(int kick_id, player who_votes)
 
   if not who_voted_for_player[kick_id].has(who_votes)
     kick_count[kick_id]++
+    who_voted_for_player[kick_id].add(who_votes)
 
 public function voteKick(player who_votes, string who_kick)
   int kick_id
@@ -74,8 +51,8 @@ public function voteKick(player who_votes, string who_kick)
   // Number
   if who_kick.length() <= 2 and who_kick.toInt() > 0 and who_kick.toInt() < 24
     kick_id = who_kick.toInt()
-  else if playerstr.has(who_kick)
-    kick_id = playerstr.indexOf(who_kick)
+  else if player_color_str.has(who_kick)
+    kick_id = player_color_str.indexOf(who_kick)
   else if getPlayerIdByName(who_kick) != -1
     kick_id = getPlayerIdByName(who_kick)
   else
@@ -83,4 +60,4 @@ public function voteKick(player who_votes, string who_kick)
     return
 
   addVote(kick_id, who_votes)
-  tryToKickOrHowMuchLeft(kick_id)
+  tryToKickOrHowManyLeft(kick_id)

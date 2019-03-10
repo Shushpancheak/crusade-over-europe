@@ -1,6 +1,7 @@
 package Commands
 import Main
 import VoteKick
+import BNetName
 
 // Constants
 // Commands
@@ -20,6 +21,7 @@ public let ksVoteKick = "votekick"
 public let ksZoom = "zoom"
 public let ksObserve = "observe"
 public let ksLowerPO = "add_po"
+public let ksBNetName = "bnet"
 
 // Errs
 public let kseNotYourCity = "The city you wanted to rename so eagerly doesn't belong to you!"
@@ -105,6 +107,12 @@ function action()
     int city_id = player_stats[pl.getId()].getSelectedCityId()
     if city_id >= 0 and city_id < cityCount
       cities[city_id].addPublicOrder(args[1].toReal())
+  else if args[0] == ksBNetName
+    let name = getBNetName(arg)
+    if name == ""
+      noteToPlayer("Couldn't find player: '" + arg + "'", pl)
+    else
+      noteToPlayer("The name of " + arg + " is " + name, pl)
   else
     noteToPlayer("Couldn't find command: '" + args[0] + "'", pl)
 

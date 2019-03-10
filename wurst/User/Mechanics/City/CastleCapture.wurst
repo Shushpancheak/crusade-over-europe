@@ -14,7 +14,7 @@ init
         u.setOwner(pl_attacker, true)
 
         if pl_attacker.getId() != PLAYER_NEUTRAL_AGGRESSIVE
-          ReplaceUnitBJ(u, getCastleByFaction(getCastleTier(u.getTypeId()), player_stats[pl_attacker.getId()].getForceId()), bj_UNIT_STATE_METHOD_RELATIVE)
+          u = ReplaceUnitBJ(u, getCastleByFaction(getCastleTier(u.getTypeId()), player_stats[pl_attacker.getId()].getForceId()), bj_UNIT_STATE_METHOD_RELATIVE)
 
         u.setLifePercent(kCityLifePercentOnceItCaptured)
         u.setManaPercent(0.0)

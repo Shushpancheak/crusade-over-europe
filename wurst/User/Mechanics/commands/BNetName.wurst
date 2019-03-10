@@ -1,0 +1,33 @@
+package BNetName
+import Main
+import CommandTools
+
+string array bnet_name
+
+init
+  for i = 0 to PLAYER_SLOTS - 1
+    bnet_name[i] = GetPlayerName(players[i])
+
+public function getBNetName(player pl) returns string
+  return bnet_name[pl.getId()]
+
+public function getBNetName(int pl_id) returns string
+  return bnet_name[pl_id]
+
+// Token can be:
+// 1) Current name of the player
+// 2) Color of the player
+// 3) Number of the player
+public function getBNetName(string token) returns string
+  for i = 0 to PLAYER_SLOTS - 1
+    if token == GetPlayerName(players[i])
+      return bnet_name[i]
+
+  if player_color_str.has(token)
+    return bnet_name[player_color_str.indexOf(token)]
+
+  let itoken = token.toInt()
+  if itoken >= 0 and itoken < PLAYER_SLOTS
+    return bnet_name[itoken]
+
+  return ""
