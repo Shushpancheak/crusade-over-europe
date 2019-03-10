@@ -285,7 +285,7 @@ public class City
     // Count tax by looking to units surrounding city
     //var count_tax = 0
     //let surrounds = GetUnitsInRangeOfLocAll(kCityRadius, Location(city_pos.x, city_pos.y))
-    //@TODO do this
+    // TODO do this
     //for u in surrounds
 
 
@@ -297,7 +297,7 @@ public class City
     tax += pop_tax
 
     // Reduce tax if city is constructing
-    //@TODO
+    // TODO
 
 
     tax = (tax * tax_multiplier * kCityTaxLevelMultipliers[tax_level]).toInt()
@@ -348,9 +348,6 @@ public class City
     return population_growth_rate
 
   function getPopulationGrowthRateStr() returns string
-    if dbg_msg
-      return (population_growth_rate * 100).toString(2) + "%"
-
     return getStringColoredBasedOnSign((population * population_growth_rate).toInt())
 
   function getPopulationGrowthStr() returns string
@@ -370,7 +367,6 @@ public class City
       return false
     modifiers.add(cm)
     this.getCityModifierOnAdd(cm)
-    dbg("Added a modifier " + cityModifiers.get(cm).name + " | " + cityModifiers.get(cm).time.toString(3))
     doAfter(cityModifiers.get(cm).time) ->
       removeModifier(cm)
     return true
@@ -379,7 +375,6 @@ public class City
     if not modifiers.has(cm)
       return false
     modifiers.remove(cm)
-    dbg("Removed a modifier " + cityModifiers.get(cm).name)
     this.getCityModifierOnRemove(cm)
     return true
 
@@ -389,7 +384,6 @@ public class City
     return modifiers.get(i)
 
   function getModifiers() returns LinkedList<CityModifier>
-    dbg(modifiers.toString())
     return modifiers
 
   /** Adds the following portion of pop to the total pop count every 5 secs
@@ -397,7 +391,8 @@ public class City
   ** 0 - 0.05%, 0.1%
   ** 1 - 0.1%, 0.3%
   ** 2 - 0.3%, 1%
-  ** 3 - 1%, 2% */
+  ** 3 - 1%, 2%
+  */
   private function addPopulation(int tier, real multiplier)
     let prev_pop = population
     population += (multiplier * GetRandomReal(mPortions[tier].get(0), mPortions[tier].get(1)) * population).toInt()

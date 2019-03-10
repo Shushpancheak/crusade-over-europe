@@ -7,5 +7,9 @@ init
   EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
     let u = GetTriggerUnit()
     if (u.isCity() or uCastles.has(u.getTypeId()))
-      if not u.getOwner().isIngame()
-        IssueImmediateOrder(u, oGarrison)
+      if not u.getOwner().isIngame() or u.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE
+        dbg("TRYING TO SUMMON A GARRISON")
+        doAfter(0.01) ->
+          IssueImmediateOrderById(u, 852261)
+          doAfter(0.01) ->
+            IssueImmediateOrderById(u, 851974)

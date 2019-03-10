@@ -10972,7 +10972,7 @@ import ObjEditingNatives
 	..setString("utub", "Improved Guard Tower, offers better offensive and defensive capabilities.")
 	..setInt("uclr", 160)
 	..setInt("uclg", 180)
-	..setString("ureq", "hkee,h008")
+	..setString("ureq", "hkee,h07G")
 	..setInt("usid", 1100)
 	..setString("uhot", "Z")
 	..setString("uupt", "h086")

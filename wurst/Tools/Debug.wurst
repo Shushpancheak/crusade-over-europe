@@ -1,0 +1,13 @@
+package Debug
+import Main
+
+init
+  EventListener.add(EVENT_PLAYER_UNIT_ISSUED_ORDER) ->
+    if GetOrderedUnit().getTypeId() == uTH
+      dbg("Issued ordinary order (|cff00ff0d" + GetIssuedOrderId().toString() + "|r) for unit " + GetOrderedUnit().getName())
+
+/*   EventListener.add(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER) ->
+    dbg("Issued point order (|cff00ff0d" + GetIssuedOrderId().toString() + "|r) for unit " + GetOrderedUnit().getName())
+
+  EventListener.add(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER) ->
+    dbg("Issued unit order (|cff00ff0d" + GetIssuedOrderId().toString() + "|r) for unit " + GetOrderedUnit().getName()) */
