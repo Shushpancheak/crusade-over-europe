@@ -5,7 +5,7 @@ import Main
 public function createCoEMultiboard() returns multiboard
   var mb = CreateMultiboardBJ(kMultiboardColC, kMultiboardRowC, "Income: 2:00")
   mb
-    ..minimalize(true)
+    ..minimize()
     ..setItemsStyle(true, false)
   for j = 0 to PLAYER_SLOTS - 1
     mb.display(players[j], false)

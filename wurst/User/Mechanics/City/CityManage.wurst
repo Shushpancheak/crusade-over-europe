@@ -22,8 +22,10 @@ init
       player_stats[player_id].changeForce(force_id)
 
       // Spawning starting units
+      let loc = GetSpellTargetLoc()
       for u in kStartingUnits[force_id]
-        CreateNUnitsAtLoc(1, u, players[player_id], GetSpellTargetLoc(), 0)
+        CreateNUnitsAtLoc(1, u, players[player_id], loc, 0)
+      RemoveLocation(loc)
 
       cities[city_id].settleCity(player_id)
       KillUnit(GetSpellAbilityUnit())

@@ -14,8 +14,9 @@ init
     let un_id = un.getTypeId()
     if kUnitsToCheck.has(un_id)
       let pl = un.getOwner()
-
-      let g = GetUnitsInRangeOfLocAll(kBuildingCheckRange, un.getLoc())
+      let loc = Location(un.getX(), un.getY())
+      let g = GetUnitsInRangeOfLocAll(kBuildingCheckRange, loc)
+      RemoveLocation(loc)
 
       for u in g
         if u.getOwner() == pl and u != un and (u.getTypeId() == un_id and u.getDistance(un) <= kBuildingCheckRange * 0.75 or uCastles.has(un_id) and uCastles.has(u.getTypeId()))

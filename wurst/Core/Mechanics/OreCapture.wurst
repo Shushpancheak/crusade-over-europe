@@ -9,7 +9,7 @@ init
   EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
     if uMines.has(GetDyingUnit().getTypeId())
       let u = GetTriggerUnit()
-      CreateUnitAtLoc(u.getOwner(), u.getTypeId(), u.getLoc(), bj_UNIT_FACING)
+      CreateUnit(u.getOwner(), u.getTypeId(), u.getX(), u.getY(), bj_UNIT_FACING)
 
   EventListener.add(EVENT_PLAYER_UNIT_UPGRADE_FINISH) ->
     if uMines.has(GetTriggerUnit().getTypeId())

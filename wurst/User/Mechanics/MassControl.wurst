@@ -3,6 +3,7 @@ package MassControl
 import Main
 import HashMap
 import ClosureForGroups
+import EventHelper
 
 let units_of_general = new HashMap<unit, LinkedList<unit>>()
 let kMassControlRanges = asList(
@@ -19,12 +20,13 @@ let uGenerals = asList(
 )
 
 init
+  let ed = EventData
   EventListener.add(EVENT_PLAYER_UNIT_SPELL_CAST) ->
     if GetSpellAbilityId() == aMassCommand
       var g = new LinkedList<unit>()
       let caster = GetSpellAbilityUnit()
       let caster_owner = caster.getOwner()
-      forUnitsInRange(getSpellTargetPos(), kMassControlRanges.get(GetLearnedSkillLevel())) u ->
+      forUnitsInRange(ed.getSpellTargetPos(), kMassControlRanges.get(GetLearnedSkillLevel())) u ->
         if u.getOwner() == caster_owner and not uPlebs.has(u.getTypeId()) and u != caster and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
           g.add(u)
       units_of_general.put(caster, g)
@@ -34,7 +36,7 @@ init
       if units_of_general.has(GetOrderedUnit())
         let g = units_of_general.get(GetOrderedUnit())
         let order = GetIssuedOrderId()
-        let pos = getOrderPos()
+        let pos = ed.getOrderPos()
         for u in g
           doAfter(0.01) ->
             u.issuePointOrderById(order, pos)
