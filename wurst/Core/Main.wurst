@@ -5,11 +5,11 @@ import public ClosureEvents
 import public ClosureTimers
 import public MathTools
 import public StringTools
-import public Units
+import public CoeUnits
 import public Forces
 import public Strings
 import public City
-import public Abilities
+import public CoeAbilities
 import public Multiboards
 import public PlayerStats
 import public Messages

@@ -1,5 +1,5 @@
 package CityTools
-import Units
+import CoeUnits
 import Forces
 
 public function getCastleTier(int unit_type) returns int

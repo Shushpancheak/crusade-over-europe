@@ -1,4 +1,4 @@
-package Units
+package CoeUnits
 import LinkedList
 import HashMap
 import HashList
@@ -230,8 +230,7 @@ public let kRiverRects = asList(
   gg_rct_SHIP_Spannish_River_4,
   gg_rct_SHIP_Swedish_Lake,
   gg_rct_SHIP_Thames,
-  gg_rct_SHIP_Upper_Nile,
-  gg_rct_smol_river_in_morocco
+  gg_rct_SHIP_Upper_Nile
 )
 
 init

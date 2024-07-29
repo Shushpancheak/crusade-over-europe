@@ -1,6 +1,6 @@
 package PublicOrderAddByUnits
 
-import Units
+import CoeUnits
 
 public function getPublicOrderAddByUnit(int id) returns real
   switch id

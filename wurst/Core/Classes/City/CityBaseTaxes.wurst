@@ -1,6 +1,6 @@
 package CityBaseTaxes
 import HashMap
-import Units
+import CoeUnits
 
 public var kCityBaseTaxes = new HashMap<int, int>
 

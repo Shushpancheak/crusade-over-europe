@@ -20,13 +20,12 @@ let uGenerals = asList(
 )
 
 init
-  let ed = EventData
   EventListener.add(EVENT_PLAYER_UNIT_SPELL_CAST) ->
     if GetSpellAbilityId() == aMassCommand
       var g = new LinkedList<unit>()
       let caster = GetSpellAbilityUnit()
       let caster_owner = caster.getOwner()
-      forUnitsInRange(ed.getSpellTargetPos(), kMassControlRanges.get(GetLearnedSkillLevel())) u ->
+      forUnitsInRange(EventData.getSpellTargetPos(), kMassControlRanges.get(GetLearnedSkillLevel())) u ->
         if u.getOwner() == caster_owner and not uPlebs.has(u.getTypeId()) and u != caster and not IsUnitType(u, UNIT_TYPE_STRUCTURE)
           g.add(u)
       units_of_general.put(caster, g)
@@ -36,7 +35,7 @@ init
       if units_of_general.has(GetOrderedUnit())
         let g = units_of_general.get(GetOrderedUnit())
         let order = GetIssuedOrderId()
-        let pos = ed.getOrderPos()
+        let pos = EventData.getOrderPos()
         for u in g
           doAfter(0.01) ->
             u.issuePointOrderById(order, pos)

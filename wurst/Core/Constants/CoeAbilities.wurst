@@ -1,4 +1,4 @@
-package Abilities
+package CoeAbilities
 import LinkedList
 
 public let aWar = 'A01T'

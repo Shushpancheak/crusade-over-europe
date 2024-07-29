@@ -1,3 +1,5 @@
 wurst.dependencies
 .vscode/settings.json
 _build
+temp
+compiled.j.txt
